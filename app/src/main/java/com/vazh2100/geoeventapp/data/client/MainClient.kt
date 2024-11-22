@@ -8,22 +8,23 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
-fun createMainRetrofit(assetInterceptor: AssetInterceptor): MainApi {
-    // Настраиваем OkHttpClient
-    val client = OkHttpClient
-        .Builder().addInterceptor(assetInterceptor).build()
 
-    // Создаем JSON-сериализатор
-    val json = Json {
-        ignoreUnknownKeys = true // Игнорируем неизвестные ключи в JSON
+fun createHttpClient(assetInterceptor: AssetInterceptor): OkHttpClient {
+    return OkHttpClient.Builder().addInterceptor(assetInterceptor).build()
+}
+
+fun createJson(assetInterceptor: AssetInterceptor): Json {
+    return Json {
+        ignoreUnknownKeys = true
     }
+}
 
-    // Создаем Retrofit
-    val retrofit = Retrofit.Builder().baseUrl("baseUrl") // Указываем базовый URL
+fun createRetrofit(client: OkHttpClient, json: Json): Retrofit {
+    return Retrofit.Builder().baseUrl("baseUrl") // Указываем базовый URL
         .client(client) // Подключаем OkHttpClient
-        .addConverterFactory(json.asConverterFactory(MediaType.get("application/json")))
-        .build()
+        .addConverterFactory(json.asConverterFactory(MediaType.get("application/json"))).build()
+}
 
-    // Создаем реализацию интерфейса EventService
+fun createMainApi(retrofit: Retrofit): MainApi {
     return retrofit.create(MainApi::class.java)
 }
