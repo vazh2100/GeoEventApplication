@@ -1,31 +1,23 @@
 package com.vazh2100.geoeventapp.domain.entities
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.vazh2100.geoeventapp.domain.entities.json.ZonedDateTimeSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.util.Date
+import java.time.ZonedDateTime
 
-// Data class для события
+
 @Serializable
+@Entity(tableName = "events")
 data class Event(
-    @SerialName("name")
-    val name: String,
-
-    @SerialName("description")
-    val description: String,
-
-    @SerialName("type")
-    val type: EventType,
-
-    @SerialName("latitude")
-    val latitude: Double,
-
-    @SerialName("longitude")
-    val longitude: Double,
-
-    @SerialName("city")
-    val city: String,
-
-    @SerialName("date")
-//    @Serializable(DateTimeSerializer::class)  // Используем сериализацию/десериализацию даты
-    val date: Date
+    @SerialName("id") @PrimaryKey @ColumnInfo(name = "id") val id: Int,
+    @SerialName("name") @ColumnInfo(name = "name") val name: String,
+    @SerialName("description") @ColumnInfo(name = "description") val description: String,
+    @SerialName("type") @ColumnInfo(name = "type") val type: EventType,
+    @SerialName("latitude") @ColumnInfo(name = "latitude") val latitude: Double,
+    @SerialName("longitude") @ColumnInfo(name = "longitude") val longitude: Double,
+    @SerialName("city") @ColumnInfo(name = "city") val city: String,
+    @Serializable(with = ZonedDateTimeSerializer::class) @SerialName("date") @ColumnInfo(name = "date") val date: ZonedDateTime
 )
