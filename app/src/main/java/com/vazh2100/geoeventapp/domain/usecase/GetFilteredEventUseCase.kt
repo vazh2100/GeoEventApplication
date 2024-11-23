@@ -17,21 +17,19 @@ class GetFilteredEventsUseCase(
         radius: Double? = null
     ): Result<List<Event>> {
         return try {
-            // Получаем текущую геолокацию пользователя
-            val (latitude, longitude) = locationRepository.getCurrentLocation()
-                ?: return Result.failure(Exception("Unable to fetch user location"))
 
-            // Получаем отфильтрованные события из репозитория
+//            val (latitude, longitude) = locationRepository.getCurrentLocation()
+//                ?: return Result.failure(Exception("Unable to fetch user location"))
+
             val filteredEvents = eventRepository.getFilteredEvents(
                 type = type,
                 startDate = startDate,
                 endDate = endDate,
-                userLatitude = latitude,
-                userLongitude = longitude,
+//                userLatitude = latitude,
+//                userLongitude = longitude,
                 radius = radius
             )
 
-            // Если список пустой, возвращаем пустой результат
             if (filteredEvents.isEmpty()) {
                 Result.success(emptyList())
             } else {

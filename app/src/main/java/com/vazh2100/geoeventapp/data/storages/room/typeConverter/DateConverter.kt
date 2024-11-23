@@ -6,15 +6,15 @@ import java.time.format.DateTimeFormatter
 
 class DateConverter {
 
-    private val formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME // Формат ISO 8601
+    private val formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME
 
     @TypeConverter
     fun fromDate(value: ZonedDateTime): String {
-        return value.toInstant().atZone(java.time.ZoneOffset.UTC).format(formatter)
+        return value.format(formatter)
     }
 
     @TypeConverter
     fun toDate(value: String): ZonedDateTime {
-        return ZonedDateTime.parse(value, formatter).toInstant().let { ZonedDateTime.from(it) }
+        return ZonedDateTime.parse(value, formatter)
     }
 }

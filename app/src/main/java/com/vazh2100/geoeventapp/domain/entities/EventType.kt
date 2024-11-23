@@ -3,30 +3,29 @@ package com.vazh2100.geoeventapp.domain.entities
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-// Enum для типа события
 @Serializable
-enum class EventType {
+enum class EventType(val displayName: String) {
     @SerialName("Concert")
-    CONCERT,
+    CONCERT("Concert"),
 
     @SerialName("Festival")
-    FESTIVAL,
+    FESTIVAL("Festival"),
 
     @SerialName("Conference")
-    CONFERENCE,
+    CONFERENCE("Conference"),
 
     @SerialName("Workshop")
-    WORKSHOP,
+    WORKSHOP("Workshop"),
 
     @SerialName("Seminar")
-    SEMINAR,
+    SEMINAR("Seminar"),
 
     @SerialName("Sporting Event")
-    SPORTING_EVENT,
+    SPORTING_EVENT("Sporting Event"),
 
     @SerialName("Trade Show")
-    TRADE_SHOW,
+    TRADE_SHOW("Trade Show"),
 
     @SerialName("Exhibition")
-    EXHIBITION
+    EXHIBITION("Exhibition")
 }

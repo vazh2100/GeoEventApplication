@@ -9,9 +9,12 @@ import com.vazh2100.geoeventapp.data.storages.room.AppDataBase
 import com.vazh2100.geoeventapp.data.storages.room.DatabaseProvider
 import com.vazh2100.geoeventapp.data.storages.room.dao.EventDao
 import com.vazh2100.geoeventapp.domain.entities.AssetReader
+import com.vazh2100.geoeventapp.domain.usecase.GetFilteredEventsUseCase
+import com.vazh2100.geoeventapp.presentaion.screen.eventList.EventListViewModel
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
@@ -41,4 +44,12 @@ val appModule = module {
         )
     }
     single<LocationRepository> { LocationRepository(context = androidContext()) }
+
+    //Use Cases
+    factory {
+        GetFilteredEventsUseCase(eventRepository = get(), locationRepository = get())
+    }
+
+    //View Models
+    viewModel<EventListViewModel> { EventListViewModel(getFilteredEventsUseCase = get()) }
 }
