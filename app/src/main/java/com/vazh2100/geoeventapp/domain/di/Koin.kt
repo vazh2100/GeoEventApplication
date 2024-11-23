@@ -4,6 +4,7 @@ import com.vazh2100.geoeventapp.data.api.MainApi
 import com.vazh2100.geoeventapp.data.client.MainClientProvider
 import com.vazh2100.geoeventapp.data.inteceptor.AssetInterceptor
 import com.vazh2100.geoeventapp.data.repository.EventRepository
+import com.vazh2100.geoeventapp.data.repository.LocationRepository
 import com.vazh2100.geoeventapp.data.storages.room.AppDataBase
 import com.vazh2100.geoeventapp.data.storages.room.DatabaseProvider
 import com.vazh2100.geoeventapp.data.storages.room.dao.EventDao
@@ -39,4 +40,5 @@ val appModule = module {
             eventDao = get<EventDao>(), mainApi = get<MainApi>()
         )
     }
+    single<LocationRepository> { LocationRepository(context = androidContext()) }
 }

@@ -1,4 +1,4 @@
-package com.vazh2100.geoeventapp.ui.theme
+package com.vazh2100.geoeventapp.presentaion.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

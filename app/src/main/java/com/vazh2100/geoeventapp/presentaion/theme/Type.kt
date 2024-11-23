@@ -1,4 +1,4 @@
-package com.vazh2100.geoeventapp.ui.theme
+package com.vazh2100.geoeventapp.presentaion.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
