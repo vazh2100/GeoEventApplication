@@ -9,22 +9,25 @@ import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 
-fun createHttpClient(assetInterceptor: AssetInterceptor): OkHttpClient {
-    return OkHttpClient.Builder().addInterceptor(assetInterceptor).build()
-}
+object MainClientProvider {
+    fun createHttpClient(assetInterceptor: AssetInterceptor): OkHttpClient {
+        return OkHttpClient.Builder().addInterceptor(assetInterceptor).build()
+    }
 
-fun createJson(assetInterceptor: AssetInterceptor): Json {
-    return Json {
-        ignoreUnknownKeys = true
+    fun createJson(): Json {
+        return Json {
+            ignoreUnknownKeys = true
+        }
+    }
+
+    fun createRetrofit(client: OkHttpClient, json: Json): Retrofit {
+        return Retrofit.Builder().baseUrl("https://baseUrl") // Указываем базовый URL
+            .client(client) // Подключаем OkHttpClient
+            .addConverterFactory(json.asConverterFactory(MediaType.get("application/json"))).build()
+    }
+
+    fun createMainApi(retrofit: Retrofit): MainApi {
+        return retrofit.create(MainApi::class.java)
     }
 }
 
-fun createRetrofit(client: OkHttpClient, json: Json): Retrofit {
-    return Retrofit.Builder().baseUrl("baseUrl") // Указываем базовый URL
-        .client(client) // Подключаем OkHttpClient
-        .addConverterFactory(json.asConverterFactory(MediaType.get("application/json"))).build()
-}
-
-fun createMainApi(retrofit: Retrofit): MainApi {
-    return retrofit.create(MainApi::class.java)
-}

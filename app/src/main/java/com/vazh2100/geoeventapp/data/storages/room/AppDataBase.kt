@@ -10,6 +10,6 @@ import com.vazh2100.geoeventapp.domain.entities.Event
 
 @Database(entities = [Event::class], version = 1, exportSchema = false)
 @TypeConverters(DateConverter::class, EventTypeConverter::class)
-abstract class AppDatabase : RoomDatabase() {
+abstract class AppDataBase : RoomDatabase() {
     abstract fun eventDao(): EventDao
 }
