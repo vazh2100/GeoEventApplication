@@ -3,10 +3,10 @@ package com.vazh2100.geoeventapp.domain.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.vazh2100.geoeventapp.domain.entities.json.ZonedDateTimeSerializer
+import com.vazh2100.geoeventapp.domain.entities.json.InstantDateTimeSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.time.ZonedDateTime
+import java.time.Instant
 
 
 @Serializable
@@ -19,5 +19,5 @@ data class Event(
     @SerialName("latitude") @ColumnInfo(name = "latitude") val latitude: Double,
     @SerialName("longitude") @ColumnInfo(name = "longitude") val longitude: Double,
     @SerialName("city") @ColumnInfo(name = "city") val city: String,
-    @Serializable(with = ZonedDateTimeSerializer::class) @SerialName("date") @ColumnInfo(name = "date") val date: ZonedDateTime
+    @Serializable(with = InstantDateTimeSerializer::class) @SerialName("date") @ColumnInfo(name = "date") val date: Instant
 )

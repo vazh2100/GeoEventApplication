@@ -1,20 +1,16 @@
 package com.vazh2100.geoeventapp.data.storages.room.typeConverter
 
 import androidx.room.TypeConverter
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
+import java.time.Instant
 
 class DateConverter {
-
-    private val formatter = DateTimeFormatter.ISO_ZONED_DATE_TIME
-
     @TypeConverter
-    fun fromDate(value: ZonedDateTime): String {
-        return value.format(formatter)
+    fun fromDate(value: Instant): String {
+        return value.toString()
     }
 
     @TypeConverter
-    fun toDate(value: String): ZonedDateTime {
-        return ZonedDateTime.parse(value, formatter)
+    fun toDate(value: String): Instant {
+        return Instant.parse(value)
     }
 }

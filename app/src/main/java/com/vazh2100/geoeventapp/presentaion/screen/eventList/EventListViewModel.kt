@@ -1,5 +1,6 @@
 package com.vazh2100.geoeventapp.presentaion.screen.eventList
 
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vazh2100.geoeventapp.domain.entities.Event
@@ -24,10 +25,27 @@ class EventListViewModel(
     val errorMessage: StateFlow<String?> get() = _errorMessage
 
     init {
-        loadEvents()
+        applyFilters()
     }
 
-    fun loadEvents(
+    fun applyFilters(
+        type: EventType? = null,
+        dateFrom: ZonedDateTime? = null,
+        dateTo: ZonedDateTime? = null,
+        distance: Int? = null
+    ) {
+        println(dateFrom)
+        println(dateTo)
+        val startDate = dateFrom
+        val endDate = dateTo
+        val radius = distance?.toDouble()
+
+        loadEvents(
+            type = type, startDate = startDate, endDate = endDate, radius = radius
+        )
+    }
+
+    private fun loadEvents(
         type: EventType? = null,
         startDate: ZonedDateTime? = null,
         endDate: ZonedDateTime? = null,
@@ -36,10 +54,7 @@ class EventListViewModel(
         viewModelScope.launch {
             _isLoading.value = true
             val result = getFilteredEventsUseCase.execute(
-                type = type,
-                startDate = startDate,
-                endDate = endDate,
-                radius = radius
+                type = type, startDate = startDate, endDate = endDate, radius = radius
             )
             result.onSuccess {
                 _events.value = it

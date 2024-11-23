@@ -32,9 +32,9 @@ class EventRepository(
         val events = getAllEvents()
         events.filter {
             (type == null || it.type == type) && (startDate == null || it.date.isAfter(
-                startDate
+                startDate.toInstant()
             )) && (endDate == null || it.date.isBefore(
-                endDate
+                endDate.toInstant()
             )) && (radius == null || userLatitude == null || userLongitude == null || haversine(
                 it.latitude, it.longitude, userLatitude, userLongitude
             ) <= radius)
