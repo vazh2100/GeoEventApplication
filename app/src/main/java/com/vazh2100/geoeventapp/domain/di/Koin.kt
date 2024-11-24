@@ -5,12 +5,14 @@ import com.vazh2100.geoeventapp.data.client.MainClientProvider
 import com.vazh2100.geoeventapp.data.inteceptor.AssetInterceptor
 import com.vazh2100.geoeventapp.data.repository.EventRepository
 import com.vazh2100.geoeventapp.data.repository.LocationRepository
+import com.vazh2100.geoeventapp.data.repository.NetworkRepository
 import com.vazh2100.geoeventapp.data.storages.device.PreferencesStorage
 import com.vazh2100.geoeventapp.data.storages.room.AppDataBase
 import com.vazh2100.geoeventapp.data.storages.room.DatabaseProvider
 import com.vazh2100.geoeventapp.data.storages.room.dao.EventDao
 import com.vazh2100.geoeventapp.domain.entities.AssetReader
 import com.vazh2100.geoeventapp.domain.usecase.GetFilteredEventsUseCase
+import com.vazh2100.geoeventapp.domain.usecase.GetNetworkStatusUseCase
 import com.vazh2100.geoeventapp.domain.usecase.GetSavedFiltersUseCase
 import com.vazh2100.geoeventapp.presentaion.screen.eventList.EventListViewModel
 import kotlinx.serialization.json.Json
@@ -47,6 +49,7 @@ val appModule = module {
         )
     }
     single<LocationRepository> { LocationRepository(context = androidContext()) }
+    single<NetworkRepository> { NetworkRepository(context = androidContext()) }
 
     //Use Cases
     factory {
@@ -54,14 +57,15 @@ val appModule = module {
             eventRepository = get(), locationRepository = get(), preferencesStorage = get()
         )
     }
-    factory {
-        GetSavedFiltersUseCase(preferencesStorage = get())
-    }
+    factory { GetSavedFiltersUseCase(preferencesStorage = get()) }
+    factory { GetNetworkStatusUseCase(get()) }
 
     //View Models
     viewModel<EventListViewModel> {
         EventListViewModel(
-            getFilteredEventsUseCase = get(), getSavedFiltersUseCase = get()
+            getFilteredEventsUseCase = get(),
+            getSavedFiltersUseCase = get(),
+            getNetworkStatusUseCase = get()
         )
     }
 }

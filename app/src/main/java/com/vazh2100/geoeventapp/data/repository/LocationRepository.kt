@@ -5,7 +5,6 @@ import android.content.Context
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.tasks.await
-import kotlin.math.*
 
 class LocationRepository(private val context: Context) {
 
@@ -22,20 +21,4 @@ class LocationRepository(private val context: Context) {
         }
     }
 
-    fun calculateDistance(start: Pair<Double, Double>, end: Pair<Double, Double>): Double {
-        val (lat1, lon1) = start
-        val (lat2, lon2) = end
-
-        val radius = 6371.0 // Радиус Земли в километрах
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-
-        val a = sin(dLat / 2).pow(2) +
-                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
-                sin(dLon / 2).pow(2)
-
-        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        return radius * c
-    }
 }

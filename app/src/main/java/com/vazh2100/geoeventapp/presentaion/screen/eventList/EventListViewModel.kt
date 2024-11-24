@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vazh2100.geoeventapp.domain.entities.Event
 import com.vazh2100.geoeventapp.domain.entities.EventFilter
+import com.vazh2100.geoeventapp.domain.entities.NetworkStatus
 import com.vazh2100.geoeventapp.domain.usecase.GetFilteredEventsUseCase
+import com.vazh2100.geoeventapp.domain.usecase.GetNetworkStatusUseCase
 import com.vazh2100.geoeventapp.domain.usecase.GetSavedFiltersUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +14,8 @@ import kotlinx.coroutines.launch
 
 class EventListViewModel(
     private val getSavedFiltersUseCase: GetSavedFiltersUseCase,
-    private val getFilteredEventsUseCase: GetFilteredEventsUseCase
+    private val getFilteredEventsUseCase: GetFilteredEventsUseCase,
+    private val getNetworkStatusUseCase: GetNetworkStatusUseCase
 ) : ViewModel() {
 
     private val _events = MutableStateFlow<List<Event>>(emptyList())
@@ -28,9 +31,24 @@ class EventListViewModel(
     private val _filter = MutableStateFlow<EventFilter>(EventFilter())
     val filter: StateFlow<EventFilter> get() = _filter
 
+
+    private val _networkStatus = MutableStateFlow<NetworkStatus>(NetworkStatus.UNKNOWN)
+    val networkStatus: StateFlow<NetworkStatus> = _networkStatus
+
     init {
+        observeNetworkStatus()
         loadSavedFilters()
         loadEvents()
+
+    }
+
+    private fun observeNetworkStatus() {
+        viewModelScope.launch {
+            getNetworkStatusUseCase.execute().collect { status ->
+                println(status)
+                _networkStatus.value = status
+            }
+        }
     }
 
     private fun loadSavedFilters() {

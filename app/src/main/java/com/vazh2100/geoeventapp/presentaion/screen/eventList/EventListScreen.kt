@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.vazh2100.geoeventapp.domain.entities.EventFilter
 import com.vazh2100.geoeventapp.domain.entities.EventType
+import com.vazh2100.geoeventapp.domain.entities.NetworkStatus
 import com.vazh2100.geoeventapp.domain.entities.formatter.formatAsUtc
 import com.vazh2100.geoeventapp.domain.entities.formatter.toInstance
 import com.vazh2100.geoeventapp.presentaion.screen.eventList.widget.EventListItem
@@ -35,6 +36,7 @@ import java.time.ZonedDateTime
 fun EventListScreen(
     navController: NavController, viewModel: EventListViewModel = getViewModel()
 ) {
+    val networkStatus by viewModel.networkStatus.collectAsState()
     val events by viewModel.events.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
@@ -57,6 +59,9 @@ fun EventListScreen(
     }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             Column(modifier = Modifier.fillMaxSize()) {
+                // Плашка с состоянием сети
+                NetworkStatusBar(networkStatus = networkStatus)
+
                 // Панель фильтров
                 FilterPanel(showFilterPanel = showFilterPanel,
                     filter = filter,
@@ -66,6 +71,7 @@ fun EventListScreen(
                     }) {
                     viewModel.applyFilters(it)
                 }
+
                 // Список событий
                 when {
                     isLoading -> {
@@ -99,6 +105,39 @@ fun EventListScreen(
     }
 }
 
+@Composable
+fun NetworkStatusBar(networkStatus: NetworkStatus) {
+    // Отображаем плашку в зависимости от состояния сети
+    val backgroundColor = when (networkStatus) {
+        NetworkStatus.CONNECTED -> MaterialTheme.colorScheme.primary
+        NetworkStatus.DISCONNECTED -> MaterialTheme.colorScheme.error
+        NetworkStatus.UNKNOWN -> MaterialTheme.colorScheme.surfaceVariant
+    }
+    val textColor = when (networkStatus) {
+        NetworkStatus.CONNECTED -> MaterialTheme.colorScheme.onPrimary
+        NetworkStatus.DISCONNECTED -> MaterialTheme.colorScheme.onError
+        NetworkStatus.UNKNOWN -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+
+    if (networkStatus == NetworkStatus.DISCONNECTED) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(backgroundColor)
+                .padding(8.dp)
+        ) {
+            Text(
+                text = when (networkStatus) {
+//                    NetworkStatus.CONNECTED -> "Сеть подключена"
+                    else -> "Нет сети"
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = textColor,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
