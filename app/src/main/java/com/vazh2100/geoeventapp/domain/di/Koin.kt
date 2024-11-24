@@ -19,9 +19,9 @@ import com.vazh2100.geoeventapp.presentaion.screen.eventList.EventListViewModel
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
+import org.koin.core.module.dsl.*
 
 val appModule = module {
     // Entity Layer
