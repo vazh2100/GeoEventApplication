@@ -7,7 +7,7 @@ import com.vazh2100.geoeventapp.domain.entities.EventFilter
 class GetSavedFiltersUseCase(
     private val preferencesStorage: PreferencesStorage
 ) {
-    suspend fun execute(): Result<EventFilter> {
+    suspend fun get(): Result<EventFilter> {
         return try {
             val filter = preferencesStorage.getEventFilter()
             Result.success(filter)

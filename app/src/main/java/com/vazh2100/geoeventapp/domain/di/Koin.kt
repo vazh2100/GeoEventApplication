@@ -23,27 +23,30 @@ import org.koin.core.module.dsl.*
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
-val appModule = module {
-    // Entity Layer
-    // Предоставляет классы сущностей и утилиты, используемые в Domain Layer.
-    single<AssetReader> { AssetReader() }
 
-    // API Layer
-    // Настройка API, клиентской части и сетевого взаимодействия.
+/**
+ * Dependency injection module definition for the GeoEventApp.
+ * This module configures and provides instances of various components
+ * used across the application such as APIs, repositories, use cases, and view models.
+ */
+
+val appModule = module {
+    // **API Layer**
+    // Configures API, networking clients, and interceptors.
     single<OkHttpClient> { MainClientProvider.createHttpClient(assetInterceptor = get()) }
     single<Json> { MainClientProvider.createJson() }
     single<Retrofit> { MainClientProvider.createRetrofit(client = get(), json = get()) }
     single<MainApi> { MainClientProvider.createMainApi(get()) }
     single<AssetInterceptor> { AssetInterceptor(androidContext(), assetReader = get()) }
 
-    // Storage Layer
-    // Настройка локальной базы данных и DAO.
+    // **Storage Layer**
+    // Configures local database, DAO, and preferences storage.
     single<AppDataBase> { DatabaseProvider.getDatabase(androidContext()) }
     single<EventDao> { get<AppDataBase>().eventDao() }
     single<PreferencesStorage> { PreferencesStorage(androidContext()) }
 
-    // Repository Layer
-    // Предоставляет реализации репозиториев для доступа к данным.
+    // **Repository Layer**
+    // Provides implementations of repositories for accessing and managing data.
     single<EventRepository> {
         EventRepository(
             eventDao = get<EventDao>(), mainApi = get<MainApi>(), preferenceStorage = get()
@@ -52,7 +55,8 @@ val appModule = module {
     single<LocationRepository> { LocationRepository(context = androidContext()) }
     single<NetworkStateRepository> { NetworkStateRepository(context = androidContext()) }
 
-    //Use Cases
+    // **Use Cases**
+    // Defines use case classes for business logic.
     factory {
         GetFilteredEventsUseCase(
             eventRepository = get(),
@@ -65,7 +69,8 @@ val appModule = module {
     factory { GetNetworkStatusUseCase(get()) }
     factory { GetLocationStatusUseCase(get()) }
 
-    //View Models
+    // **View Models**
+    // Provides ViewModel instances for the app's presentation layer.
     viewModel<EventListViewModel> {
         EventListViewModel(
             getFilteredEventsUseCase = get(),
@@ -74,4 +79,9 @@ val appModule = module {
             getLocationStatusUseCase = get()
         )
     }
+
+    // **Entity Layer**
+    // Provides utility classes and entities used in the Domain Layer.
+    single<AssetReader> { AssetReader() }
 }
+

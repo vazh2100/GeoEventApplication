@@ -27,12 +27,22 @@ data class Event(
 ) {
 
 
+    /**
+     * Checks whether the event matches a given filter and is within the specified geographical radius.
+     * @param eventFilter The filter criteria.
+     * @param userLatitude The latitude of the user.
+     * @param userLongitude The longitude of the user.
+     * @return True if the event matches all criteria, false otherwise.
+     */
     fun matchesFilter(
-        eventFilter: EventFilter, userLatitude: Double?, userLongitude: Double?
+        eventFilter: EventFilter,
+        userLatitude: Double?,
+        userLongitude: Double?
     ): Boolean {
-        return matchesType(eventFilter.type) && matchesStartDate(eventFilter.startDate) && matchesEndDate(
-            eventFilter.endDate
-        ) && matchesRadius(eventFilter.radius, userLatitude, userLongitude)
+        return matchesType(eventFilter.type) &&
+                matchesStartDate(eventFilter.startDate) &&
+                matchesEndDate(eventFilter.endDate) &&
+                matchesRadius(eventFilter.radius, userLatitude, userLongitude)
     }
 
     fun matchesType(type: EventType?): Boolean {
@@ -55,13 +65,19 @@ data class Event(
     }
 
 
+    /**
+     * Calculates the geographical distance between the event and a given point using the Haversine formula.
+     * @param lat2 The latitude of the point.
+     * @param lon2 The longitude of the point.
+     * @return The distance in kilometers.
+     */
     fun distanceFrom(lat2: Double, lon2: Double): Double {
-        val R = 6371.0
+        val R = 6371.0 // Earth's radius in kilometers
         val dLat = Math.toRadians(lat2 - this.latitude)
         val dLon = Math.toRadians(lon2 - this.longitude)
-        val a = sin(dLat / 2) * sin(dLat / 2) + cos(Math.toRadians(this.latitude)) * cos(
-            Math.toRadians(lat2)
-        ) * sin(dLon / 2) * sin(dLon / 2)
+        val a = sin(dLat / 2) * sin(dLat / 2) +
+                cos(Math.toRadians(this.latitude)) * cos(Math.toRadians(lat2)) *
+                sin(dLon / 2) * sin(dLon / 2)
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
         return R * c
     }

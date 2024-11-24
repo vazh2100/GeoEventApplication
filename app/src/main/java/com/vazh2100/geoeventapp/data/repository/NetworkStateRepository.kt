@@ -9,6 +9,10 @@ import com.vazh2100.geoeventapp.domain.entities.NetworkStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+
+/**
+ * Repository for monitoring network connectivity changes and managing the current network status.
+ */
 class NetworkStateRepository(context: Context) {
 
     private val connectivityManager = getSystemService(context, ConnectivityManager::class.java)
@@ -20,7 +24,10 @@ class NetworkStateRepository(context: Context) {
         observeNetworkChanges()
     }
 
-
+    /**
+     * Retrieves the current network status based on active network capabilities.
+     * @return The current network status: CONNECTED, DISCONNECTED
+     */
     private fun getNetworkStatus(): NetworkStatus {
         val networkCapabilities =
             connectivityManager?.activeNetwork.let { connectivityManager?.getNetworkCapabilities(it) }
@@ -33,7 +40,9 @@ class NetworkStateRepository(context: Context) {
         }
     }
 
-
+    /**
+     * Sets up a listener to observe network connectivity changes and update the network status.
+     */
     private fun observeNetworkChanges() {
         _networkStatus.value = getNetworkStatus()
         connectivityManager?.registerDefaultNetworkCallback(object :

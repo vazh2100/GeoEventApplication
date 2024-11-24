@@ -14,6 +14,10 @@ import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
+/**
+ * Repository for managing event data from various sources, including local storage and a remote API.
+ * Handles filtering, caching, and synchronization of event data.
+ */
 class EventRepository(
     private val eventDao: EventDao,
     private val mainApi: MainApi,
@@ -22,9 +26,8 @@ class EventRepository(
     private val getNowDate: () -> Instant = { Instant.now() }
     private var lastUpdateTime = MutableStateFlow<Instant?>(null)
 
-
     init {
-        preferenceStorage.getLastUpdateTimeFlow()
+        // Collects the last update time from preference storage and updates the state flow.
         CoroutineScope(Dispatchers.IO).launch {
             preferenceStorage.getLastUpdateTimeFlow().collect {
                 lastUpdateTime.value = it
@@ -32,6 +35,9 @@ class EventRepository(
         }
     }
 
+    /**
+     * Retrieves a list of events filtered by the specified criteria.
+     */
     suspend fun getFilteredEvents(
         eventFilter: EventFilter,
         userLatitude: Double? = null,
@@ -43,7 +49,9 @@ class EventRepository(
         }
     }
 
-
+    /**
+     * Fetches all events, either from the local database or the remote API, depending on cache validity.
+     */
     private suspend fun getAllEvents(hasInternet: Boolean): List<Event> {
         val isCacheValid = lastUpdateTime.value?.let {
             ChronoUnit.MINUTES.between(it, getNowDate()) < 30
@@ -58,8 +66,11 @@ class EventRepository(
         }
     }
 
+    /**
+     * Updates the local cache of events by fetching fresh data from the remote API.
+     */
     private suspend fun refreshEvents() {
-        delay(5000L)
+        delay(5000L) // Simulates a delay for the API request.
         val eventsFromApi = mainApi.getEvents()
         eventDao.deleteAllEvents()
         eventDao.insertEvents(eventsFromApi)
