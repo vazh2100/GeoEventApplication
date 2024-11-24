@@ -1,7 +1,7 @@
-package com.vazh2100.geoeventapp.data.client
+package com.vazh2100.geoeventapp.data.network.client
 
-import com.vazh2100.geoeventapp.data.api.MainApi
-import com.vazh2100.geoeventapp.data.inteceptor.AssetInterceptor
+import com.vazh2100.geoeventapp.data.network.api.MainApi
+import com.vazh2100.geoeventapp.data.network.inteceptor.AssetInterceptor
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import okhttp3.OkHttpClient

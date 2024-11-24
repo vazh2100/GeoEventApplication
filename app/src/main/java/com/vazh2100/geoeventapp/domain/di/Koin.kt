@@ -1,11 +1,11 @@
 package com.vazh2100.geoeventapp.domain.di
 
-import com.vazh2100.geoeventapp.data.api.MainApi
-import com.vazh2100.geoeventapp.data.client.MainClientProvider
-import com.vazh2100.geoeventapp.data.inteceptor.AssetInterceptor
+import com.vazh2100.geoeventapp.data.network.api.MainApi
+import com.vazh2100.geoeventapp.data.network.client.MainClientProvider
+import com.vazh2100.geoeventapp.data.network.inteceptor.AssetInterceptor
 import com.vazh2100.geoeventapp.data.repository.EventRepository
 import com.vazh2100.geoeventapp.data.repository.LocationRepository
-import com.vazh2100.geoeventapp.data.repository.NetworkRepository
+import com.vazh2100.geoeventapp.data.repository.NetworkStateRepository
 import com.vazh2100.geoeventapp.data.storages.device.PreferencesStorage
 import com.vazh2100.geoeventapp.data.storages.room.AppDataBase
 import com.vazh2100.geoeventapp.data.storages.room.DatabaseProvider
@@ -19,9 +19,9 @@ import com.vazh2100.geoeventapp.presentaion.screen.eventList.EventListViewModel
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.*
 import org.koin.dsl.module
 import retrofit2.Retrofit
-import org.koin.core.module.dsl.*
 
 val appModule = module {
     // Entity Layer
@@ -50,7 +50,7 @@ val appModule = module {
         )
     }
     single<LocationRepository> { LocationRepository(context = androidContext()) }
-    single<NetworkRepository> { NetworkRepository(context = androidContext()) }
+    single<NetworkStateRepository> { NetworkStateRepository(context = androidContext()) }
 
     //Use Cases
     factory {

@@ -1,9 +1,11 @@
-package com.vazh2100.geoeventapp.data.inteceptor
+package com.vazh2100.geoeventapp.data.network.inteceptor
 
 import android.content.Context
 import com.vazh2100.geoeventapp.domain.entities.AssetReader
 import okhttp3.Interceptor
+import okhttp3.Protocol
 import okhttp3.Response
+import okhttp3.ResponseBody
 import java.io.IOException
 
 class AssetInterceptor(
@@ -22,10 +24,10 @@ class AssetInterceptor(
             return Response
                 .Builder()
                 .request(request)
-                .protocol(okhttp3.Protocol.HTTP_1_1)
+                .protocol(Protocol.HTTP_1_1)
                 .code(200)
                 .message("OK")
-                .body(okhttp3.ResponseBody.create(null, content))
+                .body(ResponseBody.create(null, content))
                 .addHeader("Content-Type", "application/json")
                 .build()
         }

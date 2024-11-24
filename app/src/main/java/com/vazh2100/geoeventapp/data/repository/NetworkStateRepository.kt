@@ -9,7 +9,7 @@ import com.vazh2100.geoeventapp.domain.entities.NetworkStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class NetworkRepository(context: Context) {
+class NetworkStateRepository(context: Context) {
 
     private val connectivityManager = getSystemService(context, ConnectivityManager::class.java)
 
