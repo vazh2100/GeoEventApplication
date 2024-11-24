@@ -35,7 +35,7 @@ import com.vazh2100.geoeventapp.domain.entities.formatter.toInstance
 import com.vazh2100.geoeventapp.presentaion.screen.eventList.widget.EventListItem
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -43,7 +43,7 @@ import java.time.ZonedDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventListScreen(
-    navController: NavController, viewModel: EventListViewModel = getViewModel()
+    navController: NavController, viewModel: EventListViewModel = koinViewModel()
 ) {
     val networkStatus by viewModel.networkStatus.collectAsState()
     val locationStatus by viewModel.locationStatus.collectAsState()

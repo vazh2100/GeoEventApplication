@@ -29,6 +29,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -36,8 +37,15 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
+    }
+
+    testOptions {
+        unitTests.all {
+            it.jvmArgs = listOf("-XX:+EnableDynamicAgentLoading")
+        }
     }
 }
 
@@ -52,20 +60,20 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
-    //Navigation
+    // Navigation
     implementation(libs.androidx.navigation.compose)
 
-    //KoinDI
+    // KoinDI
     implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
-
+    testImplementation(libs.koin.test)
 
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.kotlinx.serialization)
 
-    //JSON
+    // JSON
     implementation(libs.kotlinx.serialization.json)
 
     // Room
@@ -73,15 +81,15 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
-    //DataStore
+    // DataStore
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.preferences.core)
 
-    //  Location Google Play Services
+    // Location Google Play Services
     implementation(libs.play.services.location)
     implementation(libs.kotlinx.coroutines.play.services)
 
-    //Permission Manager
+    // Permission Manager
     implementation(libs.accompanist.permissions)
 
     // Tests
@@ -92,4 +100,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
