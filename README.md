@@ -12,9 +12,10 @@
 ## JSON с тестовыми данными
 
 Приложение использует файл `events.json` для имитации API-ответа c помощью class AssetInterceptor, который подменяет ответ на запрос Retrofit этим файлом.
-Этот файл находится по пути:  
+Эти файлы находится по пути:  
 ```
 app/src/main/assets/events.json
+app/src/main/java/com/vazh2100/geoeventapp/data/inteceptor/AssetInterceptor.kt
 ```
 
 ### Пример данных:
@@ -67,5 +68,21 @@ app/src/main/assets/events.json
 3. Тесты проверяют:
    - Фильтрацию событий по типу.
    - Фильтрацию событий по радиусу.
+
+Чтобы протестировать неудачный сетевой запрос добавьте throw Exception() в
+```
+app/src/main/java/com/vazh2100/geoeventapp/data/repository/EventRepository.kt
+```
+
+```kotlin
+   private suspend fun refreshEvents() {
+        throw Exception() // добавьте эту строку
+        delay(5000L)
+        val eventsFromApi = mainApi.getEvents()
+        eventDao.deleteAllEvents()
+        eventDao.insertEvents(eventsFromApi)
+        preferenceStorage.setLastUpdateTime(getNowDate())
+    }
+```
 
 ---
