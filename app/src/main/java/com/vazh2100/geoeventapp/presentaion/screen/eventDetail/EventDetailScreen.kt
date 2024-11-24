@@ -21,12 +21,12 @@ import com.vazh2100.geoeventapp.domain.entities.formatter.toLocalFormattedString
 fun EventDetailsScreen(
     event: Event, navController: NavController
 ) {
-    val context = LocalContext.current // Получаем контекст
+    val context = LocalContext.current
 
     Scaffold(topBar = {
         TopAppBar(title = { Text("Event Details") }, navigationIcon = {
             IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
             }
         })
     }) { paddingValues ->
@@ -81,9 +81,9 @@ fun EventDetailsScreen(
             }
             Spacer(Modifier.height(16.dp))
 
-            // Кнопка "Добавить в календарь"
+
             Button(
-                onClick = { addEventToGoogleCalendar(event, context) }, // Передаем контекст
+                onClick = { addEventToGoogleCalendar(event, context) },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Add to Calendar")

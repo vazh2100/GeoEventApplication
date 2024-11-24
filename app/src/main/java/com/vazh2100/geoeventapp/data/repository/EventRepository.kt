@@ -7,6 +7,7 @@ import com.vazh2100.geoeventapp.domain.entities.Event
 import com.vazh2100.geoeventapp.domain.entities.EventFilter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -18,7 +19,7 @@ class EventRepository(
     private val mainApi: MainApi,
     private val preferenceStorage: PreferencesStorage,
 ) {
-    private val lastUpdateTimeProvider: () -> Instant = { Instant.now() }
+    private val getNowDate: () -> Instant = { Instant.now() }
     private var lastUpdateTime = MutableStateFlow<Instant?>(null)
 
 
@@ -26,7 +27,6 @@ class EventRepository(
         preferenceStorage.getLastUpdateTimeFlow()
         CoroutineScope(Dispatchers.IO).launch {
             preferenceStorage.getLastUpdateTimeFlow().collect {
-                println(it)
                 lastUpdateTime.value = it
             }
         }
@@ -46,7 +46,7 @@ class EventRepository(
 
     private suspend fun getAllEvents(hasInternet: Boolean): List<Event> {
         val isCacheValid = lastUpdateTime.value?.let {
-            ChronoUnit.MINUTES.between(it, lastUpdateTimeProvider()) < 30
+            ChronoUnit.MINUTES.between(it, getNowDate()) < 30
         } == true
         println("isCacheValid: $isCacheValid")
         println("isCacheValid: ${lastUpdateTime.value}")
@@ -59,9 +59,10 @@ class EventRepository(
     }
 
     private suspend fun refreshEvents() {
+        delay(5000L)
         val eventsFromApi = mainApi.getEvents()
         eventDao.deleteAllEvents()
         eventDao.insertEvents(eventsFromApi)
-        preferenceStorage.setLastUpdateTime(lastUpdateTimeProvider())
+        preferenceStorage.setLastUpdateTime(getNowDate())
     }
 }

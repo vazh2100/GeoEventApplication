@@ -94,7 +94,6 @@ class PreferencesStorage(private val context: Context) {
     }
 
     suspend fun setLastUpdateTime(lastUpdateTime: Instant) {
-        println("set")
         context.dataStore.edit { preferences ->
             preferences[LAST_UPDATE_TIME_KEY] = lastUpdateTime.toEpochMilli()
         }
@@ -106,7 +105,6 @@ class PreferencesStorage(private val context: Context) {
         }
     }
 
-    // Сохранение всего EventFilter
     suspend fun saveEventFilter(eventFilter: EventFilter) {
         if (lastFilter == eventFilter) return
         lastFilter = eventFilter
@@ -118,7 +116,6 @@ class PreferencesStorage(private val context: Context) {
         }
     }
 
-    // Получение сохранённых фильтров
     suspend fun getEventFilter(): EventFilter {
         val type = getEventTypeFlow().firstOrNull()?.let { EventType.valueOf(it) }
         val startDate = getStartDateFlow().firstOrNull()

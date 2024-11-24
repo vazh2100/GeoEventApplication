@@ -26,12 +26,13 @@ data class Event(
     @Serializable(with = InstantDateTimeSerializer::class) @SerialName("date") @ColumnInfo(name = "date") val date: Instant
 ) {
 
+
     fun matchesFilter(
         eventFilter: EventFilter, userLatitude: Double?, userLongitude: Double?
     ): Boolean {
         return matchesType(eventFilter.type) && matchesStartDate(eventFilter.startDate) && matchesEndDate(
             eventFilter.endDate
-        ) && isWithinRadius(eventFilter.radius, userLatitude, userLongitude)
+        ) && matchesRadius(eventFilter.radius, userLatitude, userLongitude)
     }
 
     fun matchesType(type: EventType?): Boolean {
@@ -46,19 +47,19 @@ data class Event(
         return endDate == null || this.date.isBefore(endDate)
     }
 
-    fun isWithinRadius(
+    fun matchesRadius(
         radius: Int?, userLatitude: Double?, userLongitude: Double?
     ): Boolean {
         if (radius == null || userLatitude == null || userLongitude == null) return true
-        return haversine(this.latitude, this.longitude, userLatitude, userLongitude) <= radius
+        return distanceFrom(userLatitude, userLongitude) <= radius
     }
 
 
-    private fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+    fun distanceFrom(lat2: Double, lon2: Double): Double {
         val R = 6371.0
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-        val a = sin(dLat / 2) * sin(dLat / 2) + cos(Math.toRadians(lat1)) * cos(
+        val dLat = Math.toRadians(lat2 - this.latitude)
+        val dLon = Math.toRadians(lon2 - this.longitude)
+        val a = sin(dLat / 2) * sin(dLat / 2) + cos(Math.toRadians(this.latitude)) * cos(
             Math.toRadians(lat2)
         ) * sin(dLon / 2) * sin(dLon / 2)
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))

@@ -21,8 +21,8 @@ object MainClientProvider {
     }
 
     fun createRetrofit(client: OkHttpClient, json: Json): Retrofit {
-        return Retrofit.Builder().baseUrl("https://baseUrl") // Указываем базовый URL
-            .client(client) // Подключаем OkHttpClient
+        return Retrofit.Builder().baseUrl("https://baseUrl")
+            .client(client)
             .addConverterFactory(json.asConverterFactory(MediaType.get("application/json"))).build()
     }
 

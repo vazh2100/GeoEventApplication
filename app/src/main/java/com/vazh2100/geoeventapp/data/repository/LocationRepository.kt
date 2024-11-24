@@ -31,7 +31,6 @@ class LocationRepository(private val context: Context) {
         startPeriodicPermissionCheck()
     }
 
-    // Периодическая проверка статуса разрешения
     private fun startPeriodicPermissionCheck() {
         periodicCheckJob = CoroutineScope(Dispatchers.Main).launch {
             while (isActive) {
@@ -39,16 +38,19 @@ class LocationRepository(private val context: Context) {
                 _locationStatus.emit(currentStatus)
 
                 if (currentStatus == LocationStatus.PERMISSION_GRANTED) {
+                    val enabled = checkGeolocationEnabled()
+                    if (!enabled) _locationStatus.emit(LocationStatus.LOCATION_OFF) else _locationStatus.emit(
+                        LocationStatus.LOCATION_ON
+                    )
                     startLocationUpdates()
                 } else {
                     stopLocationUpdates()
                 }
-                delay(10_000) // Задержка 10 секунд
+                delay(10_000)
             }
         }
     }
 
-    // Проверка текущего статуса разрешения
     private fun checkPermissionStatus(): LocationStatus {
         val isPermissionGranted = ContextCompat.checkSelfPermission(
             context, Manifest.permission.ACCESS_FINE_LOCATION
@@ -61,9 +63,15 @@ class LocationRepository(private val context: Context) {
         }
     }
 
-    // Запуск обновления координат
+    private fun checkGeolocationEnabled(): Boolean {
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
+    }
+
+
     private fun startLocationUpdates() {
-        if (locationListener != null) return // Уже запущено
+        if (locationListener != null) return
 
         locationListener = LocationListener { location ->
             _currentCoordinates.value = location.latitude to location.longitude
@@ -72,8 +80,8 @@ class LocationRepository(private val context: Context) {
         try {
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                600000L, // Минимальный интервал обновления (600 секунд)
-                100f,   // Минимальное расстояние для обновления (100 метров)
+                600000L,
+                100f,
                 locationListener!!
             )
         } catch (e: SecurityException) {
@@ -81,16 +89,16 @@ class LocationRepository(private val context: Context) {
         }
     }
 
-    // Остановка обновления координат
+
     private fun stopLocationUpdates() {
         locationListener?.let {
             locationManager.removeUpdates(it)
         }
         locationListener = null
-        _currentCoordinates.value = null // Сбрасываем координаты
+        _currentCoordinates.value = null
     }
 
-    // Остановка всех проверок
+
     fun stopPeriodicPermissionCheck() {
         periodicCheckJob?.cancel()
         stopLocationUpdates()

@@ -40,7 +40,6 @@ class EventListViewModel(
 
     init {
         loadSavedFilters()
-        loadEvents()
     }
 
 
@@ -51,6 +50,7 @@ class EventListViewModel(
 
             result.onSuccess { eventFilter ->
                 _filter.value = eventFilter
+                loadEvents()
             }.onFailure { error ->
                 _errorMessage.value = error.message
                 error.printStackTrace()
@@ -59,7 +59,6 @@ class EventListViewModel(
         }
     }
 
-    // Метод для применения новых фильтров
     fun applyFilters(
         eventFilter: EventFilter
     ) {

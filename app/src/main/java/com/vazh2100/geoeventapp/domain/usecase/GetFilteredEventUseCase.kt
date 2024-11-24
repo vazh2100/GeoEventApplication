@@ -17,10 +17,11 @@ class GetFilteredEventsUseCase(
         eventFilter: EventFilter
     ): Result<List<Event>> {
 
-        // Сохранение фильтра в настройки
+
         try {
             preferencesStorage.saveEventFilter(eventFilter)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            e.printStackTrace()
 //        return     Result.failure(Exception("Failed to save event filter"))
         }
 
@@ -37,7 +38,7 @@ class GetFilteredEventsUseCase(
             )
 
         } catch (_: Exception) {
-            return Result.failure(Exception("Failed to get filtered events"))
+            return Result.failure(Exception("Failed to get events"))
         }
         return Result.success(filteredEvents)
     }

@@ -15,7 +15,7 @@ import com.vazh2100.geoeventapp.domain.entities.Event
 import com.vazh2100.geoeventapp.domain.entities.formatter.toLocalFormattedString
 
 @Composable
-fun EventListItem(event: Event, onClick: () -> Unit) {
+fun EventListItem(userCoordinates: Pair<Double, Double>?, event: Event, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,6 +35,13 @@ fun EventListItem(event: Event, onClick: () -> Unit) {
                 text = "Type: ${event.type.displayName}",
                 style = MaterialTheme.typography.bodyMedium
             )
+            userCoordinates?.let {
+                Text(
+                    text = "Distance: %.2f km".format(event.distanceFrom(it.first, it.second)),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+            }
         }
     }
 }

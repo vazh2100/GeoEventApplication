@@ -20,14 +20,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 import com.vazh2100.geoeventapp.domain.entities.EventFilter
 import com.vazh2100.geoeventapp.domain.entities.EventType
 import com.vazh2100.geoeventapp.domain.entities.LocationStatus
@@ -49,7 +47,7 @@ fun EventListScreen(
 ) {
     val networkStatus by viewModel.networkStatus.collectAsState()
     val locationStatus by viewModel.locationStatus.collectAsState()
-    val geoPosition by viewModel.geoPosition.collectAsState()
+    val userCoordinates by viewModel.geoPosition.collectAsState()
     val events by viewModel.events.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
@@ -66,33 +64,36 @@ fun EventListScreen(
                     tempFilter = filter
                 }
             }) {
-                Icon(Icons.Filled.ArrowDropDown, contentDescription = "Фильтры")
+                Icon(Icons.Filled.ArrowDropDown, contentDescription = "Filters")
             }
         })
     }) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             Column(modifier = Modifier.fillMaxSize()) {
-                // Плашка с состоянием сети
+
                 NetworkStatusBar(networkStatus = networkStatus)
 
-                // Плашка с информацией о геолокации
+
                 LocationStatusBar(
                     locationStatus = locationStatus,
-                    geoPosition = geoPosition,
+                    geoPosition = userCoordinates,
                     context = LocalContext.current
                 )
 
-                // Панель фильтров
+
                 FilterPanel(showFilterPanel = showFilterPanel,
                     filter = filter,
                     tempFilter = tempFilter,
+                    userLocation = userCoordinates,
                     setVisibility = {
                         showFilterPanel = it
-                    }) {
-                    viewModel.applyFilters(it)
-                }
+                    },
 
-                // Список событий
+                    onApplyFilter = {
+                        viewModel.applyFilters(it)
+                    })
+
+
                 when {
                     isLoading -> {
                         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -102,7 +103,7 @@ fun EventListScreen(
 
                     errorMessage != null -> {
                         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Text(text = errorMessage ?: "Ошибка загрузки")
+                            Text(text = errorMessage ?: "Download Failed")
                         }
                     }
 
@@ -115,7 +116,7 @@ fun EventListScreen(
                             items(events) { event ->
                                 EventListItem(event = event, onClick = {
                                     navController.navigate("eventDetails/${Json.encodeToString(event)}")
-                                })
+                                }, userCoordinates = userCoordinates)
                             }
                         }
                     }
@@ -129,58 +130,50 @@ fun EventListScreen(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun LocationStatusBar(
-    locationStatus: LocationStatus,
-    geoPosition: Pair<Double, Double>?,
-    context: Context // Передаем контекст для открытия настроек
+    locationStatus: LocationStatus, geoPosition: Pair<Double, Double>?, context: Context
 ) {
     val locationPermissionState = rememberPermissionState(ACCESS_FINE_LOCATION)
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp) // Отступы по бокам
-            .background(Color.Gray.copy(alpha = 0.1f)) // Фон с прозрачностью
+            .padding(horizontal = 16.dp)
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.1f))
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth() // Это гарантирует, что Column займет всю доступную ширину
-                .padding(16.dp) // Отступы внутри Column
+                .fillMaxWidth()
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
         ) {
-            // Статус геолокации
-            if (locationStatus == LocationStatus.PERMISSION_DENIED) {
+            if (locationStatus == LocationStatus.PERMISSION_DENIED || locationStatus == LocationStatus.LOCATION_OFF) {
                 Text(
                     text = "Location Status: ${locationStatus.statusMessage}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 4.dp) // Отступы между строками
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
-
                 Spacer(modifier = Modifier.height(4.dp))
             }
 
-            // Координаты
             geoPosition?.let {
                 Text(
-                    text = "Coordinates: Lat: %.2f Lon: %.2f".format(
-                        it.first, it.second
-                    ),
+                    text = "Coordinates: Lat: %.2f, Lon: %.2f".format(it.first, it.second),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black,
-                    modifier = Modifier.padding(bottom = 4.dp) // Отступы между строками
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
             } ?: Text(
                 text = "Coordinates: Not Available",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Black,
-                modifier = Modifier.padding(bottom = 4.dp) // Отступы между строками
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 4.dp)
             )
 
-            // Если разрешение не предоставлено, показываем кнопку для запроса разрешения
+
             if (locationStatus == LocationStatus.PERMISSION_DENIED) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     onClick = {
-                        println(locationPermissionState.status.isGranted)
-                        println(locationPermissionState.status.shouldShowRationale)
                         locationPermissionState.launchPermissionRequest()
                     }, modifier = Modifier.fillMaxWidth()
                 ) {
@@ -189,7 +182,6 @@ fun LocationStatusBar(
             }
 
 
-            // Если разрешение отклонено несколько раз, показываем кнопку для перехода в настройки
             if (!locationPermissionState.status.isGranted) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
@@ -197,8 +189,11 @@ fun LocationStatusBar(
                         val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
                         val uri = android.net.Uri.fromParts("package", context.packageName, null)
                         intent.data = uri
-                        context.startActivity(intent) // Открываем настройки приложения
-                    }, modifier = Modifier.fillMaxWidth()
+                        context.startActivity(intent)
+                    }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Text(text = "Go to Settings")
                 }
@@ -210,7 +205,6 @@ fun LocationStatusBar(
 
 @Composable
 fun NetworkStatusBar(networkStatus: NetworkStatus) {
-    // Отображаем плашку в зависимости от состояния сети
     val backgroundColor = when (networkStatus) {
         NetworkStatus.CONNECTED -> MaterialTheme.colorScheme.primary
         NetworkStatus.DISCONNECTED -> MaterialTheme.colorScheme.error
@@ -231,8 +225,7 @@ fun NetworkStatusBar(networkStatus: NetworkStatus) {
         ) {
             Text(
                 text = when (networkStatus) {
-//                    NetworkStatus.CONNECTED -> "Сеть подключена"
-                    else -> "Нет сети"
+                    else -> "No network"
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = textColor,
@@ -250,8 +243,9 @@ fun FilterPanel(
     tempFilter: EventFilter,
     setVisibility: (Boolean) -> Unit,
     onApplyFilter: (EventFilter) -> Unit,
+    userLocation: Pair<Double, Double>?
 
-    ) {
+) {
     var tempFilter by remember { mutableStateOf(tempFilter) }
 
     if (showFilterPanel) {
@@ -273,13 +267,13 @@ fun FilterPanel(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Фильтр по типу
+
                 Text("Event Type", style = MaterialTheme.typography.titleSmall)
                 EventTypeSelector(currentSelection = tempFilter.type,
                     onSelectionChange = { tempFilter = tempFilter.copy(type = it) },
                     items = EventType.entries.toMutableList<EventType?>().apply { add(null) })
 
-                // Фильтр по дате
+
                 Text("Date", style = MaterialTheme.typography.titleSmall)
                 DateRangeSelector(dateFrom = tempFilter.startDate,
                     dateTo = tempFilter.endDate,
@@ -291,7 +285,8 @@ fun FilterPanel(
                 Text(
                     "Distance (km)", style = MaterialTheme.typography.titleSmall
                 )
-                Slider(value = tempFilter.radius?.toFloat() ?: 17001f,
+                Slider(
+                    value = tempFilter.radius?.toFloat() ?: 17001f,
                     onValueChange = {
                         tempFilter = tempFilter.copy(radius = it.toInt())
                     },
@@ -301,15 +296,17 @@ fun FilterPanel(
                     thumb = {
                         Box(
                             modifier = Modifier
-                                .size(16.dp) // Размер точки
+                                .size(16.dp)
                                 .background(
                                     MaterialTheme.colorScheme.primary, shape = CircleShape
                                 )
                         )
-                    })
+                    },
+                    enabled = userLocation != null
+                )
                 Text("Chosen: ${tempFilter.radius?.toInt() ?: 17001} km")
 
-                // Кнопки "Применить" и "Отмена"
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -319,13 +316,13 @@ fun FilterPanel(
                         tempFilter = filter
 
                     }) {
-                        Text("Отмена")
+                        Text("Cancel")
                     }
                     Button(onClick = {
                         setVisibility(false)
                         onApplyFilter(tempFilter)
                     }) {
-                        Text("Применить")
+                        Text("Apply")
                     }
                 }
             }
@@ -384,7 +381,7 @@ fun DateRangeSelector(
             return utcTimeMillis in now..plusMonth && (dateFrom == null || utcTimeMillis > dateFrom.toEpochMilli())
         }
     }
-    // Состояние для выбора дат
+
     val datePickerStateFrom = rememberDatePickerState(
         initialSelectedDateMillis = dateFrom?.toEpochMilli(),
         initialDisplayedMonthMillis = dateFrom?.toEpochMilli(),
@@ -397,28 +394,27 @@ fun DateRangeSelector(
         selectableDates = selectableDatesTo
     )
 
-    // Диалог для выбора даты "от"
     if (showDatePickerFrom) {
         DatePickerDialog(onDismissRequest = { showDatePickerFrom = false }, confirmButton = {
 
             TextButton(onClick = {
                 datePickerStateFrom.selectedDateMillis?.let {
-                    onDateFromChange(it.toInstance()) // Обновляем состояние для "от"
+                    onDateFromChange(it.toInstance())
                 }
                 showDatePickerFrom = false
             }) {
-                Text("ОК")
+                Text("Ok")
             }
         }, dismissButton = {
             TextButton(onClick = { showDatePickerFrom = false }) {
-                Text("Отмена")
+                Text("Cancel")
             }
         }) {
             DatePicker(state = datePickerStateFrom)
         }
     }
 
-    // Диалог для выбора даты "до"
+
     if (showDatePickerTo) {
         DatePickerDialog(onDismissRequest = { showDatePickerTo = false }, confirmButton = {
             TextButton(onClick = {
@@ -427,11 +423,11 @@ fun DateRangeSelector(
                 }
                 showDatePickerTo = false
             }) {
-                Text("ОК")
+                Text("Ok")
             }
         }, dismissButton = {
             TextButton(onClick = { showDatePickerTo = false }) {
-                Text("Отмена")
+                Text("Cancel")
             }
         }) {
             DatePicker(state = datePickerStateTo)
@@ -439,7 +435,6 @@ fun DateRangeSelector(
     }
 
     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        // Блок для выбора "от"
         Box(modifier = Modifier
             .weight(1f)
             .border(
@@ -449,7 +444,7 @@ fun DateRangeSelector(
             )
             .padding(16.dp)
             .clickable {
-                showDatePickerFrom = true // Открываем диалог для "от"
+                showDatePickerFrom = true
             }) {
             Row(
                 modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
@@ -460,12 +455,11 @@ fun DateRangeSelector(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Icon(
-                    imageVector = Icons.Filled.DateRange, contentDescription = "Выбрать дату от"
+                    imageVector = Icons.Filled.DateRange, contentDescription = "Select from date"
                 )
             }
         }
 
-        // Блок для выбора "до"
         Box(modifier = Modifier
             .weight(1f)
             .border(
@@ -475,7 +469,7 @@ fun DateRangeSelector(
             )
             .padding(16.dp)
             .clickable {
-                showDatePickerTo = true // Открываем диалог для "до"
+                showDatePickerTo = true
             }) {
             Row(
                 modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
@@ -486,7 +480,7 @@ fun DateRangeSelector(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Icon(
-                    imageVector = Icons.Filled.DateRange, contentDescription = "Выбрать дату до"
+                    imageVector = Icons.Filled.DateRange, contentDescription = "Select date to"
                 )
             }
         }
