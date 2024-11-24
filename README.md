@@ -1,7 +1,12 @@
 # GeoEventApp
 
+## Скриншоты
+
+ <div style="display: flex; justify-content: space-between;"> <img src="screenshots/Screenshot_Good.png" width="270" /> <img src="screenshots/Screenshot_Bad.png" width="270" /> <img src="screenshots/Screenshot_Filter.png" width="270" /> </div>
+
 ## Установка проекта
-1. Склонируйте репозиторий:  
+
+1. Склонируйте репозиторий:
    ```bash
    git clone <repository-url>
    ```
@@ -11,14 +16,17 @@
 
 ## JSON с тестовыми данными
 
-Приложение использует файл `events.json` для имитации API-ответа c помощью class AssetInterceptor, который подменяет ответ на запрос Retrofit этим файлом.
-Эти файлы находится по пути:  
+Приложение использует файл `events.json` для имитации API-ответа c помощью class AssetInterceptor,
+который подменяет ответ на запрос Retrofit этим файлом.  
+Эти файлы находятся по пути:
+
 ```
 app/src/main/assets/events.json
 app/src/main/java/com/vazh2100/geoeventapp/data/inteceptor/AssetInterceptor.kt
 ```
 
 ### Пример данных:
+
 ```json
 [
   {
@@ -45,22 +53,25 @@ app/src/main/java/com/vazh2100/geoeventapp/data/inteceptor/AssetInterceptor.kt
 ```
 
 ### Структура JSON:
-| Поле          | Тип          | Описание                               |
-|---------------|--------------|----------------------------------------|
-| `id`          | `Int`        | Уникальный идентификатор события.      |
-| `name`        | `String`     | Название события.                      |
-| `description` | `String`     | Краткое описание события.              |
-| `type`        | `String`     | Тип события (например, выставка, фестиваль). |
-| `latitude`    | `Double`     | Географическая широта места события.   |
-| `longitude`   | `Double`     | Географическая долгота места события.  |
-| `city`        | `String`     | Город, где проходит событие.           |
-| `date`        | `String`     | Дата и время события в формате ISO 8601. |
+
+| Поле          | Тип      | Описание                                     |
+|---------------|----------|----------------------------------------------|
+| `id`          | `Int`    | Уникальный идентификатор события.            |
+| `name`        | `String` | Название события.                            |
+| `description` | `String` | Краткое описание события.                    |
+| `type`        | `String` | Тип события (например, выставка, фестиваль). |
+| `latitude`    | `Double` | Географическая широта места события.         |
+| `longitude`   | `Double` | Географическая долгота места события.        |
+| `city`        | `String` | Город, где проходит событие.                 |
+| `date`        | `String` | Дата и время события в формате ISO 8601.     |
 
 ---
 
 ## Тестирование
+
 Для запуска модульных тестов:
-1. Откройте файл:  
+
+1. Откройте файл:
    ```
    app/src/test/java/com/vazh2100/geoeventapp/domain/entity/EventFilterTest.kt
    ```
@@ -70,19 +81,21 @@ app/src/main/java/com/vazh2100/geoeventapp/data/inteceptor/AssetInterceptor.kt
    - Фильтрацию событий по радиусу.
 
 Чтобы протестировать неудачный сетевой запрос добавьте throw Exception() в
+
 ```
 app/src/main/java/com/vazh2100/geoeventapp/data/repository/EventRepository.kt
 ```
 
 ```kotlin
    private suspend fun refreshEvents() {
-        throw Exception() // добавьте эту строку
-        delay(5000L)
-        val eventsFromApi = mainApi.getEvents()
-        eventDao.deleteAllEvents()
-        eventDao.insertEvents(eventsFromApi)
-        preferenceStorage.setLastUpdateTime(getNowDate())
-    }
+   throw Exception() // добавьте эту строку
+   delay(5000L)
+   val eventsFromApi = mainApi.getEvents()
+   eventDao.deleteAllEvents()
+   eventDao.insertEvents(eventsFromApi)
+   preferenceStorage.setLastUpdateTime(getNowDate())
+}
 ```
 
 ---
+

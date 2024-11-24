@@ -20,10 +20,10 @@ fun Instant.toLocalFormattedString(): String {
 /**
  * Formats an [Instant] as a UTC-based string.
  * The resulting string represents the date and time in UTC.
- * @return A string representation of the instant in UTC format "dd MMM yyyy HH:mm".
+ * @return A string representation of the instant in UTC format "dd MMM yyyy".
  */
 fun Instant.formatAsUtc(): String {
-    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm")
+    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
     return this.atZone(ZoneId.of("UTC")).format(formatter)
 }
 
