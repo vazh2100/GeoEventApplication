@@ -93,20 +93,18 @@ fun EventDetailsScreen(
 }
 
 fun addEventToGoogleCalendar(event: Event, context: Context) {
+    val startMillis = event.date.toEpochMilli()
+    val endMillis = event.date.plusSeconds(2 * 60 * 60).toEpochMilli()
+
     val intent = Intent(Intent.ACTION_INSERT).apply {
         data = CalendarContract.Events.CONTENT_URI
         putExtra(CalendarContract.Events.TITLE, event.name)
         putExtra(CalendarContract.Events.DESCRIPTION, event.description)
         putExtra(CalendarContract.Events.EVENT_LOCATION, "${event.latitude}, ${event.longitude}")
-
-        // Устанавливаем время начала и окончания
-        val startMillis = event.date.toEpochMilli()
-        val endMillis = event.date.plusSeconds(2 * 60 * 60).toEpochMilli()
         putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startMillis)
         putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endMillis)
     }
 
-    // Запуск календаря
     if (intent.resolveActivity(context.packageManager) != null) {
         context.startActivity(intent)
     }

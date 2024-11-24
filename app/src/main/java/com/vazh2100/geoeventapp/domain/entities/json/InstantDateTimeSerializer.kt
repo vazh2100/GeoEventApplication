@@ -8,9 +8,9 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import java.time.Instant
 
-object InstantDateTimeSerializer : KSerializer<Instant> {
+class InstantDateTimeSerializer : KSerializer<Instant> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("ZonedDateTime", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("Instant", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Instant) {
         encoder.encodeString(value.toString())
@@ -19,6 +19,6 @@ object InstantDateTimeSerializer : KSerializer<Instant> {
     override fun deserialize(decoder: Decoder): Instant {
         return Instant.parse(
             decoder.decodeString(),
-        ) // Парсим строку в ZonedDateTime
+        )
     }
 }

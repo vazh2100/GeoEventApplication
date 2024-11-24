@@ -2,42 +2,37 @@ package com.vazh2100.geoeventapp.domain.usecase
 
 import com.vazh2100.geoeventapp.data.repository.EventRepository
 import com.vazh2100.geoeventapp.data.repository.LocationRepository
+import com.vazh2100.geoeventapp.data.storages.device.PreferencesStorage
 import com.vazh2100.geoeventapp.domain.entities.Event
-import com.vazh2100.geoeventapp.domain.entities.EventType
-import java.time.ZonedDateTime
+import com.vazh2100.geoeventapp.domain.entities.EventFilter
 
 class GetFilteredEventsUseCase(
     private val eventRepository: EventRepository,
-    private val locationRepository: LocationRepository
+    private val locationRepository: LocationRepository,
+    private val preferencesStorage: PreferencesStorage
 ) {
     suspend fun execute(
-        type: EventType? = null,
-        startDate: ZonedDateTime? = null,
-        endDate: ZonedDateTime? = null,
-        radius: Double? = null
+        eventFilter: EventFilter
     ): Result<List<Event>> {
-        return try {
 
-//            val (latitude, longitude) = locationRepository.getCurrentLocation()
-//                ?: return Result.failure(Exception("Unable to fetch user location"))
-
-            val filteredEvents = eventRepository.getFilteredEvents(
-                type = type,
-                startDate = startDate,
-                endDate = endDate,
-//                userLatitude = latitude,
-//                userLongitude = longitude,
-                radius = radius
-            )
-
-            if (filteredEvents.isEmpty()) {
-                Result.success(emptyList())
-            } else {
-                Result.success(filteredEvents)
-            }
-        } catch (e: Exception) {
-            // В случае ошибки возвращаем ошибочное состояние
-            Result.failure(e)
+        try {
+            preferencesStorage.saveEventFilter(eventFilter)
+        } catch (_: Exception) {
+            return Result.failure(Exception("Failed to save event filter"))
         }
+
+        val filteredEvents = try {
+            val (latitude, longitude) = Pair(47.2400899, 39.8140522)
+            eventRepository.getFilteredEvents(
+                eventFilter = eventFilter, userLatitude = latitude, userLongitude = longitude
+            )
+        } catch (_: Exception) {
+            return Result.failure(Exception("Failed to fetch filtered events"))
+        }
+        return Result.success(filteredEvents)
+
     }
+
 }
+
+

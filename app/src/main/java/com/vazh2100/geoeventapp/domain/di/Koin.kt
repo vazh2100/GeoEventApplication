@@ -5,11 +5,13 @@ import com.vazh2100.geoeventapp.data.client.MainClientProvider
 import com.vazh2100.geoeventapp.data.inteceptor.AssetInterceptor
 import com.vazh2100.geoeventapp.data.repository.EventRepository
 import com.vazh2100.geoeventapp.data.repository.LocationRepository
+import com.vazh2100.geoeventapp.data.storages.device.PreferencesStorage
 import com.vazh2100.geoeventapp.data.storages.room.AppDataBase
 import com.vazh2100.geoeventapp.data.storages.room.DatabaseProvider
 import com.vazh2100.geoeventapp.data.storages.room.dao.EventDao
 import com.vazh2100.geoeventapp.domain.entities.AssetReader
 import com.vazh2100.geoeventapp.domain.usecase.GetFilteredEventsUseCase
+import com.vazh2100.geoeventapp.domain.usecase.GetSavedFiltersUseCase
 import com.vazh2100.geoeventapp.presentaion.screen.eventList.EventListViewModel
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
@@ -35,6 +37,7 @@ val appModule = module {
     // Настройка локальной базы данных и DAO.
     single<AppDataBase> { DatabaseProvider.getDatabase(androidContext()) }
     single<EventDao> { get<AppDataBase>().eventDao() }
+    single<PreferencesStorage> { PreferencesStorage(androidContext()) }
 
     // Repository Layer
     // Предоставляет реализации репозиториев для доступа к данным.
@@ -47,9 +50,18 @@ val appModule = module {
 
     //Use Cases
     factory {
-        GetFilteredEventsUseCase(eventRepository = get(), locationRepository = get())
+        GetFilteredEventsUseCase(
+            eventRepository = get(), locationRepository = get(), preferencesStorage = get()
+        )
+    }
+    factory {
+        GetSavedFiltersUseCase(preferencesStorage = get())
     }
 
     //View Models
-    viewModel<EventListViewModel> { EventListViewModel(getFilteredEventsUseCase = get()) }
+    viewModel<EventListViewModel> {
+        EventListViewModel(
+            getFilteredEventsUseCase = get(), getSavedFiltersUseCase = get()
+        )
+    }
 }

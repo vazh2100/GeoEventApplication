@@ -2,13 +2,8 @@ package com.vazh2100.geoeventapp.domain.entities.formatter
 
 import java.time.Instant
 import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-fun ZonedDateTime.toLocalFormattedString(): String {
-    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm")
-    return this.format(formatter)
-}
 
 //utc 0
 fun Instant.toLocalFormattedString(): String {
@@ -18,13 +13,14 @@ fun Instant.toLocalFormattedString(): String {
     return zonedDateTime.format(formatter)
 }
 
-// местное время
-fun ZonedDateTime.toFormattedMonth(): String {
-    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
-    return this.format(formatter)
+// utc as utc
+fun Instant.formatAsUtc(): String {
+    val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm")
+    return this.atZone(ZoneId.of("UTC")).format(formatter)
 }
 
-fun Long.toZonedDateTime(): ZonedDateTime {
-    return Instant.ofEpochMilli(this).atZone(ZoneId.systemDefault())
+///utc milliseconds to utc insrnce
+fun Long.toInstance(): Instant {
+    return Instant.ofEpochMilli(this)
 
 }

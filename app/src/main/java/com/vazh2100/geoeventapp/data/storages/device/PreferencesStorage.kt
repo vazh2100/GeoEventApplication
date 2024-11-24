@@ -8,7 +8,10 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.vazh2100.geoeventapp.domain.entities.EventFilter
+import com.vazh2100.geoeventapp.domain.entities.EventType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import java.time.Instant
 
@@ -23,10 +26,12 @@ class PreferencesStorage(private val context: Context) {
     }
 
 
-    suspend fun setEventType(eventType: String?) {
+    private var lastFilter: EventFilter? = null
+
+    suspend fun setEventType(eventType: EventType?) {
         context.dataStore.edit { preferences ->
             if (eventType != null) {
-                preferences[EVENT_TYPE_KEY] = eventType
+                preferences[EVENT_TYPE_KEY] = eventType.name
             } else {
                 preferences.remove(EVENT_TYPE_KEY)
             }
@@ -86,4 +91,29 @@ class PreferencesStorage(private val context: Context) {
             preferences[RADIUS_KEY]
         }
     }
+
+    // Сохранение всего EventFilter
+    suspend fun saveEventFilter(eventFilter: EventFilter) {
+        println(eventFilter)
+        println(eventFilter == lastFilter)
+        if (lastFilter == eventFilter) return
+        lastFilter = eventFilter
+        with(eventFilter) {
+            setEventType(type)
+            setStartDate(startDate)
+            setEndDate(endDate)
+            setRadius(radius)
+        }
+    }
+
+    // Получение сохранённых фильтров
+    suspend fun getEventFilter(): EventFilter {
+        val type = getEventTypeFlow().firstOrNull()?.let { EventType.valueOf(it) }
+        val startDate = getStartDateFlow().firstOrNull()
+        val endDate = getEndDateFlow().firstOrNull()
+        val radius = getRadiusFlow().firstOrNull()
+
+        return EventFilter(type, startDate, endDate, radius).also { lastFilter = it }
+    }
 }
+
