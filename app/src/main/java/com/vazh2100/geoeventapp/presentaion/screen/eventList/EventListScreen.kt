@@ -1,6 +1,10 @@
 package com.vazh2100.geoeventapp.presentaion.screen.eventList
 
 
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.content.Context
+import android.content.Intent
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,10 +20,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.vazh2100.geoeventapp.domain.entities.EventFilter
 import com.vazh2100.geoeventapp.domain.entities.EventType
+import com.vazh2100.geoeventapp.domain.entities.LocationStatus
 import com.vazh2100.geoeventapp.domain.entities.NetworkStatus
 import com.vazh2100.geoeventapp.domain.entities.formatter.formatAsUtc
 import com.vazh2100.geoeventapp.domain.entities.formatter.toInstance
@@ -37,6 +48,8 @@ fun EventListScreen(
     navController: NavController, viewModel: EventListViewModel = getViewModel()
 ) {
     val networkStatus by viewModel.networkStatus.collectAsState()
+    val locationStatus by viewModel.locationStatus.collectAsState()
+    val geoPosition by viewModel.geoPosition.collectAsState()
     val events by viewModel.events.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
@@ -61,6 +74,13 @@ fun EventListScreen(
             Column(modifier = Modifier.fillMaxSize()) {
                 // Плашка с состоянием сети
                 NetworkStatusBar(networkStatus = networkStatus)
+
+                // Плашка с информацией о геолокации
+                LocationStatusBar(
+                    locationStatus = locationStatus,
+                    geoPosition = geoPosition,
+                    context = LocalContext.current
+                )
 
                 // Панель фильтров
                 FilterPanel(showFilterPanel = showFilterPanel,
@@ -104,6 +124,89 @@ fun EventListScreen(
         }
     }
 }
+
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun LocationStatusBar(
+    locationStatus: LocationStatus,
+    geoPosition: Pair<Double, Double>?,
+    context: Context // Передаем контекст для открытия настроек
+) {
+    val locationPermissionState = rememberPermissionState(ACCESS_FINE_LOCATION)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp) // Отступы по бокам
+            .background(Color.Gray.copy(alpha = 0.1f)) // Фон с прозрачностью
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth() // Это гарантирует, что Column займет всю доступную ширину
+                .padding(16.dp) // Отступы внутри Column
+        ) {
+            // Статус геолокации
+            if (locationStatus == LocationStatus.PERMISSION_DENIED) {
+                Text(
+                    text = "Location Status: ${locationStatus.statusMessage}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 4.dp) // Отступы между строками
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+
+            // Координаты
+            geoPosition?.let {
+                Text(
+                    text = "Coordinates: Lat: %.2f Lon: %.2f".format(
+                        it.first, it.second
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 4.dp) // Отступы между строками
+                )
+            } ?: Text(
+                text = "Coordinates: Not Available",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Black,
+                modifier = Modifier.padding(bottom = 4.dp) // Отступы между строками
+            )
+
+            // Если разрешение не предоставлено, показываем кнопку для запроса разрешения
+            if (locationStatus == LocationStatus.PERMISSION_DENIED) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = {
+                        println(locationPermissionState.status.isGranted)
+                        println(locationPermissionState.status.shouldShowRationale)
+                        locationPermissionState.launchPermissionRequest()
+                    }, modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Grant Location Permission")
+                }
+            }
+
+
+            // Если разрешение отклонено несколько раз, показываем кнопку для перехода в настройки
+            if (!locationPermissionState.status.isGranted) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = {
+                        val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
+                        val uri = android.net.Uri.fromParts("package", context.packageName, null)
+                        intent.data = uri
+                        context.startActivity(intent) // Открываем настройки приложения
+                    }, modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Go to Settings")
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 fun NetworkStatusBar(networkStatus: NetworkStatus) {

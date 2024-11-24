@@ -12,6 +12,7 @@ import com.vazh2100.geoeventapp.data.storages.room.DatabaseProvider
 import com.vazh2100.geoeventapp.data.storages.room.dao.EventDao
 import com.vazh2100.geoeventapp.domain.entities.AssetReader
 import com.vazh2100.geoeventapp.domain.usecase.GetFilteredEventsUseCase
+import com.vazh2100.geoeventapp.domain.usecase.GetLocationStatusUseCase
 import com.vazh2100.geoeventapp.domain.usecase.GetNetworkStatusUseCase
 import com.vazh2100.geoeventapp.domain.usecase.GetSavedFiltersUseCase
 import com.vazh2100.geoeventapp.presentaion.screen.eventList.EventListViewModel
@@ -59,13 +60,15 @@ val appModule = module {
     }
     factory { GetSavedFiltersUseCase(preferencesStorage = get()) }
     factory { GetNetworkStatusUseCase(get()) }
+    factory { GetLocationStatusUseCase(get()) }
 
     //View Models
     viewModel<EventListViewModel> {
         EventListViewModel(
             getFilteredEventsUseCase = get(),
             getSavedFiltersUseCase = get(),
-            getNetworkStatusUseCase = get()
+            getNetworkStatusUseCase = get(),
+            getLocationStatusUseCase = get()
         )
     }
 }
