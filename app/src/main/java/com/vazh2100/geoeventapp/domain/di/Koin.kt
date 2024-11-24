@@ -46,7 +46,7 @@ val appModule = module {
     // Предоставляет реализации репозиториев для доступа к данным.
     single<EventRepository> {
         EventRepository(
-            eventDao = get<EventDao>(), mainApi = get<MainApi>()
+            eventDao = get<EventDao>(), mainApi = get<MainApi>(), preferenceStorage = get()
         )
     }
     single<LocationRepository> { LocationRepository(context = androidContext()) }
@@ -55,7 +55,10 @@ val appModule = module {
     //Use Cases
     factory {
         GetFilteredEventsUseCase(
-            eventRepository = get(), locationRepository = get(), preferencesStorage = get()
+            eventRepository = get(),
+            preferencesStorage = get(),
+            getNetworkStatusUseCase = get(),
+            getLocationStatusUseCase = get()
         )
     }
     factory { GetSavedFiltersUseCase(preferencesStorage = get()) }

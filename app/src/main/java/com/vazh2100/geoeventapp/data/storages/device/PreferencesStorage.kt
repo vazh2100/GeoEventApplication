@@ -23,6 +23,7 @@ class PreferencesStorage(private val context: Context) {
         private val START_DATE_KEY = longPreferencesKey("start_date")
         private val END_DATE_KEY = longPreferencesKey("end_date")
         private val RADIUS_KEY = intPreferencesKey("radius")
+        private val LAST_UPDATE_TIME_KEY = longPreferencesKey("last_update_time")
     }
 
 
@@ -92,10 +93,21 @@ class PreferencesStorage(private val context: Context) {
         }
     }
 
+    suspend fun setLastUpdateTime(lastUpdateTime: Instant) {
+        println("set")
+        context.dataStore.edit { preferences ->
+            preferences[LAST_UPDATE_TIME_KEY] = lastUpdateTime.toEpochMilli()
+        }
+    }
+
+    fun getLastUpdateTimeFlow(): Flow<Instant?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[LAST_UPDATE_TIME_KEY]?.let { Instant.ofEpochMilli(it) }
+        }
+    }
+
     // Сохранение всего EventFilter
     suspend fun saveEventFilter(eventFilter: EventFilter) {
-        println(eventFilter)
-        println(eventFilter == lastFilter)
         if (lastFilter == eventFilter) return
         lastFilter = eventFilter
         with(eventFilter) {
@@ -116,4 +128,5 @@ class PreferencesStorage(private val context: Context) {
         return EventFilter(type, startDate, endDate, radius).also { lastFilter = it }
     }
 }
+
 

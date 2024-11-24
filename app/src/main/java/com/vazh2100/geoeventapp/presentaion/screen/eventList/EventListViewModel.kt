@@ -74,7 +74,7 @@ class EventListViewModel(
     private fun loadEvents(eventFilter: EventFilter = _filter.value) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = getFilteredEventsUseCase.execute(eventFilter)
+            val result = getFilteredEventsUseCase.get(eventFilter)
 
             result.onSuccess { events ->
                 _events.value = events
