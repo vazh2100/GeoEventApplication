@@ -11,10 +11,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.koin.core.context.GlobalContext
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
-import org.koin.dsl.module
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import kotlin.test.assertEquals
@@ -32,7 +28,6 @@ import kotlin.test.assertEquals
  * filtering events based on one or more criteria.
 
  * Dependencies:
- * - Koin for dependency injection.
  * - MockK for mocking and spying on methods.
  * - Kotlin Coroutines for asynchronous testing.
 
@@ -52,12 +47,10 @@ class EventFilterTest {
         Event(
             1, "Concert", // Event type CONCERT
             "Description", EventType.CONCERT, 55.0, 37.0, "Moscow", Instant.now()
-        ),
-        Event(
+        ), Event(
             2, "Sport Event", // Event type SPORTING_EVENT
             "Description", EventType.SPORTING_EVENT, 56.0, 38.0, "Saint-Petersburg", Instant.now()
-        ),
-        Event(
+        ), Event(
             3,
             "Festival", // Event type CONCERT
             "Description",
@@ -66,8 +59,7 @@ class EventFilterTest {
             37.5,
             "Moscow",
             Instant.now().plus(1, ChronoUnit.DAYS)
-        ),
-        Event(
+        ), Event(
             4,
             "Football Match", // Event type SPORTING_EVENT
             "Description",
@@ -79,8 +71,7 @@ class EventFilterTest {
         )
     )
 
-    lateinit var spyEventRepository: EventRepository
-
+    var spyEventRepository: EventRepository = mockk()
     /**
      * Sets up the test environment before each test.
      * - Initializes Koin for dependency injection.
@@ -88,15 +79,8 @@ class EventFilterTest {
      */
     @Before
     fun setup() {
-        // Initializes Koin for the test environment
-        startKoin {
-            modules(module {
-                single<EventRepository> { mockk() }
-            })
-        }
-        val eventRepository: EventRepository = GlobalContext.get().get()
-        spyEventRepository = spyk(eventRepository)
         // Mock the `getAllEvents` method within the spy
+        spyEventRepository = spyk(spyEventRepository)
         every { spyEventRepository["getAllEvents"](true) } returns events
     }
 
@@ -106,7 +90,6 @@ class EventFilterTest {
      */
     @After
     fun teardown() {
-        stopKoin()
     }
 
     /**
@@ -188,7 +171,8 @@ class EventFilterTest {
     @Test
     fun `test filtering events by type and radius`() = runBlocking {
         // Filters events by type and radius
-        val eventFilter = EventFilter(type = EventType.CONCERT, startDate = null, endDate = null, radius = radius)
+        val eventFilter =
+            EventFilter(type = EventType.CONCERT, startDate = null, endDate = null, radius = radius)
         val filteredEvents = spyEventRepository.getFilteredEvents(eventFilter, hasInternet = true)
         // Verifies that two events of type CONCERT within the radius are returned
         assertEquals(2, filteredEvents.size)
