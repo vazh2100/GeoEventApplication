@@ -1,5 +1,8 @@
 # GeoEventApp
 
+Техническое задание:
+[TECHNICALSPECIFICATIONS.md](https://github.com/vazh2100/GeoEventApplication/blob/master/TECHNICALSPECIFICATIONS.md)
+
 ## Скриншоты
 
  <div style="display: flex; justify-content: space-between;"> <img src="screenshots/Screenshot_Good.png" width="270" /> <img src="screenshots/Screenshot_Bad.png" width="270" /> <img src="screenshots/Screenshot_Filter.png" width="270" /> </div>
@@ -13,10 +16,16 @@
 2. Откройте проект в **Android Studio 2024**
 
 ---
+
 ## JSON с тестовыми данными
-Приложение использует файл [events.json](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/main/assets/events.json) для имитации API-ответа Retrofit c помощью [AssetInterceptor](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/main/java/com/vazh2100/geoeventapp/data/network/inteceptor/AssetInterceptor.kt).
+
+Приложение использует
+файл [events.json](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/main/assets/events.json)
+для имитации API-ответа Retrofit c
+помощью [AssetInterceptor](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/main/java/com/vazh2100/geoeventapp/data/network/inteceptor/AssetInterceptor.kt).
 
 ### Пример данных:
+
 ```json
 [
   {
@@ -33,6 +42,7 @@
 ```
 
 ### Структура JSON:
+
 | Поле          | Тип      | Описание                                     |
 |---------------|----------|----------------------------------------------|
 | `id`          | `Int`    | Уникальный идентификатор события.            |
@@ -45,16 +55,20 @@
 | `date`        | `String` | Дата и время события в формате ISO 8601.     |
 
 ---
+
 ## Тестирование
+
 Для запуска модульных тестов:
+
 1. Откройте файл:
-[app/src/test/java/com/vazh2100/geoeventapp/domain/entity/EventFilterTest.kt](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/test/java/com/vazh2100/geoeventapp/domain/entity/EventFilterTest.kt)
+   [app/src/test/java/com/vazh2100/geoeventapp/domain/entity/EventFilterTest.kt](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/test/java/com/vazh2100/geoeventapp/domain/entity/EventFilterTest.kt)
 2. Выберите **Run 'EventFilterTest'**.
 3. Тесты проверяют:
    - Фильтрацию событий по типу.
    - Фильтрацию событий по радиусу.
 
-Чтобы протестировать неудачный сетевой запрос добавьте throw Exception() в [app/src/main/java/com/vazh2100/geoeventapp/data/repository/EventRepository.kt](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/main/java/com/vazh2100/geoeventapp/data/repository/EventRepository.kt)
+Чтобы протестировать неудачный сетевой запрос добавьте throw Exception()
+в [app/src/main/java/com/vazh2100/geoeventapp/data/repository/EventRepository.kt](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/main/java/com/vazh2100/geoeventapp/data/repository/EventRepository.kt)
 
 ```kotlin
    private suspend fun refreshEvents() {

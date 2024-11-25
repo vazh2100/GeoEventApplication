@@ -78,12 +78,12 @@ fun FilterPanel(
                     "Distance (km)", style = MaterialTheme.typography.titleSmall
                 )
                 Slider(
-                    value = tempFilter.radius?.toFloat() ?: 17001f,
+                    value = tempFilter.radius?.toFloat() ?: 7500f,
                     onValueChange = {
                         tempFilter = tempFilter.copy(radius = it.toInt())
                     },
-                    valueRange = 1f..17001f,
-                    steps = 30,
+                    valueRange = 250f..7500f,
+                    steps = 28,
                     modifier = Modifier.padding(horizontal = 4.dp),
                     thumb = {
                         Box(
