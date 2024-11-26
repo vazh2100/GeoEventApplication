@@ -1,12 +1,12 @@
 ### GeoEventApp
--**UI и навигация**: Jetpack Compose, Material 3, Compose Navigation.  
--**DI**: Koin DI.  
--**Сетевое взаимодействие**: Retrofit, Kotlin Serialization.  
--**Локальное хранилище**: Room, Data Store.  
--**Геолокация**: Location Google Play Services, Accompanist Permission.  
--**Тестирование**: JUnit, Mockk.  
--**Архитектура**: MVVM, DI, Clean Architecture  
--**Техническое задание**: [TECHNICAL SPECIFICATIONS.md](https://github.com/vazh2100/GeoEventApplication/blob/master/TECHNICALSPECIFICATIONS.md)
+**UI и навигация**: Jetpack Compose, Material 3, Compose Navigation.  
+**DI**: Koin DI.  
+**Сетевое взаимодействие**: Retrofit, Kotlin Serialization.  
+**Локальное хранилище**: Room, Data Store.  
+**Геолокация**: Location Google Play Services, Accompanist Permission.  
+**Тестирование**: JUnit, Mockk.  
+**Архитектура**: MVVM, DI, Clean Architecture  
+**Техническое задание**: [TECHNICAL SPECIFICATIONS.md](https://github.com/vazh2100/GeoEventApplication/blob/master/TECHNICALSPECIFICATIONS.md)
  <div style="display: flex; justify-content: space-between;"> <img src="screenshots/Screenshot_Good.png" width="270" /> <img src="screenshots/Screenshot_Bad.png" width="270" /> <img src="screenshots/Screenshot_Filter.png" width="270" /> </div>
 
 #### Экраны  
@@ -43,14 +43,14 @@
 ```json
 [
   {
-    "id": 1, // Уникальный идентификатор события.  
-    "name": "Wilde", // Название события. 
-    "description": "Gonococcal endophthalmia", // Краткое описание события.
-    "type": "Festival", // Тип события (например, выставка, фестиваль)
-    "latitude": 24.086481, // Географическая широта места события. 
-    "longitude": 112.346259, //  Географическая долгота места события.
-    "city": "Qiashui", // Город, где проходит событие.  
-    "date": "2024-12-06T13:55:07Z" // Дата и время события в формате ISO 8601.
+    "id": 1,
+    "name": "Wilde",
+    "description": "Gonococcal endophthalmia",
+    "type": "Festival",
+    "latitude": 24.086481, 
+    "longitude": 112.346259,
+    "city": "Qiashui",  
+    "date": "2024-12-06T13:55:07Z"
   }
 ]
 ```
@@ -77,3 +77,74 @@
    preferenceStorage.setLastUpdateTime(getNowDate())
 }
 ```
+
+#### Дерево проекта
+```css
+./
+   ├── data
+   │   ├── network
+   │   │   ├── api
+   │   │   │   └── MainApi.kt
+   │   │   ├── client
+   │   │   │   └── MainClient.kt
+   │   │   ├── inteceptor
+   │   │   │   └── AssetInterceptor.kt
+   │   ├── repository
+   │   │   └── EventRepository.kt
+   │   │   └── LocationRepository.kt
+   │   │   └── NetworkStateRepository.kt
+   │   ├── storages
+   │   │   ├── device
+   │   │   │   └── PreferencesStorage.kt
+   │   │   ├── room
+   │   │   │   └── AppDataBase.kt
+   │   │   │   ├── dao
+   │   │   │   │   └── EventDao.kt
+   │   │   │   └── DataBaseProvider.kt
+   │   │   │   ├── typeConverter
+   │   │   │   │   └── DateConverter.kt
+   │   │   │   │   └── EventTypeConverter.kt
+   ├── domain
+   │   ├── di
+   │   │   └── Koin.kt
+   │   ├── entities
+   │   │   └── AssetReader.kt
+   │   │   └── EventFilter.kt
+   │   │   └── Event.kt
+   │   │   └── EventType.kt
+   │   │   ├── formatter
+   │   │   │   └── DateFormatter.kt
+   │   │   ├── json
+   │   │   │   └── InstantDateTimeSerializer.kt
+   │   │   └── LocationStatus.kt
+   │   │   └── NetworkStatus.kt
+   │   ├── usecase
+   │   │   └── GetFilteredEventsUseCase.kt
+   │   │   └── GetLocationStatusUseCase.kt
+   │   │   └── GetNetworkStatusUseCase.kt
+   │   │   └── GetSavedFiltersUseCase.kt
+   └── MainActivity.kt
+   └── MyApp.kt
+   ├── presentaion
+   │   └── Navigation.kt
+   │   ├── screen
+   │   │   ├── eventDetail
+   │   │   │   └── EventDetailScreen.kt
+   │   │   ├── eventList
+   │   │   │   └── EventListScreen.kt
+   │   │   │   └── EventListViewModel.kt
+   │   │   │   ├── widget
+   │   │   │   │   └── DateRangeSelector.kt
+   │   │   │   │   └── EventListItem.kt
+   │   │   │   │   └── EventList.kt
+   │   │   │   │   └── EventTypeSelector.kt
+   │   │   │   │   └── FilterPanel.kt
+   │   │   │   │   └── LocationStatusBar.kt
+   │   │   │   │   └── NetworkStatusBar.kt
+   │   ├── theme
+   │   │   └── Color.kt
+   │   │   └── Theme.kt
+   │   │   └── Type.kt
+   └── tree.sh
+```
+
