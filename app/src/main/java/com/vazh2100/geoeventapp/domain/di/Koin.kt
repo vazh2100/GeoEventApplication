@@ -37,7 +37,7 @@ val appModule = module {
     single<Json> { MainClientProvider.createJson() }
     single<Retrofit> { MainClientProvider.createRetrofit(client = get(), json = get()) }
     single<MainApi> { MainClientProvider.createMainApi(get()) }
-    single<AssetInterceptor> { AssetInterceptor(androidContext(), assetReader = get()) }
+    single<AssetInterceptor> { AssetInterceptor(assetReader = get()) }
 
     // **Storage Layer**
     // Configures local database, DAO, and preferences storage.
@@ -82,6 +82,6 @@ val appModule = module {
 
     // **Entity Layer**
     // Provides utility classes and entities used in the Domain Layer.
-    single<AssetReader> { AssetReader() }
+    single<AssetReader> { AssetReader(androidContext()) }
 }
 

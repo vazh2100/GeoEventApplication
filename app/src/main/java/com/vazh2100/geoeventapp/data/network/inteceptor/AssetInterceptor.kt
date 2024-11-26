@@ -1,6 +1,5 @@
 package com.vazh2100.geoeventapp.data.network.inteceptor
 
-import android.content.Context
 import com.vazh2100.geoeventapp.domain.entities.AssetReader
 import okhttp3.Interceptor
 import okhttp3.Protocol
@@ -9,7 +8,6 @@ import okhttp3.ResponseBody
 import java.io.IOException
 
 class AssetInterceptor(
-    private val context: Context,
     private val assetReader: AssetReader,
     private val targetPath: String = "event"
 ) : Interceptor {
@@ -19,7 +17,7 @@ class AssetInterceptor(
         val request = chain.request()
         val url = request.url().toString()
         if (url.contains(targetPath)) {
-            val content = assetReader.readJsonFromAsset(context)
+            val content = assetReader.readJsonFromAsset()
 
             return Response
                 .Builder()
