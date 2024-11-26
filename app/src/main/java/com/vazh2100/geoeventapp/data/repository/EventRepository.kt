@@ -4,13 +4,11 @@ import com.vazh2100.geoeventapp.data.network.api.MainApi
 import com.vazh2100.geoeventapp.data.storages.device.PreferencesStorage
 import com.vazh2100.geoeventapp.data.storages.room.dao.EventDao
 import com.vazh2100.geoeventapp.domain.entities.Event
-import com.vazh2100.geoeventapp.domain.entities.EventFilter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -36,23 +34,9 @@ class EventRepository(
     }
 
     /**
-     * Retrieves a list of events filtered by the specified criteria.
-     */
-    suspend fun getFilteredEvents(
-        eventFilter: EventFilter,
-        userLatitude: Double? = null,
-        userLongitude: Double? = null,
-        hasInternet: Boolean,
-    ): List<Event> = withContext(Dispatchers.IO) {
-        getAllEvents(hasInternet).filter {
-            it.matchesFilter(eventFilter, userLatitude, userLongitude)
-        }
-    }
-
-    /**
      * Fetches all events, either from the local database or the remote API, depending on cache validity.
      */
-    private suspend fun getAllEvents(hasInternet: Boolean): List<Event> {
+    suspend fun getAllEvents(hasInternet: Boolean): List<Event> {
         val isCacheValid = lastUpdateTime.value?.let {
             ChronoUnit.MINUTES.between(it, getNowDate()) < 30
         } == true

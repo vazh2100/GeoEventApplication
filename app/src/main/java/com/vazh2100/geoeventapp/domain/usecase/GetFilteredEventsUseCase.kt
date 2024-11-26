@@ -36,18 +36,20 @@ class GetFilteredEventsUseCase(
         // Get the user's current coordinates
         val currentCoordinates = getLocationStatusUseCase.currentCoordinates.value
 
-        val filteredEvents: List<Event>
+        val events: List<Event>
         try {
-            // Fetch the filtered events from the repository
-            filteredEvents = eventRepository.getFilteredEvents(
-                eventFilter = eventFilter,
-                userLatitude = currentCoordinates?.first,
-                userLongitude = currentCoordinates?.second,
-                hasInternet = hasInternet
-            )
+            // Fetch the events from the repository
+            events = eventRepository.getAllEvents(hasInternet)
         } catch (_: Exception) {
             // Return a failure result if fetching events fails
             return Result.failure(Exception("Failed to get events"))
+        }
+
+        // Filter events
+        val filteredEvents = events.filter {
+            it.matchesFilter(
+                eventFilter, currentCoordinates?.first, currentCoordinates?.second
+            )
         }
 
         // Return a successful result with the filtered events

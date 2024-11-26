@@ -1,12 +1,18 @@
 package com.vazh2100.geoeventapp.domain.entity
 
 import com.vazh2100.geoeventapp.data.repository.EventRepository
+import com.vazh2100.geoeventapp.data.storages.device.PreferencesStorage
 import com.vazh2100.geoeventapp.domain.entities.Event
 import com.vazh2100.geoeventapp.domain.entities.EventFilter
 import com.vazh2100.geoeventapp.domain.entities.EventType
-import io.mockk.every
+import com.vazh2100.geoeventapp.domain.entities.NetworkStatus
+import com.vazh2100.geoeventapp.domain.usecase.GetFilteredEventsUseCase
+import com.vazh2100.geoeventapp.domain.usecase.GetLocationStatusUseCase
+import com.vazh2100.geoeventapp.domain.usecase.GetNetworkStatusUseCase
+import io.mockk.coEvery
+import io.mockk.just
 import io.mockk.mockk
-import io.mockk.spyk
+import io.mockk.runs
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
@@ -16,7 +22,7 @@ import java.time.temporal.ChronoUnit
 import kotlin.test.assertEquals
 
 /**
- * Unit tests for the event filtering functionality in the EventRepository.
+ * Unit tests for the event filtering functionality in the GetFilteredEventsUseCase.
  * This test class focuses on validating the filtering of events based on different criteria:
  * 1. Event type (e.g., CONCERT, SPORTING_EVENT)
  * 2. Radius from the user's location
@@ -24,7 +30,7 @@ import kotlin.test.assertEquals
  * 4. End date of the event
  * 5. Combined filtering by type and radius
  * 6. No filters applied, returning all events.
- * The tests are designed to ensure that the `getFilteredEvents` method behaves as expected when
+ * The tests are designed to ensure that the getAllEvents()` method behaves as expected when
  * filtering events based on one or more criteria.
 
  * Dependencies:
@@ -71,7 +77,14 @@ class EventFilterTest {
         )
     )
 
-    var spyEventRepository: EventRepository = mockk()
+    val eventRepository: EventRepository = mockk()
+    val preferencesStorage: PreferencesStorage = mockk()
+    val getNetworkStatusUseCase: GetNetworkStatusUseCase = mockk()
+    val getLocationStatusUseCase: GetLocationStatusUseCase = mockk()
+    val getFilteredEventsUseCase: GetFilteredEventsUseCase = GetFilteredEventsUseCase(
+        eventRepository, preferencesStorage, getNetworkStatusUseCase, getLocationStatusUseCase
+    )
+
     /**
      * Sets up the test environment before each test.
      * - Initializes Koin for dependency injection.
@@ -79,9 +92,10 @@ class EventFilterTest {
      */
     @Before
     fun setup() {
-        // Mock the `getAllEvents` method within the spy
-        spyEventRepository = spyk(spyEventRepository)
-        every { spyEventRepository["getAllEvents"](true) } returns events
+        coEvery { preferencesStorage.saveEventFilter(any()) } just runs
+        coEvery { getNetworkStatusUseCase.networkStatus.value } returns NetworkStatus.CONNECTED
+        coEvery { eventRepository.getAllEvents(true) } returns events
+        coEvery { getLocationStatusUseCase.currentCoordinates.value } returns null
     }
 
     /**
@@ -102,7 +116,7 @@ class EventFilterTest {
         // Filters events by type CONCERT
         val eventFilter =
             EventFilter(type = EventType.CONCERT, startDate = null, endDate = null, radius = null)
-        val filteredEvents = spyEventRepository.getFilteredEvents(eventFilter, hasInternet = true)
+        val filteredEvents = getFilteredEventsUseCase.get(eventFilter).getOrThrow()
         // Verifies that two events of type CONCERT are returned
         assertEquals(2, filteredEvents.size)
         assertEquals("Concert", filteredEvents[0].name)
@@ -119,12 +133,8 @@ class EventFilterTest {
         // Filters events by radius
         val eventFilter =
             EventFilter(type = null, startDate = null, endDate = null, radius = radius)
-        val filteredEvents = spyEventRepository.getFilteredEvents(
-            eventFilter,
-            hasInternet = true,
-            userLatitude = userLatitude,
-            userLongitude = userLongitude
-        )
+        coEvery { getLocationStatusUseCase.currentCoordinates.value } returns (userLatitude to userLongitude)
+        val filteredEvents = getFilteredEventsUseCase.get(eventFilter).getOrThrow()
         // Verifies that two events within the radius are returned
         assertEquals(2, filteredEvents.size)
         assertEquals("Concert", filteredEvents[0].name)
@@ -140,7 +150,7 @@ class EventFilterTest {
     fun `test filtering events by start date`() = runBlocking {
         // Filters events that start after the current date
         val eventFilter = EventFilter(startDate = now, endDate = null, radius = null, type = null)
-        val filteredEvents = spyEventRepository.getFilteredEvents(eventFilter, hasInternet = true)
+        val filteredEvents = getFilteredEventsUseCase.get(eventFilter).getOrThrow()
         // Verifies that three events starting after the current date are returned
         assertEquals(3, filteredEvents.size)
         assertEquals("Concert", filteredEvents[0].name)
@@ -157,7 +167,7 @@ class EventFilterTest {
     fun `test filtering events by end date`() = runBlocking {
         // Filters events that end before the current date
         val eventFilter = EventFilter(startDate = null, endDate = now, radius = null, type = null)
-        val filteredEvents = spyEventRepository.getFilteredEvents(eventFilter, hasInternet = true)
+        val filteredEvents = getFilteredEventsUseCase.get(eventFilter).getOrThrow()
         // Verifies that one event that ended before the current date is returned
         assertEquals(1, filteredEvents.size)
         assertEquals("Football Match", filteredEvents[0].name)
@@ -173,7 +183,7 @@ class EventFilterTest {
         // Filters events by type and radius
         val eventFilter =
             EventFilter(type = EventType.CONCERT, startDate = null, endDate = null, radius = radius)
-        val filteredEvents = spyEventRepository.getFilteredEvents(eventFilter, hasInternet = true)
+        val filteredEvents = getFilteredEventsUseCase.get(eventFilter).getOrThrow()
         // Verifies that two events of type CONCERT within the radius are returned
         assertEquals(2, filteredEvents.size)
         assertEquals("Concert", filteredEvents[0].name)
@@ -188,7 +198,7 @@ class EventFilterTest {
     fun `test filtering events with no filters`() = runBlocking {
         // No filters — all events should be returned
         val eventFilter = EventFilter(null, null, null, null)
-        val filteredEvents = spyEventRepository.getFilteredEvents(eventFilter, hasInternet = true)
+        val filteredEvents = getFilteredEventsUseCase.get(eventFilter).getOrThrow()
         // Verifies that all four events are returned
         assertEquals(4, filteredEvents.size)
     }
