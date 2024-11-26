@@ -24,8 +24,14 @@ class EventRepository(
     private val getNowDate: () -> Instant = { Instant.now() }
     private var lastUpdateTime = MutableStateFlow<Instant?>(null)
 
+    private var events: List<Event> = listOf()
+
     init {
-        // Collects the last update time from preference storage and updates the state flow.
+        CoroutineScope(Dispatchers.IO).launch {
+            eventDao.getAllEvents().let {
+                events = it
+            }
+        }
         CoroutineScope(Dispatchers.IO).launch {
             preferenceStorage.getLastUpdateTimeFlow().collect {
                 lastUpdateTime.value = it
@@ -43,10 +49,10 @@ class EventRepository(
         println("isCacheValid: $isCacheValid")
         println("isCacheValid: ${lastUpdateTime.value}")
         return if (isCacheValid || !hasInternet) {
-            eventDao.getAllEvents()
+            events
         } else {
             refreshEvents()
-            eventDao.getAllEvents()
+            events
         }
     }
 
@@ -56,6 +62,7 @@ class EventRepository(
     private suspend fun refreshEvents() {
         delay(5000L) // Simulates a delay for the API request.
         val eventsFromApi = mainApi.getEvents()
+        events = eventsFromApi
         eventDao.deleteAllEvents()
         eventDao.insertEvents(eventsFromApi)
         preferenceStorage.setLastUpdateTime(getNowDate())
