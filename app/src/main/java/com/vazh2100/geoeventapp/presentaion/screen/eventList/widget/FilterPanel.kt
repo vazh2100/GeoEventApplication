@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vazh2100.geoeventapp.domain.entities.EventFilter
 import com.vazh2100.geoeventapp.domain.entities.EventType
+import com.vazh2100.geoeventapp.domain.entities.GPoint
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +38,7 @@ fun FilterPanel(
     tempFilter: EventFilter,
     setVisibility: (Boolean) -> Unit,
     onApplyFilter: (EventFilter) -> Unit,
-    userLocation: Pair<Double, Double>?,
+    userGPoint: GPoint?,
 ) {
     var tempFilter by remember { mutableStateOf(tempFilter) }
 
@@ -78,7 +79,7 @@ fun FilterPanel(
                         tempFilter = tempFilter.copy(endDate = it)
                     })
 
-                userLocation?.let {
+                userGPoint?.let {
                     Text(
                         "Distance (km)", style = MaterialTheme.typography.titleSmall
                     )

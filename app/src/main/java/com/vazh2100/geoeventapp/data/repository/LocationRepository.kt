@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
 import androidx.core.content.ContextCompat
+import com.vazh2100.geoeventapp.domain.entities.GPoint
 import com.vazh2100.geoeventapp.domain.entities.LocationStatus
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +21,8 @@ class LocationRepository(private val context: Context) {
     private val _locationStatus = MutableStateFlow(LocationStatus.PERMISSION_DENIED)
     val locationStatus: StateFlow<LocationStatus> = _locationStatus
 
-    private val _currentCoordinates = MutableStateFlow<Pair<Double, Double>?>(null)
-    val currentCoordinates: StateFlow<Pair<Double, Double>?> = _currentCoordinates
+    private val _userGPoint = MutableStateFlow<GPoint?>(null)
+    val userGPoint: StateFlow<GPoint?> = _userGPoint
 
     private var periodicCheckJob: Job? = null
     private var locationListener: LocationListener? = null
@@ -93,8 +94,8 @@ class LocationRepository(private val context: Context) {
     private fun startLocationUpdates() {
         if (locationListener != null) return
 
-        locationListener = LocationListener { location ->
-            _currentCoordinates.value = location.latitude to location.longitude
+        locationListener = LocationListener { gPoint ->
+            _userGPoint.value = GPoint(gPoint.latitude, gPoint.longitude)
         }
 
         try {
@@ -117,14 +118,6 @@ class LocationRepository(private val context: Context) {
             locationManager.removeUpdates(it)
         }
         locationListener = null
-        _currentCoordinates.value = null
-    }
-
-    /**
-     * Stops the periodic permission and geolocation status checks and location updates.
-     */
-    fun stopPeriodicPermissionCheck() {
-        periodicCheckJob?.cancel()
-        stopLocationUpdates()
+        _userGPoint.value = null
     }
 }

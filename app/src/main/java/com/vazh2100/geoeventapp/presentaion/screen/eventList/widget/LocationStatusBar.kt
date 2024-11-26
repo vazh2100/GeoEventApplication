@@ -21,12 +21,13 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.vazh2100.geoeventapp.domain.entities.GPoint
 import com.vazh2100.geoeventapp.domain.entities.LocationStatus
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun LocationStatusBar(
-    locationStatus: LocationStatus, geoPosition: Pair<Double, Double>?, context: Context
+    locationStatus: LocationStatus, userGPoint: GPoint?, context: Context
 ) {
     val locationPermissionState = rememberPermissionState(ACCESS_FINE_LOCATION)
 
@@ -51,9 +52,9 @@ fun LocationStatusBar(
                 Spacer(modifier = Modifier.height(4.dp))
             }
 
-            geoPosition?.let {
+            userGPoint?.let {
                 Text(
-                    text = "Coordinates: Lat: %.2f, Lon: %.2f".format(it.first, it.second),
+                    text = "Coordinates: Lat: %.2f, Lon: %.2f".format(it.lat, it.lon),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 4.dp)

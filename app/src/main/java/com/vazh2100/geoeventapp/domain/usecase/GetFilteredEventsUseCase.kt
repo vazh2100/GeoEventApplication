@@ -4,6 +4,7 @@ import com.vazh2100.geoeventapp.data.repository.EventRepository
 import com.vazh2100.geoeventapp.data.storages.device.PreferencesStorage
 import com.vazh2100.geoeventapp.domain.entities.Event
 import com.vazh2100.geoeventapp.domain.entities.EventFilter
+import com.vazh2100.geoeventapp.domain.entities.EventsProcessor
 import com.vazh2100.geoeventapp.domain.entities.NetworkStatus
 
 /**
@@ -15,7 +16,8 @@ class GetFilteredEventsUseCase(
     private val eventRepository: EventRepository,
     private val preferencesStorage: PreferencesStorage,
     private val getNetworkStatusUseCase: GetNetworkStatusUseCase,
-    private val getLocationStatusUseCase: GetLocationStatusUseCase
+    private val getLocationStatusUseCase: GetLocationStatusUseCase,
+    private val eventsProcessor: EventsProcessor
 ) {
 
     /**
@@ -34,7 +36,7 @@ class GetFilteredEventsUseCase(
         // Check the current network status
         val hasInternet = getNetworkStatusUseCase.networkStatus.value == NetworkStatus.CONNECTED
         // Get the user's current coordinates
-        val currentCoordinates = getLocationStatusUseCase.currentCoordinates.value
+        val userGPoint = getLocationStatusUseCase.userGPoint.value
 
         val events: List<Event>
         try {
@@ -46,11 +48,7 @@ class GetFilteredEventsUseCase(
         }
 
         // Filter events
-        val filteredEvents = events.filter {
-            it.matchesFilter(
-                eventFilter, currentCoordinates?.first, currentCoordinates?.second
-            )
-        }
+        val filteredEvents = eventsProcessor.filter(events, eventFilter, userGPoint)
 
         // Return a successful result with the filtered events
         return Result.success(filteredEvents)

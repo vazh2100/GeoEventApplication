@@ -21,8 +21,8 @@ import kotlinx.coroutines.launch
 class EventListViewModel(
     private val getSavedFiltersUseCase: GetSavedFiltersUseCase,
     private val getFilteredEventsUseCase: GetFilteredEventsUseCase,
-    private val getNetworkStatusUseCase: GetNetworkStatusUseCase,
-    private val getLocationStatusUseCase: GetLocationStatusUseCase,
+    getNetworkStatusUseCase: GetNetworkStatusUseCase,
+    getLocationStatusUseCase: GetLocationStatusUseCase,
 ) : ViewModel() {
 
     // State to hold the list of events to be displayed
@@ -46,7 +46,7 @@ class EventListViewModel(
 
     // Flow for location status and current user's coordinates
     val locationStatus = getLocationStatusUseCase.locationStatus
-    val geoPosition = getLocationStatusUseCase.currentCoordinates
+    val userGPoint = getLocationStatusUseCase.userGPoint
 
     init {
         loadSavedFilters()

@@ -12,10 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vazh2100.geoeventapp.domain.entities.Event
+import com.vazh2100.geoeventapp.domain.entities.GPoint
 import com.vazh2100.geoeventapp.domain.entities.formatter.toLocalFormattedString
 
 @Composable
-fun EventListItem(userCoordinates: Pair<Double, Double>?, event: Event, onClick: () -> Unit) {
+fun EventListItem(userGPoint: GPoint?, event: Event, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,9 +36,9 @@ fun EventListItem(userCoordinates: Pair<Double, Double>?, event: Event, onClick:
                 text = "Type: ${event.type.displayName}",
                 style = MaterialTheme.typography.bodyMedium
             )
-            userCoordinates?.let {
+            userGPoint?.let {
                 Text(
-                    text = "Distance: %.2f km".format(event.distanceFrom(it.first, it.second)),
+                    text = "Distance: %.2f km".format(event.gPoint.distanceTo(it)),
                     style = MaterialTheme.typography.bodyMedium
                 )
 

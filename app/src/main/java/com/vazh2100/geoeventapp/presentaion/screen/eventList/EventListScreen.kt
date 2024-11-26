@@ -27,7 +27,7 @@ fun EventListScreen(
     // Observing state from the ViewModel
     val networkStatus by viewModel.networkStatus.collectAsState()
     val locationStatus by viewModel.locationStatus.collectAsState()
-    val userCoordinates by viewModel.geoPosition.collectAsState()
+    val userGPoint by viewModel.userGPoint.collectAsState()
     val events by viewModel.events.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
@@ -62,7 +62,7 @@ fun EventListScreen(
                 // Displays the current location status and user's geographical position
                 LocationStatusBar(
                     locationStatus = locationStatus,
-                    geoPosition = userCoordinates,
+                    userGPoint = userGPoint,
                     context = LocalContext.current
                 )
                 when {
@@ -71,7 +71,7 @@ fun EventListScreen(
                     events.isEmpty() -> EmptyMessage()
                     else -> EventList(
                         events = events,
-                        userCoordinates = userCoordinates,
+                        userGPoint = userGPoint,
                         navController = navController
                     ) // Displays the list of events
                 }
@@ -82,7 +82,7 @@ fun EventListScreen(
                 showFilterPanel = showFilterPanel,
                 filter = filter,
                 tempFilter = tempFilter,
-                userLocation = userCoordinates,
+                userGPoint = userGPoint,
                 setVisibility = { showFilterPanel = it },
                 onApplyFilter = viewModel::applyFilters,
             )

@@ -13,13 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.vazh2100.geoeventapp.domain.entities.Event
+import com.vazh2100.geoeventapp.domain.entities.GPoint
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
 fun EventList(
     events: List<Event>,
-    userCoordinates: Pair<Double, Double>?,
+    userGPoint: GPoint?,
     navController: NavController
 ) {
     LazyColumn(
@@ -33,7 +34,7 @@ fun EventList(
                 onClick = {
                     navController.navigate("eventDetails/${Json.encodeToString(event)}")
                 },
-                userCoordinates = userCoordinates
+                userGPoint = userGPoint
             )
         }
     }

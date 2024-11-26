@@ -55,28 +55,15 @@
 ]
 ```
 #### Покрытие тестами  
--написан Unit-тест, проверяющий фильтрацию событий в `EventRepository`.  
+
+-написан Unit-тест, проверяющий фильтрацию событий в `EventsProcessor.kt`.  
 Для запуска теста:
 1. Откройте файл:
-   [app/src/test/java/com/vazh2100/geoeventapp/domain/entity/EventFilterTest.kt](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/test/java/com/vazh2100/geoeventapp/domain/entity/EventFilterTest.kt)
+   [app/src/test/java/com/vazh2100/geoeventapp/domain/entity/EventsProcessorTest.kt](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/test/java/com/vazh2100/geoeventapp/domain/entity/EventsProcessorTest.kt)
 2. Выберите **Run 'EventFilterTest'**.
 3. Тесты проверяют:
    - Фильтрацию событий по типу.
    - Фильтрацию событий по радиусу.
-
-Чтобы протестировать неудачный сетевой запрос добавьте throw Exception()
-в [app/src/main/java/com/vazh2100/geoeventapp/data/repository/EventRepository.kt](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/main/java/com/vazh2100/geoeventapp/data/repository/EventRepository.kt)
-
-```kotlin
-   private suspend fun refreshEvents() {
-   delay(5000L)
-   throw Exception() // добавьте эту строку
-   val eventsFromApi = mainApi.getEvents()
-   eventDao.deleteAllEvents()
-   eventDao.insertEvents(eventsFromApi)
-   preferenceStorage.setLastUpdateTime(getNowDate())
-}
-```
 
 #### Дерево проекта
 ```css
@@ -97,25 +84,27 @@
    │   │   ├── device
    │   │   │   └── PreferencesStorage.kt
    │   │   ├── room
-   │   │   │   └── AppDataBase.kt
    │   │   │   ├── dao
    │   │   │   │   └── EventDao.kt
-   │   │   │   └── DataBaseProvider.kt
    │   │   │   ├── typeConverter
    │   │   │   │   └── DateConverter.kt
    │   │   │   │   └── EventTypeConverter.kt
+   │   │   │   └── AppDataBase.kt
+   │   │   │   └── DataBaseProvider.kt
    ├── domain
    │   ├── di
    │   │   └── Koin.kt
    │   ├── entities
-   │   │   └── AssetReader.kt
-   │   │   └── EventFilter.kt
-   │   │   └── Event.kt
-   │   │   └── EventType.kt
    │   │   ├── formatter
    │   │   │   └── DateFormatter.kt
    │   │   ├── json
    │   │   │   └── InstantDateTimeSerializer.kt
+   │   │   └── AssetReader.kt
+   │   │   └── EventFilter.kt
+   │   │   └── Event.kt
+   │   │   └── EventsProcessor.kt
+   │   │   └── EventType.kt
+   │   │   └── GPoint.kt
    │   │   └── LocationStatus.kt
    │   │   └── NetworkStatus.kt
    │   ├── usecase
@@ -123,16 +112,11 @@
    │   │   └── GetLocationStatusUseCase.kt
    │   │   └── GetNetworkStatusUseCase.kt
    │   │   └── GetSavedFiltersUseCase.kt
-   └── MainActivity.kt
-   └── MyApp.kt
    ├── presentaion
-   │   └── Navigation.kt
    │   ├── screen
    │   │   ├── eventDetail
    │   │   │   └── EventDetailScreen.kt
    │   │   ├── eventList
-   │   │   │   └── EventListScreen.kt
-   │   │   │   └── EventListViewModel.kt
    │   │   │   ├── widget
    │   │   │   │   └── DateRangeSelector.kt
    │   │   │   │   └── EventListItem.kt
@@ -141,10 +125,15 @@
    │   │   │   │   └── FilterPanel.kt
    │   │   │   │   └── LocationStatusBar.kt
    │   │   │   │   └── NetworkStatusBar.kt
+   │   │   │   └── EventListScreen.kt
+   │   │   │   └── EventListViewModel.kt
    │   ├── theme
    │   │   └── Color.kt
    │   │   └── Theme.kt
    │   │   └── Type.kt
+   │   └── Navigation.kt
+   └── MainActivity.kt
+   └── MyApp.kt
    └── tree.sh
 ```
 
