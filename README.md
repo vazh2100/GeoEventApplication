@@ -54,16 +54,10 @@
   }
 ]
 ```
-#### Покрытие тестами  
-
+#### Покрытие тестами
 -написан Unit-тест, проверяющий фильтрацию событий в `EventsProcessor.kt`.  
-Для запуска теста:
-1. Откройте файл:
-   [app/src/test/java/com/vazh2100/geoeventapp/domain/entity/EventsProcessorTest.kt](https://github.com/vazh2100/GeoEventApplication/blob/master/app/src/test/java/com/vazh2100/geoeventapp/domain/entity/EventsProcessorTest.kt)
-2. Выберите **Run 'EventFilterTest'**.
-3. Тесты проверяют:
-   - Фильтрацию событий по типу.
-   - Фильтрацию событий по радиусу.
+-написан Unit-тест, проверяющий расчёт расстояний между двумя геоточками в `GPoint.kt`.  
+
 
 #### Дерево проекта
 ```css
