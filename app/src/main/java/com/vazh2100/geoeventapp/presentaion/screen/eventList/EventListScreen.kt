@@ -22,8 +22,7 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventListScreen(
-    navController: NavController,
-    viewModel: EventListViewModel = koinViewModel()
+    navController: NavController, viewModel: EventListViewModel = koinViewModel()
 ) {
     // Observing state from the ViewModel
     val networkStatus by viewModel.networkStatus.collectAsState()
@@ -38,46 +37,34 @@ fun EventListScreen(
     var tempFilter by remember { mutableStateOf(filter) }
     var showFilterPanel by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Event List") },
-                actions = {
-                    IconButton(onClick = {
-                        showFilterPanel = !showFilterPanel
-                        // Reset temporary filter when hiding the filter panel
-                        if (!showFilterPanel) {
-                            tempFilter = filter
-                        }
-                    }) {
-                        Icon(Icons.Filled.ArrowDropDown, contentDescription = "Filters")
-                    }
+    Scaffold(topBar = {
+        TopAppBar(title = { Text("Event List") }, actions = {
+            IconButton(onClick = {
+                showFilterPanel = !showFilterPanel
+                // Reset temporary filter when hiding the filter panel
+                if (!showFilterPanel) {
+                    tempFilter = filter
                 }
-            )
-        }
-    ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+            }) {
+                Icon(Icons.Filled.ArrowDropDown, contentDescription = "Filters")
+            }
+        })
+    }) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+
             Column(modifier = Modifier.fillMaxSize()) {
                 // Displays the current network status
                 NetworkStatusBar(networkStatus = networkStatus)
-
                 // Displays the current location status and user's geographical position
                 LocationStatusBar(
                     locationStatus = locationStatus,
                     geoPosition = userCoordinates,
                     context = LocalContext.current
                 )
-
-                // Filter panel for adjusting the event filters
-                FilterPanel(
-                    showFilterPanel = showFilterPanel,
-                    filter = filter,
-                    tempFilter = tempFilter,
-                    userLocation = userCoordinates,
-                    setVisibility = { showFilterPanel = it },
-                    onApplyFilter = viewModel::applyFilters
-                )
-
                 when {
                     isLoading -> LoadingIndicator()
                     errorMessage != null -> ErrorMessage(errorMessage)
@@ -89,6 +76,16 @@ fun EventListScreen(
                     ) // Displays the list of events
                 }
             }
+
+            // Filter panel for adjusting the event filters
+            FilterPanel(
+                showFilterPanel = showFilterPanel,
+                filter = filter,
+                tempFilter = tempFilter,
+                userLocation = userCoordinates,
+                setVisibility = { showFilterPanel = it },
+                onApplyFilter = viewModel::applyFilters,
+            )
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.vazh2100.geoeventapp.presentaion.screen.eventList.widget
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,8 +37,7 @@ fun FilterPanel(
     tempFilter: EventFilter,
     setVisibility: (Boolean) -> Unit,
     onApplyFilter: (EventFilter) -> Unit,
-    userLocation: Pair<Double, Double>?
-
+    userLocation: Pair<Double, Double>?,
 ) {
     var tempFilter by remember { mutableStateOf(tempFilter) }
 
@@ -45,7 +46,10 @@ fun FilterPanel(
     }
 
     AnimatedVisibility(
-        visible = showFilterPanel, modifier = Modifier.fillMaxWidth()
+        enter = expandIn(),
+        exit = shrinkOut(),
+        visible = showFilterPanel,
+        modifier = Modifier.fillMaxWidth()
     ) {
         Surface(
             modifier = Modifier
@@ -74,30 +78,30 @@ fun FilterPanel(
                         tempFilter = tempFilter.copy(endDate = it)
                     })
 
-                Text(
-                    "Distance (km)", style = MaterialTheme.typography.titleSmall
-                )
-                Slider(
-                    value = tempFilter.radius?.toFloat() ?: 7500f,
-                    onValueChange = {
-                        tempFilter = tempFilter.copy(radius = it.toInt())
-                    },
-                    valueRange = 250f..7500f,
-                    steps = 28,
-                    modifier = Modifier.padding(horizontal = 4.dp),
-                    thumb = {
-                        Box(
-                            modifier = Modifier
-                                .size(16.dp)
-                                .background(
-                                    MaterialTheme.colorScheme.primary, shape = CircleShape
-                                )
-                        )
-                    },
-                    enabled = userLocation != null
-                )
-                Text("Chosen: ${tempFilter.radius?.toInt() ?: 17001} km")
-
+                userLocation?.let {
+                    Text(
+                        "Distance (km)", style = MaterialTheme.typography.titleSmall
+                    )
+                    Slider(
+                        value = tempFilter.radius?.toFloat() ?: 7500f,
+                        onValueChange = {
+                            tempFilter = tempFilter.copy(radius = it.toInt())
+                        },
+                        valueRange = 250f..7500f,
+                        steps = 28,
+                        modifier = Modifier.padding(horizontal = 4.dp),
+                        thumb = {
+                            Box(
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .background(
+                                        MaterialTheme.colorScheme.primary, shape = CircleShape
+                                    )
+                            )
+                        },
+                    )
+                    Text("Chosen: ${tempFilter.radius?.toInt() ?: 17001} km")
+                }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
