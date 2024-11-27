@@ -1,8 +1,9 @@
-package com.vazh2100.geoeventapp.domain.entities
+package com.vazh2100.geoeventapp.domain.entities.event
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.vazh2100.geoeventapp.domain.entities.GPoint
 import com.vazh2100.geoeventapp.domain.entities.json.InstantDateTimeSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

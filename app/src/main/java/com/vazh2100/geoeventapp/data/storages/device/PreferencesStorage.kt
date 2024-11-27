@@ -4,8 +4,9 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
-import com.vazh2100.geoeventapp.domain.entities.EventFilter
-import com.vazh2100.geoeventapp.domain.entities.EventType
+import com.vazh2100.geoeventapp.domain.entities.event.EventSearchParams
+import com.vazh2100.geoeventapp.domain.entities.event.EventSortType
+import com.vazh2100.geoeventapp.domain.entities.event.EventType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
@@ -36,43 +37,49 @@ class PreferencesStorage(private val context: Context) {
 
     /**
      * Saves the entire event filter to persistent storage.
-     * @param eventFilter The event filter containing multiple criteria.
+     * @param eventSearchParams The event filter containing multiple criteria.
      */
-    suspend fun saveEventFilter(eventFilter: EventFilter) {
-        if (lastFilter == eventFilter) return
-        lastFilter = eventFilter
-        with(eventFilter) {
+    suspend fun saveEventSearchParams(eventSearchParams: EventSearchParams) {
+        if (lastSearch == eventSearchParams) return
+        lastSearch = eventSearchParams
+        with(eventSearchParams) {
             setEventType(type)
             setStartDate(startDate)
             setEndDate(endDate)
             setRadius(radius)
+            setSortType(sortType)
         }
     }
 
     /**
      * Retrieves the entire event filter from persistent storage.
-     * @return An [EventFilter] object with the stored criteria or defaults.
+     * @return An [EventSearchParams] object with the stored criteria or defaults.
      */
-    suspend fun getEventFilter(): EventFilter {
+    suspend fun getEventSearchParams(): EventSearchParams {
         val type = getEventTypeFlow().firstOrNull()?.let { EventType.valueOf(it) }
         val startDate = getStartDateFlow().firstOrNull()
         val endDate = getEndDateFlow().firstOrNull()
         val radius = getRadiusFlow().firstOrNull()
+        val sortType = getSortType().firstOrNull()?.let { EventSortType.valueOf(it) }
 
-        return EventFilter(type, startDate, endDate, radius).also { lastFilter = it }
+
+        return EventSearchParams(type, startDate, endDate, radius, sortType).also {
+            lastSearch = it
+        }
     }
 
     companion object {
+
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "filter_preferences")
         private val EVENT_TYPE_KEY = stringPreferencesKey("event_type")
         private val START_DATE_KEY = longPreferencesKey("start_date")
         private val END_DATE_KEY = longPreferencesKey("end_date")
         private val RADIUS_KEY = intPreferencesKey("radius")
+        private val EVENT_SORT_TYPE_KEY = stringPreferencesKey("sort_type")
         private val LAST_UPDATE_TIME_KEY = longPreferencesKey("last_update_time")
     }
 
-    private var lastFilter: EventFilter? = null
-
+    private var lastSearch: EventSearchParams? = null
 
     private suspend fun setEventType(eventType: EventType?) {
         context.dataStore.edit { preferences ->
@@ -100,7 +107,6 @@ class PreferencesStorage(private val context: Context) {
         }
     }
 
-
     private fun getStartDateFlow(): Flow<Instant?> {
         return context.dataStore.data.map { preferences ->
             preferences[START_DATE_KEY]?.let { Instant.ofEpochMilli(it) }
@@ -123,7 +129,6 @@ class PreferencesStorage(private val context: Context) {
         }
     }
 
-
     private suspend fun setRadius(radius: Int?) {
         context.dataStore.edit { preferences ->
             if (radius != null) {
@@ -134,12 +139,25 @@ class PreferencesStorage(private val context: Context) {
         }
     }
 
-
     private fun getRadiusFlow(): Flow<Int?> {
         return context.dataStore.data.map { preferences ->
             preferences[RADIUS_KEY]
         }
     }
 
+    private suspend fun setSortType(eventSortType: EventSortType?) {
+        context.dataStore.edit { preferences ->
+            if (eventSortType != null) {
+                preferences[EVENT_SORT_TYPE_KEY] = eventSortType.name
+            } else {
+                preferences.remove(EVENT_SORT_TYPE_KEY)
+            }
+        }
+    }
 
+    private fun getSortType(): Flow<String?> {
+        return context.dataStore.data.map { preferences ->
+            preferences[EVENT_SORT_TYPE_KEY]
+        }
+    }
 }

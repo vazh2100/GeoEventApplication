@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
  */
 class LocationRepository(private val context: Context) {
 
-    private val _locationStatus = MutableStateFlow(LocationStatus.PERMISSION_DENIED)
+    private val _locationStatus = MutableStateFlow(LocationStatus.UNDEFINED)
     val locationStatus: StateFlow<LocationStatus> = _locationStatus
 
     private val _userGPoint = MutableStateFlow<GPoint?>(null)

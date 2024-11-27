@@ -3,20 +3,17 @@ package com.vazh2100.geoeventapp.presentaion.screen.eventList.widget
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.shrinkOut
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,25 +23,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.vazh2100.geoeventapp.domain.entities.EventFilter
-import com.vazh2100.geoeventapp.domain.entities.EventType
 import com.vazh2100.geoeventapp.domain.entities.GPoint
+import com.vazh2100.geoeventapp.domain.entities.event.EventSearchParams
+import com.vazh2100.geoeventapp.domain.entities.event.EventSortType
+import com.vazh2100.geoeventapp.domain.entities.event.EventType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterPanel(
     showFilterPanel: Boolean,
-    filter: EventFilter,
-    tempFilter: EventFilter,
-    setVisibility: (Boolean) -> Unit,
-    onApplyFilter: (EventFilter) -> Unit,
+    searchParams: EventSearchParams,
+    close: () -> Unit,
+    onApply: (EventSearchParams) -> Unit,
     userGPoint: GPoint?,
 ) {
-    var tempFilter by remember { mutableStateOf(tempFilter) }
+    var tempParams by remember { mutableStateOf(searchParams) }
 
-    if (showFilterPanel) {
-        tempFilter = filter
-    }
+    if (!showFilterPanel) tempParams = searchParams
+
 
     AnimatedVisibility(
         enter = expandIn(),
@@ -62,67 +58,71 @@ fun FilterPanel(
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-
-                Text("Event Type", style = MaterialTheme.typography.titleSmall)
-                EventTypeSelector(currentSelection = tempFilter.type,
-                    onSelectionChange = { tempFilter = tempFilter.copy(type = it) },
-                    items = EventType.entries.toMutableList<EventType?>().apply { add(null) })
-
-
-                Text("Date", style = MaterialTheme.typography.titleSmall)
-                DateRangeSelector(dateFrom = tempFilter.startDate,
-                    dateTo = tempFilter.endDate,
-                    onDateFromChange = { tempFilter = tempFilter.copy(startDate = it) },
-                    onDateToChange = {
-                        tempFilter = tempFilter.copy(endDate = it)
-                    })
-
-                userGPoint?.let {
-                    Text(
-                        "Distance (km)", style = MaterialTheme.typography.titleSmall
-                    )
-                    Slider(
-                        value = tempFilter.radius?.toFloat() ?: 7500f,
-                        onValueChange = {
-                            tempFilter = tempFilter.copy(radius = it.toInt())
+                Row(
+                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start
+                ) {
+                    EventTypeSelector(
+                        currentSelection = tempParams.type,
+                        onSelectionChange = { tempParams = tempParams.copy(type = it) },
+                        items = mutableListOf<EventType?>().apply {
+                            add(null)
+                            addAll(EventType.entries)
                         },
-                        valueRange = 250f..7500f,
-                        steps = 28,
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        thumb = {
-                            Box(
-                                modifier = Modifier
-                                    .size(16.dp)
-                                    .background(
-                                        MaterialTheme.colorScheme.primary, shape = CircleShape
-                                    )
-                            )
-                        },
+                        modifier = Modifier.weight(1f)
                     )
-                    tempFilter.radius?.let { Text("Chosen: ${it.toInt()} km") }
+                    SortTypeSelector(
+                        currentSelection = tempParams.sortType.takeIf { it != EventSortType.DISTANCE || userGPoint != null },
+                        items = mutableListOf<EventSortType?>().apply {
+                            add(null)
+                            addAll(EventSortType.entries)
+                            if (userGPoint == null) remove(EventSortType.DISTANCE)
+                        },
+                        onSelectionChange = {
+                            tempParams = tempParams.copy(sortType = it)
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
                 }
-
+                Spacer(Modifier.height(8.dp))
+                DateRangeSelector(dateFrom = tempParams.startDate,
+                    dateTo = tempParams.endDate,
+                    onDateFromChange = { tempParams = tempParams.copy(startDate = it) },
+                    onDateToChange = { tempParams = tempParams.copy(endDate = it) })
+                userGPoint?.let {
+                    Spacer(Modifier.height(16.dp))
+                    RadiusSelector(initialRadius = tempParams.radius, onValueChanged = {
+                        tempParams = tempParams.copy(radius = it?.toInt())
+                    })
+                }
+                Spacer(Modifier.height(8.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.Start
                 ) {
                     OutlinedButton(onClick = {
-                        setVisibility(false)
-                        tempFilter = filter
-
-                    }) {
+                        close()
+                    }
+                    ) {
                         Text("Cancel")
                     }
+                    Spacer(modifier = Modifier.weight(1f))
                     Button(onClick = {
-                        setVisibility(false)
-                        onApplyFilter(tempFilter)
-                    }) {
+                        close()
+                        onApply(tempParams)
+                    }
+                    ) {
                         Text("Apply")
                     }
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
         }
     }
 }
+
+
+
+
+
+

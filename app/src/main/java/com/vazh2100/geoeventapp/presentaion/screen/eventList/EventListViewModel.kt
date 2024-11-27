@@ -2,9 +2,9 @@ package com.vazh2100.geoeventapp.presentaion.screen.eventList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vazh2100.geoeventapp.domain.entities.Event
-import com.vazh2100.geoeventapp.domain.entities.EventFilter
 import com.vazh2100.geoeventapp.domain.entities.NetworkStatus
+import com.vazh2100.geoeventapp.domain.entities.event.Event
+import com.vazh2100.geoeventapp.domain.entities.event.EventSearchParams
 import com.vazh2100.geoeventapp.domain.usecase.GetFilteredEventsUseCase
 import com.vazh2100.geoeventapp.domain.usecase.GetLocationStatusUseCase
 import com.vazh2100.geoeventapp.domain.usecase.GetNetworkStatusUseCase
@@ -12,7 +12,6 @@ import com.vazh2100.geoeventapp.domain.usecase.GetSavedFiltersUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-
 
 /**
  * ViewModel for the Event List screen. Manages the state of the events, filter settings,
@@ -38,8 +37,8 @@ class EventListViewModel(
     val errorMessage: StateFlow<String?> get() = _errorMessage
 
     // State to store the currently applied event filter
-    private val _filter = MutableStateFlow<EventFilter>(EventFilter())
-    val filter: StateFlow<EventFilter> get() = _filter
+    private val _searchParams = MutableStateFlow<EventSearchParams>(EventSearchParams())
+    val eventSearchParams: StateFlow<EventSearchParams> get() = _searchParams
 
     // Flow for network status
     val networkStatus: StateFlow<NetworkStatus> = getNetworkStatusUseCase.networkStatus
@@ -62,7 +61,7 @@ class EventListViewModel(
 
             result.onSuccess { eventFilter ->
                 // Set the loaded filter and fetch the events based on it
-                _filter.value = eventFilter
+                _searchParams.value = eventFilter
                 loadEvents()
             }.onFailure { error ->
                 _errorMessage.value = error.message
@@ -74,13 +73,13 @@ class EventListViewModel(
 
     /**
      * Applies the new event filter and reloads the events if the filter has changed.
-     * @param eventFilter The new filter to apply.
+     * @param eventSearchParams The new filter to apply.
      */
     fun applyFilters(
-        eventFilter: EventFilter
+        eventSearchParams: EventSearchParams
     ) {
-        val changed = eventFilter != _filter.value
-        _filter.value = eventFilter
+        val changed = eventSearchParams != _searchParams.value
+        _searchParams.value = eventSearchParams
         if (changed) {
             // Reload events when the filter changes
             loadEvents()
@@ -93,7 +92,7 @@ class EventListViewModel(
     private fun loadEvents() {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = getFilteredEventsUseCase.get(_filter.value)
+            val result = getFilteredEventsUseCase.get(_searchParams.value)
 
             result.onSuccess { events ->
                 // Update the events state with the new list of events

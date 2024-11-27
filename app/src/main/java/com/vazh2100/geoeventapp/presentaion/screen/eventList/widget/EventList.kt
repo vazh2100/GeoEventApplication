@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.vazh2100.geoeventapp.domain.entities.Event
 import com.vazh2100.geoeventapp.domain.entities.GPoint
+import com.vazh2100.geoeventapp.domain.entities.event.Event
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

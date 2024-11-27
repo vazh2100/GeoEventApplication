@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.vazh2100.geoeventapp.domain.entities.Event
+import com.vazh2100.geoeventapp.domain.entities.event.Event
 import com.vazh2100.geoeventapp.domain.entities.formatter.toLocalFormattedString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,7 +95,6 @@ fun EventDetailsScreen(
 fun addEventToGoogleCalendar(event: Event, context: Context) {
     val startMillis = event.date.toEpochMilli()
     val endMillis = event.date.plusSeconds(2 * 60 * 60).toEpochMilli()
-
     val intent = Intent(Intent.ACTION_INSERT).apply {
         data = CalendarContract.Events.CONTENT_URI
         putExtra(CalendarContract.Events.TITLE, event.name)

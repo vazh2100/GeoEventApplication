@@ -4,8 +4,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -41,7 +44,6 @@ fun DateRangeSelector(
 ) {
     var showDatePickerFrom by remember { mutableStateOf(false) }
     var showDatePickerTo by remember { mutableStateOf(false) }
-
     val now = ZonedDateTime.now().let {
         ZonedDateTime
             .of(it.year, it.monthValue, it.dayOfMonth, 0, 0, 0, 0, ZoneId.of("UTC"))
@@ -49,25 +51,21 @@ fun DateRangeSelector(
             .toEpochMilli()
     }
     val plusMonth = ZonedDateTime.now().plusMonths(1).toInstant().toEpochMilli()
-
     val selectableDatesFrom = object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
             return utcTimeMillis in now..plusMonth && (dateTo == null || utcTimeMillis < dateTo.toEpochMilli())
         }
     }
-
     val selectableDatesTo = object : SelectableDates {
         override fun isSelectableDate(utcTimeMillis: Long): Boolean {
             return utcTimeMillis in now..plusMonth && (dateFrom == null || utcTimeMillis > dateFrom.toEpochMilli())
         }
     }
-
     val datePickerStateFrom = rememberDatePickerState(
         initialSelectedDateMillis = dateFrom?.toEpochMilli(),
         initialDisplayedMonthMillis = dateFrom?.toEpochMilli(),
         selectableDates = selectableDatesFrom,
     )
-
     val datePickerStateTo = rememberDatePickerState(
         initialSelectedDateMillis = dateTo?.toEpochMilli(),
         initialDisplayedMonthMillis = dateTo?.toEpochMilli(),
@@ -76,7 +74,6 @@ fun DateRangeSelector(
 
     if (showDatePickerFrom) {
         DatePickerDialog(onDismissRequest = { showDatePickerFrom = false }, confirmButton = {
-
             TextButton(onClick = {
                 datePickerStateFrom.selectedDateMillis?.let {
                     onDateFromChange(it.toInstance())
@@ -114,54 +111,62 @@ fun DateRangeSelector(
         }
     }
 
-    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        Box(modifier = Modifier
-            .weight(1f)
-            .border(
-                1.dp,
-                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                MaterialTheme.shapes.small
-            )
-            .padding(16.dp)
-            .clickable {
-                showDatePickerFrom = true
-            }) {
-            Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = dateFrom?.formatAsUtc() ?: "",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Icon(
-                    imageVector = Icons.Filled.DateRange, contentDescription = "Select from date"
-                )
-            }
-        }
 
-        Box(modifier = Modifier
-            .weight(1f)
-            .border(
-                1.dp,
-                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                MaterialTheme.shapes.small
-            )
-            .padding(16.dp)
-            .clickable {
-                showDatePickerTo = true
-            }) {
-            Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = dateTo?.formatAsUtc() ?: "",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
+    Column {
+        Text("Date", style = MaterialTheme.typography.titleSmall)
+        Spacer(Modifier.height(8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Box(modifier = Modifier
+                .weight(1f)
+                .border(
+                    1.dp,
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                    MaterialTheme.shapes.small
                 )
-                Icon(
-                    imageVector = Icons.Filled.DateRange, contentDescription = "Select date to"
+                .padding(16.dp)
+                .clickable {
+                    showDatePickerFrom = true
+                }) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = dateFrom?.formatAsUtc() ?: "",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.DateRange,
+                        contentDescription = "Select from date"
+                    )
+                }
+            }
+
+            Box(modifier = Modifier
+                .weight(1f)
+                .border(
+                    1.dp,
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                    MaterialTheme.shapes.small
                 )
+                .padding(16.dp)
+                .clickable {
+                    showDatePickerTo = true
+                }) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = dateTo?.formatAsUtc() ?: "",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.DateRange, contentDescription = "Select date to"
+                    )
+                }
             }
         }
     }

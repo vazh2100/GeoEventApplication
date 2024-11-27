@@ -30,9 +30,8 @@ fun EventListScreen(
     val events by viewModel.events.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
-    val filter by viewModel.filter.collectAsState()
+    val eventSearchParams by viewModel.eventSearchParams.collectAsState()
     // Local state for managing temporary filters and visibility of the filter panel
-    var tempFilter by remember { mutableStateOf(filter) }
     var showFilterPanel by remember { mutableStateOf(false) }
 
     Scaffold(topBar = {
@@ -50,10 +49,6 @@ fun EventListScreen(
             actions = {
                 IconButton(onClick = {
                     showFilterPanel = !showFilterPanel
-                    // Reset temporary filter when hiding the filter panel
-                    if (!showFilterPanel) {
-                        tempFilter = filter
-                    }
                 }) {
                     Icon(
                         Icons.Filled.FilterList,
@@ -93,11 +88,10 @@ fun EventListScreen(
             // Filter panel for adjusting the event filters
             FilterPanel(
                 showFilterPanel = showFilterPanel,
-                filter = filter,
-                tempFilter = tempFilter,
+                searchParams = eventSearchParams,
                 userGPoint = userGPoint,
-                setVisibility = { showFilterPanel = it },
-                onApplyFilter = viewModel::applyFilters,
+                close = { showFilterPanel = false },
+                onApply = viewModel::applyFilters,
             )
         }
     }

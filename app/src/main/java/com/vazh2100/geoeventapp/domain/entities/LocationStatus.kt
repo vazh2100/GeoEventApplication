@@ -5,4 +5,5 @@ enum class LocationStatus(val statusMessage: String) {
     PERMISSION_GRANTED("Location permission granted."),
     LOCATION_OFF("Location is off."),
     LOCATION_ON("Location is on."),
+    UNDEFINED("")
 }

@@ -1,4 +1,4 @@
-package com.vazh2100.geoeventapp.domain.entities
+package com.vazh2100.geoeventapp.domain.entities.event
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

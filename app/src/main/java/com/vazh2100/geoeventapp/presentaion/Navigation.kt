@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.vazh2100.geoeventapp.domain.entities.Event
+import com.vazh2100.geoeventapp.domain.entities.event.Event
 import com.vazh2100.geoeventapp.presentaion.screen.eventList.EventListScreen
 import kotlinx.serialization.json.Json
 
@@ -21,37 +21,37 @@ fun AppNavGraph(navController: NavHostController) {
         startDestination = "eventList",
         enterTransition = {
             slideInHorizontally(
-                initialOffsetX = { it }, // Вход справа
+                initialOffsetX = { it },
                 animationSpec = tween(
                     durationMillis = 400,
-                    easing = EaseInOut // Сглаживание движения
+                    easing = EaseInOut
                 )
             )
         },
         exitTransition = {
             slideOutHorizontally(
-                targetOffsetX = { -it }, // Уход влево
+                targetOffsetX = { -it },
                 animationSpec = tween(
                     durationMillis = 400,
-                    easing = EaseInOut // Сглаживание движения
+                    easing = EaseInOut
                 )
             )
         },
         popEnterTransition = {
             slideInHorizontally(
-                initialOffsetX = { -it }, // Возврат с левой стороны
+                initialOffsetX = { -it },
                 animationSpec = tween(
                     durationMillis = 400,
-                    easing = EaseInOut // Сглаживание движения
+                    easing = EaseInOut
                 )
             )
         },
         popExitTransition = {
             slideOutHorizontally(
-                targetOffsetX = { it }, // Уход вправо
+                targetOffsetX = { it },
                 animationSpec = tween(
                     durationMillis = 400,
-                    easing = EaseInOut // Сглаживание движения
+                    easing = EaseInOut
                 )
             )
         }

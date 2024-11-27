@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.vazh2100.geoeventapp.data.storages.room.dao.EventDao
 import com.vazh2100.geoeventapp.data.storages.room.typeConverter.DateConverter
 import com.vazh2100.geoeventapp.data.storages.room.typeConverter.EventTypeConverter
-import com.vazh2100.geoeventapp.domain.entities.Event
+import com.vazh2100.geoeventapp.domain.entities.event.Event
 
 @Database(entities = [Event::class], version = 1, exportSchema = false)
 @TypeConverters(DateConverter::class, EventTypeConverter::class)

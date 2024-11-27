@@ -3,7 +3,7 @@ package com.vazh2100.geoeventapp.data.repository
 import com.vazh2100.geoeventapp.data.network.api.MainApi
 import com.vazh2100.geoeventapp.data.storages.device.PreferencesStorage
 import com.vazh2100.geoeventapp.data.storages.room.dao.EventDao
-import com.vazh2100.geoeventapp.domain.entities.Event
+import com.vazh2100.geoeventapp.domain.entities.event.Event
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

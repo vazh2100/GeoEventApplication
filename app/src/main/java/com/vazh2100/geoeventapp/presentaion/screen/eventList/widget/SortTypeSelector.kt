@@ -19,25 +19,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.vazh2100.geoeventapp.domain.entities.event.EventType
+import com.vazh2100.geoeventapp.domain.entities.event.EventSortType
 import kotlin.collections.forEach
 
 @Composable
-fun EventTypeSelector(
-    currentSelection: EventType?,
-    onSelectionChange: (EventType?) -> Unit,
-    items: List<EventType?>,
+fun SortTypeSelector(
+    currentSelection: EventSortType?,
+    items: List<EventSortType?>,
+    onSelectionChange: (EventSortType?) -> Unit,
     modifier: Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
-        Text("Event Type", style = MaterialTheme.typography.titleSmall)
+        Text("Sort By", style = MaterialTheme.typography.titleSmall)
         Spacer(modifier = Modifier.height(8.dp))
         Box {
-            OutlinedButton(onClick = { expanded = true }) {
-                Text(currentSelection?.displayName ?: "Choose type")
-                Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+            OutlinedButton(
+                onClick = { expanded = true },
+            ) {
+                Text(text = currentSelection?.displayName ?: "Choose sorting")
+                Icon(Icons.Filled.ArrowDropDown, contentDescription = "Expand")
             }
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 items.forEach { type ->
@@ -50,4 +52,3 @@ fun EventTypeSelector(
         }
     }
 }
-
