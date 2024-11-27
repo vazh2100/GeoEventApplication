@@ -55,7 +55,7 @@ fun FilterPanel(
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             shadowElevation = 4.dp,
             tonalElevation = 4.dp,
             shape = MaterialTheme.shapes.medium
@@ -101,7 +101,7 @@ fun FilterPanel(
                             )
                         },
                     )
-                    Text("Chosen: ${tempFilter.radius?.toInt() ?: 17001} km")
+                    tempFilter.radius?.let { Text("Chosen: ${it.toInt()} km") }
                 }
 
                 Row(

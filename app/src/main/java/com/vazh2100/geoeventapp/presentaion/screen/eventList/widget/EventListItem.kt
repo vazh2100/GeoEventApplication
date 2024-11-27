@@ -20,11 +20,14 @@ fun EventListItem(userGPoint: GPoint?, event: Event, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable { onClick() },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column(Modifier.padding(16.dp)) {
+        Column(
+            Modifier
+                .padding(16.dp)
+        ) {
             Text(
                 text = event.name, style = MaterialTheme.typography.titleLarge
             )
