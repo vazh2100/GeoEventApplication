@@ -31,6 +31,5 @@ print_tree() {
 }
 
 # Основная программа
-root_dir="${1:-.}"  # Если директория не указана, используем текущую
-echo "$root_dir/"
-print_tree "$root_dir" "   "
+echo "app/"
+print_tree "." "   "

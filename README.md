@@ -1,11 +1,10 @@
 ### GeoEventApp
-**UI и навигация**: Jetpack Compose, Material 3, Compose Navigation.  
-**DI**: Koin DI.  
+**UI и навигация**: Jetpack Compose, Material 3, Compose Navigation.   
 **Сетевое взаимодействие**: Retrofit, Kotlin Serialization.  
 **Локальное хранилище**: Room, Data Store.  
 **Геолокация**: Location Google Play Services, Accompanist Permission.  
 **Тестирование**: JUnit, Mockk.  
-**Архитектура**: MVVM, DI, Clean Architecture  
+**Архитектура**: Мультимодальная, Clean Architecture, Koin DI, MVVM   
 **Техническое задание**: [TECHNICAL SPECIFICATIONS.md](https://github.com/vazh2100/GeoEventApplication/blob/master/TECHNICALSPECIFICATIONS.md)
  <div style="display: flex; justify-content: space-between;"> <img src="screenshots/Screenshot_Good.png" width="270" /> <img src="screenshots/Screenshot_Bad.png" width="270" /> <img src="screenshots/Screenshot_Filter.png" width="270" /> </div>
 
@@ -29,6 +28,7 @@
 -в процессе загрузки отображается индикатор загрузки.  
 -если в процессе получения событий возникла ошибка, то ошибка отображается вместо списка с понятным для пользователя сообщением.  
 -если список пуст, то отображается сообщение вместо списка.  
+-если пользователь включил приложение с выключенной геолокацией, но у него сохраненён фильтр или сортировка, связанные с геолокацией, то при включении геолокации сохраненный фильтр применится автоматически.
 
 #### Экран "Детальное отображение события" 
 -позволяет добавить событие в календарь с геометкой.  
@@ -62,36 +62,71 @@
 -написан Unit-тест, проверяющий расчёт расстояний между двумя геоточками в `GPoint.kt`.  
 -написан Unit-тест, проверяющий разные сценарии в `GetFilteredEventsUseCase.kt`.  
 
-
 #### Дерево проекта
 ```css
-./
+app/
+   └── MainActivity.kt
+   └── MyApp.kt
+   └── Navigation.kt
+   └── tree.sh
+core/
+   ├── data
+   │   ├── repository
+   │   │   └── LocationRepository.kt
+   │   │   └── NetworkStateRepository.kt
+   │   ├── storages
+   │   │   ├── room
+   │   │   │   ├── typeConverter
+   │   │   │   │   └── DateConverter.kt
+   ├── domain
+   │   ├── entities
+   │   │   ├── formatter
+   │   │   │   └── DateFormatter.kt
+   │   │   ├── json
+   │   │   │   └── InstantDateTimeSerializer.kt
+   │   │   └── DisplayNameEnum.kt
+   │   │   └── GPoint.kt
+   │   │   └── LocationStatus.kt
+   │   │   └── NetworkStatus.kt
+   │   ├── usecase
+   │   │   └── IGetLocationStatusUseCase.kt
+   │   │   └── IGetNetworkStatusUseCase.kt
+   ├── presentaion
+   │   ├── theme
+   │   │   └── Color.kt
+   │   │   └── Theme.kt
+   │   │   └── Type.kt
+   │   ├── widget
+   │   │   └── DateRangeSelector.kt
+   │   │   └── ErrorMessage.kt
+   │   │   └── ErrorPanel.kt
+   │   │   └── LoadingIndicator.kt
+   │   │   └── NetworkStatusBar.kt
+   │   │   └── TypeSelector.kt
+   └── Koin.kt
+   └── tree.sh
+feature_events/
    ├── data
    │   ├── network
    │   │   ├── api
-   │   │   │   └── MainApi.kt
+   │   │   │   └── EventsApi.kt
    │   │   ├── client
-   │   │   │   └── MainClient.kt
+   │   │   │   └── EventsClient.kt
    │   │   ├── inteceptor
    │   │   │   └── AssetInterceptor.kt
    │   ├── repository
    │   │   └── EventRepository.kt
-   │   │   └── LocationRepository.kt
-   │   │   └── NetworkStateRepository.kt
    │   ├── storages
    │   │   ├── device
-   │   │   │   └── PreferencesStorage.kt
+   │   │   │   └── EventsPreferencesStorage.kt
    │   │   ├── room
    │   │   │   ├── dao
    │   │   │   │   └── EventDao.kt
    │   │   │   ├── typeConverter
-   │   │   │   │   └── DateConverter.kt
    │   │   │   │   └── EventTypeConverter.kt
-   │   │   │   └── AppDataBase.kt
    │   │   │   └── DataBaseProvider.kt
+   │   │   │   └── EventsDatabase.kt
    ├── domain
-   │   ├── di
-   │   │   └── Koin.kt
    │   ├── entities
    │   │   ├── event
    │   │   │   └── Event.kt
@@ -99,44 +134,24 @@
    │   │   │   └── EventSortType.kt
    │   │   │   └── EventsProcessor.kt
    │   │   │   └── EventType.kt
-   │   │   ├── formatter
-   │   │   │   └── DateFormatter.kt
-   │   │   ├── json
-   │   │   │   └── InstantDateTimeSerializer.kt
    │   │   └── AssetReader.kt
-   │   │   └── GPoint.kt
-   │   │   └── LocationStatus.kt
-   │   │   └── NetworkStatus.kt
    │   ├── usecase
    │   │   └── GetFilteredEventsUseCase.kt
-   │   │   └── GetLocationStatusUseCase.kt
-   │   │   └── GetNetworkStatusUseCase.kt
    │   │   └── GetSavedFiltersUseCase.kt
    ├── presentaion
    │   ├── screen
-   │   │   ├── eventDetail
+   │   │   ├── event_detail
    │   │   │   └── EventDetailScreen.kt
-   │   │   ├── eventList
+   │   │   ├── event_list
    │   │   │   ├── widget
-   │   │   │   │   └── DateRangeSelector.kt
-   │   │   │   │   └── ErrorPanel.kt
    │   │   │   │   └── EventListItem.kt
    │   │   │   │   └── EventList.kt
-   │   │   │   │   └── EventTypeSelector.kt
    │   │   │   │   └── FilterPanel.kt
    │   │   │   │   └── LocationStatusBar.kt
-   │   │   │   │   └── NetworkStatusBar.kt
    │   │   │   │   └── RadiusSelector.kt
-   │   │   │   │   └── SortTypeSelector.kt
    │   │   │   └── EventListScreen.kt
    │   │   │   └── EventListViewModel.kt
-   │   ├── theme
-   │   │   └── Color.kt
-   │   │   └── Theme.kt
-   │   │   └── Type.kt
-   │   └── Navigation.kt
-   └── MainActivity.kt
-   └── MyApp.kt
+   └── Koin.kt
    └── tree.sh
 ```
 
