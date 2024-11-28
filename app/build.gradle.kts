@@ -7,6 +7,13 @@ plugins {
 }
 
 android {
+    val getVersionName: (Int) -> String = { versionCode ->
+        val major = versionCode / 100 + 1
+        val minor = (versionCode % 100) / 10
+        val patch = versionCode % 10
+        "$major.$minor.$patch"
+    }
+
     namespace = "com.vazh2100.geoeventapp"
     compileSdk = 35
 
@@ -14,19 +21,28 @@ android {
         applicationId = "com.vazh2100.geoeventapp"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
-
+        versionCode = 2
+        versionName = getVersionName(versionCode!!)
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+
+    applicationVariants.configureEach {
+        outputs.configureEach {
+            // Change output file name to match the desired naming convention
+            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val newApkName = "${defaultConfig.applicationId}.${defaultConfig.versionName}.apk"
+            outputImpl.outputFileName = newApkName
         }
     }
 
@@ -49,6 +65,8 @@ android {
     }
 }
 
+
+
 dependencies {
     // Core
     implementation(libs.androidx.core.ktx)
@@ -60,39 +78,30 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended)
-
     // Navigation
     implementation(libs.androidx.navigation.compose)
-
     // KoinDI
     implementation(libs.koin.core)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     testImplementation(libs.koin.test)
-
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.kotlinx.serialization)
-
     // JSON
     implementation(libs.kotlinx.serialization.json)
-
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
-
     // DataStore
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.datastore.preferences.core)
-
     // Location Google Play Services
     implementation(libs.play.services.location)
     implementation(libs.kotlinx.coroutines.play.services)
-
     // Permission Manager
     implementation(libs.accompanist.permissions)
-
     // Tests
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
@@ -103,5 +112,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
 }
