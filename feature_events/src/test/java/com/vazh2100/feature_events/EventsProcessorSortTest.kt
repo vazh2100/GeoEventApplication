@@ -95,6 +95,3 @@ class EventsProcessorSortTest {
         assertEquals(events, sortedEvents)
     }
 }
-
-
-

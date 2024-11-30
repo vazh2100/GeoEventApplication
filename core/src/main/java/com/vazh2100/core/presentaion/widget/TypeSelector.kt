@@ -27,7 +27,7 @@ fun <T : DisplayNameEnum> TypeSelector(
     currentSelection: T?,
     onSelectionChange: (T?) -> Unit,
     items: List<T?>,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -50,4 +50,3 @@ fun <T : DisplayNameEnum> TypeSelector(
         }
     }
 }
-

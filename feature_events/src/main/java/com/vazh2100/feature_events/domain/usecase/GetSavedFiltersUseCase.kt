@@ -16,4 +16,3 @@ internal class GetSavedFiltersUseCase(
         }
     }
 }
-

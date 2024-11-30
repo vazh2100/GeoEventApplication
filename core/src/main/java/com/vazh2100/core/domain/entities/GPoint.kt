@@ -7,12 +7,15 @@ import kotlin.math.sqrt
 
 data class GPoint(val lat: Double, val lon: Double) {
 
+    private companion object {
+        const val EARTH_RADIUS = 6371.0 // km
+    }
+
     /**
      * Calculates the geographical distance between the point and other point using the Haversine formula.
      * @return The distance in kilometers.
      */
     fun distanceTo(other: GPoint): Double {
-        val r = 6371.0 // Earth's radius in kilometers
         val dLat = Math.toRadians(other.lat - this.lat)
         val dLon = Math.toRadians(other.lon - this.lon)
         val a =
@@ -20,6 +23,6 @@ data class GPoint(val lat: Double, val lon: Double) {
                 dLon / 2
             ) * sin(dLon / 2)
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
-        return r * c
+        return EARTH_RADIUS * c
     }
 }

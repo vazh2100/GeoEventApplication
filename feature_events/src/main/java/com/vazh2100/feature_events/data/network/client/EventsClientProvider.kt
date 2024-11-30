@@ -33,4 +33,3 @@ internal object EventsClientProvider {
         return retrofit.create(EventsApi::class.java)
     }
 }
-

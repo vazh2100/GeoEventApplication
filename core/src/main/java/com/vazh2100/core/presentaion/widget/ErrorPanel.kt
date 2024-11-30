@@ -21,7 +21,8 @@ fun ErrorPanel(text: String, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    backgroundColor, shape = RoundedCornerShape(24.dp)
+                    backgroundColor,
+                    shape = RoundedCornerShape(24.dp)
                 )
                 .padding(10.dp)
         ) {

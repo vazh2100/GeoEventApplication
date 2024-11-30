@@ -8,14 +8,69 @@ import com.vazh2100.feature_events.domain.entities.event.EventSearchParams
 import com.vazh2100.feature_events.domain.entities.event.EventSortType
 import com.vazh2100.feature_events.domain.entities.event.EventType
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.time.Instant
 
 /**
- * Handles persistent storage of user preferences, including filters
+ * Handles persistent storage of user preferences, including filters and update times.
  */
 internal class EventsPreferencesStorage(private val context: Context) {
+
+    /**
+     * Saves the entire event filter to persistent storage.
+     * @param eventSearchParams The event filter containing multiple criteria.
+     */
+    suspend fun saveEventSearchParams(eventSearchParams: EventSearchParams) {
+        lastSearch = eventSearchParams
+        context.dataStore.edit { preferences ->
+            if (eventSearchParams.type != null) {
+                preferences[EVENT_TYPE_KEY] = eventSearchParams.type.name
+            } else {
+                preferences.remove(EVENT_TYPE_KEY)
+            }
+
+            if (eventSearchParams.startDate != null) {
+                preferences[START_DATE_KEY] = eventSearchParams.startDate.toEpochMilli()
+            } else {
+                preferences.remove(START_DATE_KEY)
+            }
+
+            if (eventSearchParams.endDate != null) {
+                preferences[END_DATE_KEY] = eventSearchParams.endDate.toEpochMilli()
+            } else {
+                preferences.remove(END_DATE_KEY)
+            }
+
+            if (eventSearchParams.radius != null) {
+                preferences[RADIUS_KEY] = eventSearchParams.radius
+            } else {
+                preferences.remove(RADIUS_KEY)
+            }
+
+            if (eventSearchParams.sortType != null) {
+                preferences[EVENT_SORT_TYPE_KEY] = eventSearchParams.sortType.name
+            } else {
+                preferences.remove(EVENT_SORT_TYPE_KEY)
+            }
+        }
+    }
+
+    /**
+     * Retrieves the entire event filter from persistent storage.
+     * @return An [EventSearchParams] object with the stored criteria or defaults.
+     */
+    suspend fun getEventSearchParams(): EventSearchParams {
+        val preferences = context.dataStore.data.first()
+        val type = preferences[EVENT_TYPE_KEY]?.let { EventType.valueOf(it) }
+        val startDate = preferences[START_DATE_KEY]?.let { Instant.ofEpochMilli(it) }
+        val endDate = preferences[END_DATE_KEY]?.let { Instant.ofEpochMilli(it) }
+        val radius = preferences[RADIUS_KEY]
+        val sortType = preferences[EVENT_SORT_TYPE_KEY]?.let { EventSortType.valueOf(it) }
+        return EventSearchParams(type, startDate, endDate, radius, sortType).also {
+            lastSearch = it
+        }
+    }
 
     /**
      * Updates the timestamp of the last successful update of Event
@@ -35,39 +90,6 @@ internal class EventsPreferencesStorage(private val context: Context) {
         }
     }
 
-    /**
-     * Saves the entire event filter to persistent storage.
-     * @param eventSearchParams The event filter containing multiple criteria.
-     */
-    suspend fun saveEventSearchParams(eventSearchParams: EventSearchParams) {
-        if (lastSearch == eventSearchParams) return
-        lastSearch = eventSearchParams
-        with(eventSearchParams) {
-            setEventType(type)
-            setStartDate(startDate)
-            setEndDate(endDate)
-            setRadius(radius)
-            setSortType(sortType)
-        }
-    }
-
-    /**
-     * Retrieves the entire event filter from persistent storage.
-     * @return An [EventSearchParams] object with the stored criteria or defaults.
-     */
-    suspend fun getEventSearchParams(): EventSearchParams {
-        val type = getEventTypeFlow().firstOrNull()?.let { EventType.valueOf(it) }
-        val startDate = getStartDateFlow().firstOrNull()
-        val endDate = getEndDateFlow().firstOrNull()
-        val radius = getRadiusFlow().firstOrNull()
-        val sortType = getSortType().firstOrNull()?.let { EventSortType.valueOf(it) }
-
-
-        return EventSearchParams(type, startDate, endDate, radius, sortType).also {
-            lastSearch = it
-        }
-    }
-
     companion object {
 
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "filter_preferences")
@@ -80,84 +102,4 @@ internal class EventsPreferencesStorage(private val context: Context) {
     }
 
     private var lastSearch: EventSearchParams? = null
-
-    private suspend fun setEventType(eventType: EventType?) {
-        context.dataStore.edit { preferences ->
-            if (eventType != null) {
-                preferences[EVENT_TYPE_KEY] = eventType.name
-            } else {
-                preferences.remove(EVENT_TYPE_KEY)
-            }
-        }
-    }
-
-    private fun getEventTypeFlow(): Flow<String?> {
-        return context.dataStore.data.map { preferences ->
-            preferences[EVENT_TYPE_KEY]
-        }
-    }
-
-    private suspend fun setStartDate(startDate: Instant?) {
-        context.dataStore.edit { preferences ->
-            if (startDate != null) {
-                preferences[START_DATE_KEY] = startDate.toEpochMilli()
-            } else {
-                preferences.remove(START_DATE_KEY)
-            }
-        }
-    }
-
-    private fun getStartDateFlow(): Flow<Instant?> {
-        return context.dataStore.data.map { preferences ->
-            preferences[START_DATE_KEY]?.let { Instant.ofEpochMilli(it) }
-        }
-    }
-
-    private suspend fun setEndDate(endDate: Instant?) {
-        context.dataStore.edit { preferences ->
-            if (endDate != null) {
-                preferences[END_DATE_KEY] = endDate.toEpochMilli()
-            } else {
-                preferences.remove(END_DATE_KEY)
-            }
-        }
-    }
-
-    private fun getEndDateFlow(): Flow<Instant?> {
-        return context.dataStore.data.map { preferences ->
-            preferences[END_DATE_KEY]?.let { Instant.ofEpochMilli(it) }
-        }
-    }
-
-    private suspend fun setRadius(radius: Int?) {
-        context.dataStore.edit { preferences ->
-            if (radius != null) {
-                preferences[RADIUS_KEY] = radius
-            } else {
-                preferences.remove(RADIUS_KEY)
-            }
-        }
-    }
-
-    private fun getRadiusFlow(): Flow<Int?> {
-        return context.dataStore.data.map { preferences ->
-            preferences[RADIUS_KEY]
-        }
-    }
-
-    private suspend fun setSortType(eventSortType: EventSortType?) {
-        context.dataStore.edit { preferences ->
-            if (eventSortType != null) {
-                preferences[EVENT_SORT_TYPE_KEY] = eventSortType.name
-            } else {
-                preferences.remove(EVENT_SORT_TYPE_KEY)
-            }
-        }
-    }
-
-    private fun getSortType(): Flow<String?> {
-        return context.dataStore.data.map { preferences ->
-            preferences[EVENT_SORT_TYPE_KEY]
-        }
-    }
 }

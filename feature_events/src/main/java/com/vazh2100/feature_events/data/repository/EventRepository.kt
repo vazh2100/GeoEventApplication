@@ -44,7 +44,7 @@ internal class EventRepository(
      */
     suspend fun getAllEvents(hasInternet: Boolean): List<Event> {
         val isCacheValid = lastUpdateTime.value?.let {
-            ChronoUnit.MINUTES.between(it, getNowDate()) < 30
+            ChronoUnit.MINUTES.between(it, getNowDate()) < CACHE_VALIDITY_TIME
         } == true
         println("isCacheValid: $isCacheValid")
         println("isCacheValid: ${lastUpdateTime.value}")
@@ -60,11 +60,15 @@ internal class EventRepository(
      * Updates the local cache of events by fetching fresh data from the remote API.
      */
     private suspend fun refreshEvents() {
-        delay(5000L) // Simulates a delay for the API request.
+        delay(DELAY)
         val eventsFromApi = eventsApi.getEvents()
         events = eventsFromApi
         eventDao.deleteAllEvents()
         eventDao.insertEvents(eventsFromApi)
         preferenceStorage.setLastUpdateTime(getNowDate())
+    }
+    private companion object {
+        const val DELAY = 5000L
+        const val CACHE_VALIDITY_TIME = 30 // seconds
     }
 }

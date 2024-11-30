@@ -1,5 +1,6 @@
 package com.vazh2100.feature_events.domain.usecase
 
+import android.util.Log
 import com.vazh2100.core.domain.entities.NetworkStatus
 import com.vazh2100.core.domain.usecase.IGetLocationStatusUseCase
 import com.vazh2100.core.domain.usecase.IGetNetworkStatusUseCase
@@ -31,7 +32,7 @@ internal class GetFilteredEventsUseCase(
         try {
             eventsPreferencesStorage.saveEventSearchParams(eventSearchParams)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("", "", e)
         }
         // Check the current network status
         val hasInternet = getNetworkStatusUseCase.networkStatus.value == NetworkStatus.CONNECTED
@@ -46,7 +47,10 @@ internal class GetFilteredEventsUseCase(
             return Result.failure(Exception("Failed to get events"))
         }
         // Filter and sort events
-        val filteredEvents = events.searchWith(eventSearchParams, userGPoint)
+        val filteredEvents = events.searchWith(
+            eventSearchParams,
+            userGPoint
+        )
         // Return a successful result with the filtered events
         return Result.success(filteredEvents)
     }

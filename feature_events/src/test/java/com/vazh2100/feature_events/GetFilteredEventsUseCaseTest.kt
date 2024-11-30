@@ -1,5 +1,6 @@
 package com.vazh2100.feature_events
 
+import android.util.Log
 import com.vazh2100.core.domain.entities.GPoint
 import com.vazh2100.core.domain.entities.NetworkStatus
 import com.vazh2100.core.domain.usecase.IGetLocationStatusUseCase
@@ -61,15 +62,20 @@ class GetFilteredEventsUseCaseTest {
     @Before
     fun setUp() {
         getFilteredEventsUseCase = GetFilteredEventsUseCase(
-            eventRepository, preferencesStorage, getNetworkStatusUseCase, getLocationStatusUseCase
+            eventRepository,
+            preferencesStorage,
+            getNetworkStatusUseCase,
+            getLocationStatusUseCase
         )
         mockkObject(EventsProcessor)
+        mockkStatic(Log::class)
         coEvery { preferencesStorage.saveEventSearchParams(eventSearchParams) } just Runs
         every { getNetworkStatusUseCase.networkStatus.value } returns NetworkStatus.CONNECTED
         every { getLocationStatusUseCase.userGPoint.value } returns userGPoint
         coEvery { eventRepository.getAllEvents(true) } returns mockEvents
         coEvery { eventRepository.getAllEvents(false) } returns mockEvents
         every { mockEvents.searchWith(eventSearchParams, userGPoint) } returns searchedEvents
+        every { Log.e(any(), any(), any()) } returns 0
     }
 
     /**
@@ -90,7 +96,8 @@ class GetFilteredEventsUseCaseTest {
 
     /**
      * Test case for successful retrieval of events when there is no internet connection.
-     * Verifies that the events are fetched from the local repository and the result contains the expected filtered events.
+     * Verifies that the events are fetched from the local repository
+     * and the result contains the expected filtered events.
      */
     @Test
     fun `test get events successfully with no network`() = runBlocking {

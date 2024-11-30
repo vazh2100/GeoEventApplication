@@ -6,7 +6,8 @@ import java.time.Instant
 internal object EventsProcessor {
 
     fun List<Event>.searchWith(
-        eventSearchParams: EventSearchParams, gPoint: GPoint?
+        eventSearchParams: EventSearchParams,
+        gPoint: GPoint?
     ): List<Event> {
         val filtered = filter(this, eventSearchParams, gPoint)
         val sorted = sort(filtered, eventSearchParams.sortType, gPoint)
@@ -24,7 +25,9 @@ internal object EventsProcessor {
     }
 
     fun filter(
-        events: List<Event>, eventSearchParams: EventSearchParams, gPoint: GPoint?
+        events: List<Event>,
+        eventSearchParams: EventSearchParams,
+        gPoint: GPoint?
     ): List<Event> = events.filter { it.matchesFilter(eventSearchParams, gPoint) }
 
     /**
@@ -33,7 +36,8 @@ internal object EventsProcessor {
      * @return True if the event matches all criteria, false otherwise.
      */
     private fun Event.matchesFilter(
-        eventSearchParams: EventSearchParams, gPoint: GPoint?
+        eventSearchParams: EventSearchParams,
+        gPoint: GPoint?
     ): Boolean {
         return matchesType(eventSearchParams.type) && matchesStartDate(eventSearchParams.startDate) && matchesEndDate(
             eventSearchParams.endDate
@@ -49,7 +53,8 @@ internal object EventsProcessor {
         endDate == null || this.date.isBefore(endDate)
 
     private fun Event.matchesRadius(
-        radius: Int?, gPoint: GPoint?
+        radius: Int?,
+        gPoint: GPoint?
     ): Boolean {
         if (radius == null || gPoint == null) return true
         return this.distanceTo(gPoint) <= radius

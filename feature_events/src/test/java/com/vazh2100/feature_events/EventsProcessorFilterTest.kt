@@ -79,7 +79,10 @@ class EventsProcessorFilterTest {
     @Test
     fun `test filtering events by type CONCERT`() {
         val eventSearchParams = EventSearchParams(
-            type = EventType.CONCERT, startDate = null, endDate = null, radius = null
+            type = EventType.CONCERT,
+            startDate = null,
+            endDate = null,
+            radius = null
         )
         val filteredEvents = EventsProcessor.filter(events, eventSearchParams, null)
 
@@ -154,7 +157,3 @@ class EventsProcessorFilterTest {
         assertTrue(filteredEvents.isEmpty())
     }
 }
-
-
-
-

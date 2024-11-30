@@ -1,4 +1,4 @@
-package com.vazh2100.feature_events.presentaion.screen.event_list.widget
+package com.vazh2100.core.presentaion.widget
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -7,12 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vazh2100.core.domain.entities.NetworkStatus
-import com.vazh2100.core.presentaion.widget.ErrorPanel
 
 @Composable
-fun NetworkStatusBar(networkStatus: NetworkStatus) {
+fun NetworkStatusBar(networkStatus: NetworkStatus, modifier: Modifier = Modifier) {
     AnimatedVisibility(
-        networkStatus == NetworkStatus.DISCONNECTED, modifier = Modifier.fillMaxWidth()
+        networkStatus == NetworkStatus.DISCONNECTED,
+        modifier = modifier.fillMaxWidth()
     ) {
         ErrorPanel(
             "No network",

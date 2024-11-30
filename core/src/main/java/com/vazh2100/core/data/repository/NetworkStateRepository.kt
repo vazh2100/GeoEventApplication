@@ -58,7 +58,8 @@ internal class NetworkStateRepository(context: Context) {
             }
 
             override fun onCapabilitiesChanged(
-                network: Network, capabilities: NetworkCapabilities
+                network: Network,
+                capabilities: NetworkCapabilities
             ) {
                 val isInternetAvailable =
                     capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -71,4 +72,3 @@ internal class NetworkStateRepository(context: Context) {
         })
     }
 }
-

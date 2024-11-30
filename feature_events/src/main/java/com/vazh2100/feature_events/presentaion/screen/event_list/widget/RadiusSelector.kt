@@ -24,16 +24,19 @@ import androidx.compose.ui.unit.dp
 @Composable
 internal fun RadiusSelector(
     initialRadius: Int?,
-    onValueChanged: (Int?) -> Unit,
+    onValueChange: (Int?) -> Unit,
 ) {
     var tempRadius by remember { mutableStateOf(initialRadius?.toFloat()) }
     Column {
-        Text("Distance (km)", style = MaterialTheme.typography.titleSmall)
+        Text(
+            "Distance (km)",
+            style = MaterialTheme.typography.titleSmall
+        )
         Spacer(Modifier.height(8.dp))
         Slider(
             onValueChange = { tempRadius = it },
             valueRange = 250f..7500f,
-            onValueChangeFinished = { onValueChanged(tempRadius?.toInt()) },
+            onValueChangeFinished = { onValueChange(tempRadius?.toInt()) },
             value = tempRadius ?: 7500f,
             steps = 28,
             modifier = Modifier.padding(horizontal = 4.dp),
@@ -42,7 +45,8 @@ internal fun RadiusSelector(
                     modifier = Modifier
                         .size(16.dp)
                         .background(
-                            MaterialTheme.colorScheme.primary, shape = CircleShape
+                            MaterialTheme.colorScheme.primary,
+                            shape = CircleShape
                         )
                 )
             },

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+./gradlew detekt || exit 1
+./gradlew testDebugUnitTest || exit 1

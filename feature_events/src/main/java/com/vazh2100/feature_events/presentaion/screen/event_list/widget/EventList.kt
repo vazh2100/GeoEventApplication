@@ -10,7 +10,8 @@ import com.vazh2100.feature_events.domain.entities.event.Event
 
 @Composable
 internal fun EventList(
-    events: List<Event>, userGPoint: GPoint?,
+    events: List<Event>,
+    userGPoint: GPoint?,
     onEventTap: (Event) -> Unit,
 ) {
     LazyColumn(
@@ -19,9 +20,9 @@ internal fun EventList(
     ) {
         items(events) { event ->
             EventListItem(
-                event = event, onClick = {
-                    onEventTap(event)
-                }, userGPoint = userGPoint
+                event = event,
+                onClick = { onEventTap(event) },
+                userGPoint = userGPoint
             )
         }
     }

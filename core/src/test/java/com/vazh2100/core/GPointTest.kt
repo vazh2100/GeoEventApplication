@@ -38,7 +38,8 @@ class GPointTest {
 
     /**
      * Test case for calculating the distance between two points on the equator with different longitudes.
-     * The distance between two points on the equator with a 10° difference in longitude should be approximately 1112.0 km.
+     * The distance between two points on the equator with a 10° difference in longitude should be approximately
+     * 1112.0 km.
      */
     @Test
     fun testDistanceTo_equatorPoints() {

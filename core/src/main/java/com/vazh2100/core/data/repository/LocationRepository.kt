@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.vazh2100.core.domain.entities.GPoint
 import com.vazh2100.core.domain.entities.LocationStatus
@@ -17,6 +18,13 @@ import kotlinx.coroutines.flow.StateFlow
  * geolocation status, and periodic updates of the user's current coordinates.
  */
 internal class LocationRepository(private val context: Context) {
+
+    private companion object {
+
+        const val CHECK_PERMISSION_TIME_PERIOD = 10_000L // 10 sec
+        const val MINIMUM_DISTANCE_TO_UPDATE = 100f // 100 m
+        const val UPDATE_LOCATION_PERIOD = 600000L // 10 minutes
+    }
 
     private val _locationStatus = MutableStateFlow(LocationStatus.UNDEFINED)
     val locationStatus: StateFlow<LocationStatus> = _locationStatus
@@ -53,7 +61,7 @@ internal class LocationRepository(private val context: Context) {
                 } else {
                     stopLocationUpdates()
                 }
-                delay(10_000) // Check every 10 seconds.
+                delay(CHECK_PERMISSION_TIME_PERIOD)
             }
         }
     }
@@ -65,7 +73,8 @@ internal class LocationRepository(private val context: Context) {
      */
     private fun checkPermissionStatus(): LocationStatus {
         val isPermissionGranted = ContextCompat.checkSelfPermission(
-            context, Manifest.permission.ACCESS_FINE_LOCATION
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
 
         return if (isPermissionGranted) {
@@ -92,18 +101,21 @@ internal class LocationRepository(private val context: Context) {
         if (locationListener != null) return
 
         locationListener = LocationListener { gPoint ->
-            _userGPoint.value = GPoint(gPoint.latitude, gPoint.longitude)
+            _userGPoint.value = GPoint(
+                gPoint.latitude,
+                gPoint.longitude
+            )
         }
 
         try {
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                600000L, // Minimum time interval for updates (10 minutes).
-                100f, // Minimum distance for updates (100 meters).
+                UPDATE_LOCATION_PERIOD,
+                MINIMUM_DISTANCE_TO_UPDATE,
                 locationListener!!
             )
         } catch (e: SecurityException) {
-            e.printStackTrace()
+            Log.e("LocationUpdates", "Failed to request location updates", e)
         }
     }
 

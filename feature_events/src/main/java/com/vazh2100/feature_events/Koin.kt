@@ -41,7 +41,9 @@ val featureEventsModule = module {
     // Provides implementations of repositories for accessing and managing data.
     single<EventRepository> {
         EventRepository(
-            eventDao = get<EventDao>(), eventsApi = get<EventsApi>(), preferenceStorage = get()
+            eventDao = get<EventDao>(),
+            eventsApi = get<EventsApi>(),
+            preferenceStorage = get()
         )
     }
     // **Use Cases**
@@ -71,4 +73,3 @@ val featureEventsModule = module {
         AssetReader(androidContext())
     }
 }
-

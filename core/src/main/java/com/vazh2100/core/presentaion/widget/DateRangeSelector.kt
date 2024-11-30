@@ -34,19 +34,38 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
+const val TWENTY_THREE_HOURS_IN_SECONDS = (23 * 60 + 59) * 60L
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateRangeSelector(
     dateFrom: Instant?,
     dateTo: Instant?,
     onDateFromChange: (Instant) -> Unit,
-    onDateToChange: (Instant) -> Unit
+    onDateToChange: (Instant) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var showDatePickerFrom by remember { mutableStateOf(false) }
     var showDatePickerTo by remember { mutableStateOf(false) }
     val now = ZonedDateTime.now().let {
-        ZonedDateTime
-            .of(it.year, it.monthValue, it.dayOfMonth, 0, 0, 0, 0, ZoneId.of("UTC"))
+        ZonedDateTime.of(
+            /* year = */
+            it.year,
+            /* month = */
+            it.monthValue,
+            /* dayOfMonth = */
+            it.dayOfMonth,
+            /* hour = */
+            0,
+            /* minute = */
+            0,
+            /* second = */
+            0,
+            /* nanoOfSecond = */
+            0,
+            /* zone = */
+            ZoneId.of("UTC")
+        )
             .toInstant()
             .toEpochMilli()
     }
@@ -73,60 +92,73 @@ fun DateRangeSelector(
     )
 
     if (showDatePickerFrom) {
-        DatePickerDialog(onDismissRequest = { showDatePickerFrom = false }, confirmButton = {
-            TextButton(onClick = {
-                datePickerStateFrom.selectedDateMillis?.let {
-                    onDateFromChange(it.toInstance())
+        DatePickerDialog(
+            onDismissRequest = { showDatePickerFrom = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerStateFrom.selectedDateMillis?.let {
+                        onDateFromChange(it.toInstance())
+                    }
+                    showDatePickerFrom = false
+                }) {
+                    Text("Ok")
                 }
-                showDatePickerFrom = false
-            }) {
-                Text("Ok")
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePickerFrom = false }) {
+                    Text("Cancel")
+                }
             }
-        }, dismissButton = {
-            TextButton(onClick = { showDatePickerFrom = false }) {
-                Text("Cancel")
-            }
-        }) {
+        ) {
             DatePicker(state = datePickerStateFrom)
         }
     }
-
-
     if (showDatePickerTo) {
-        DatePickerDialog(onDismissRequest = { showDatePickerTo = false }, confirmButton = {
-            TextButton(onClick = {
-                datePickerStateTo.selectedDateMillis?.let {
-                    onDateToChange(it.toInstance().plusSeconds((23 * 60 + 59) * 60))
+        DatePickerDialog(
+            onDismissRequest = { showDatePickerTo = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerStateTo.selectedDateMillis?.let {
+                            onDateToChange(it.toInstance().plusSeconds(TWENTY_THREE_HOURS_IN_SECONDS))
+                        }
+                        showDatePickerTo = false
+                    }
+                ) {
+                    Text("Ok")
                 }
-                showDatePickerTo = false
-            }) {
-                Text("Ok")
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePickerTo = false }) {
+                    Text("Cancel")
+                }
             }
-        }, dismissButton = {
-            TextButton(onClick = { showDatePickerTo = false }) {
-                Text("Cancel")
-            }
-        }) {
+        ) {
             DatePicker(state = datePickerStateTo)
         }
     }
-
-
-    Column {
-        Text("Date", style = MaterialTheme.typography.titleSmall)
-        Spacer(Modifier.height(8.dp))
+    Column(modifier = modifier) {
+        Text(
+            "Date",
+            style = MaterialTheme.typography.titleSmall
+        )
+        Spacer(
+            Modifier.height(8.dp)
+        )
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Box(modifier = Modifier
-                .weight(1f)
-                .border(
-                    1.dp,
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                    MaterialTheme.shapes.small
-                )
-                .padding(16.dp)
-                .clickable {
-                    showDatePickerFrom = true
-                }) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .border(
+                        1.dp,
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                        MaterialTheme.shapes.small
+                    )
+                    .padding(16.dp)
+                    .clickable {
+                        showDatePickerFrom = true
+                    }
+            ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -143,17 +175,19 @@ fun DateRangeSelector(
                 }
             }
 
-            Box(modifier = Modifier
-                .weight(1f)
-                .border(
-                    1.dp,
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                    MaterialTheme.shapes.small
-                )
-                .padding(16.dp)
-                .clickable {
-                    showDatePickerTo = true
-                }) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .border(
+                        1.dp,
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                        MaterialTheme.shapes.small
+                    )
+                    .padding(16.dp)
+                    .clickable {
+                        showDatePickerTo = true
+                    }
+            ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -164,7 +198,8 @@ fun DateRangeSelector(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Icon(
-                        imageVector = Icons.Filled.DateRange, contentDescription = "Select date to"
+                        imageVector = Icons.Filled.DateRange,
+                        contentDescription = "Select date to"
                     )
                 }
             }

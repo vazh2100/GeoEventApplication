@@ -1,0 +1,57 @@
+config:
+  validation: true
+
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+  weights:
+    complexity: 2
+    longMethod: 2
+    largeClass: 1
+
+comments:
+  CommentOverPrivateFunction:
+    active: false
+
+complexity:
+  LongParameterList:
+    ignoreAnnotated: [ "Composable" ]
+    functionThreshold: 5
+    constructorThreshold: 5
+  LargeClass:
+    threshold: 200
+  LongMethod:
+    ignoreAnnotated: [ "Composable" ]
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated: [ "Composable" ]
+  PackageNaming:
+    packagePattern: '^[a-z]+([._]?[a-z0-9]+)*$'
+    excludes: [ "**_**"]
+
+style:
+  MagicNumber:
+    ignoreNumbers: [ "-1", "0", "1", "2" ]
+  WildcardImport:
+    active: false
+
+formatting:
+  PackageName:
+    active: false
+  NoWildcardImports:
+    active: false
+  MaxLineLength:
+    maxLineLength: 120
+  ArgumentListWrapping:
+    maxLineLength: 300
+
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: false
+
+
+# Проверка производительности кода.
+#performance:
+

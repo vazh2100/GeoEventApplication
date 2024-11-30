@@ -9,7 +9,9 @@ internal object DatabaseProvider {
     fun getDatabase(context: Context): EventsDatabase {
         return instance ?: synchronized(this) {
             val dateBase = Room.databaseBuilder(
-                context.applicationContext, EventsDatabase::class.java, "app_database"
+                context.applicationContext,
+                EventsDatabase::class.java,
+                "app_database"
             ).build()
             instance = dateBase
             dateBase

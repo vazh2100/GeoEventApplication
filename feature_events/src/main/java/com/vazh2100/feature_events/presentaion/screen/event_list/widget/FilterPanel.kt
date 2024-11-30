@@ -42,8 +42,6 @@ internal fun FilterPanel(
     var tempParams by remember { mutableStateOf(searchParams) }
 
     if (!showFilterPanel) tempParams = searchParams
-
-
     AnimatedVisibility(
         enter = expandIn(),
         exit = shrinkOut(),
@@ -62,7 +60,8 @@ internal fun FilterPanel(
                 modifier = Modifier.padding(16.dp),
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
                 ) {
                     TypeSelector<EventType>(
                         currentSelection = tempParams.type,
@@ -73,8 +72,10 @@ internal fun FilterPanel(
                         },
                         modifier = Modifier.weight(1f)
                     )
+                    val currentSelection =
+                        tempParams.sortType.takeIf { it != EventSortType.DISTANCE || userGPoint != null }
                     TypeSelector<EventSortType>(
-                        currentSelection = tempParams.sortType.takeIf { it != EventSortType.DISTANCE || userGPoint != null },
+                        currentSelection = currentSelection,
                         items = mutableListOf<EventSortType?>().apply {
                             add(null)
                             addAll(EventSortType.entries)
@@ -87,15 +88,20 @@ internal fun FilterPanel(
                     )
                 }
                 Spacer(Modifier.height(8.dp))
-                DateRangeSelector(dateFrom = tempParams.startDate,
+                DateRangeSelector(
+                    dateFrom = tempParams.startDate,
                     dateTo = tempParams.endDate,
                     onDateFromChange = { tempParams = tempParams.copy(startDate = it) },
-                    onDateToChange = { tempParams = tempParams.copy(endDate = it) })
+                    onDateToChange = { tempParams = tempParams.copy(endDate = it) }
+                )
                 userGPoint?.let {
                     Spacer(Modifier.height(16.dp))
-                    RadiusSelector(initialRadius = tempParams.radius, onValueChanged = {
-                        tempParams = tempParams.copy(radius = it)
-                    })
+                    RadiusSelector(
+                        initialRadius = tempParams.radius,
+                        onValueChange = {
+                            tempParams = tempParams.copy(radius = it)
+                        }
+                    )
                 }
                 Spacer(Modifier.height(8.dp))
                 Row(
@@ -104,16 +110,14 @@ internal fun FilterPanel(
                 ) {
                     OutlinedButton(onClick = {
                         onClose()
-                    }
-                    ) {
+                    }) {
                         Text("Cancel")
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Button(onClick = {
                         onClose()
                         onApply(tempParams)
-                    }
-                    ) {
+                    }) {
                         Text("Apply")
                     }
                     Spacer(modifier = Modifier.weight(1f))
@@ -122,9 +126,3 @@ internal fun FilterPanel(
         }
     }
 }
-
-
-
-
-
-

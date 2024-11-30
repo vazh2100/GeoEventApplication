@@ -32,4 +32,3 @@ val coreModule = module {
     // **Entity Layer**
     // Provides utility classes and entities used in the Domain Layer.
 }
-

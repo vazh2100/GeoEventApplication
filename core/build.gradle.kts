@@ -1,10 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.dependency.analysis)
 }
 
 android {
@@ -51,7 +47,7 @@ dependencies {
     // KoinDI
     implementation(libs.koin.core)
     implementation(libs.koin.android)
-    //Json
+    // Json
     implementation(libs.kotlinx.serialization.json)
     // Room
     implementation(libs.room.runtime)

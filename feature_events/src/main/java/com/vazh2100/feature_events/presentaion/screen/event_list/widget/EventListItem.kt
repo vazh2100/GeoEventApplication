@@ -20,7 +20,10 @@ internal fun EventListItem(userGPoint: GPoint?, event: Event, onClick: () -> Uni
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(
+                horizontal = 16.dp,
+                vertical = 8.dp
+            )
             .clickable { onClick() },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -29,7 +32,8 @@ internal fun EventListItem(userGPoint: GPoint?, event: Event, onClick: () -> Uni
                 .padding(16.dp)
         ) {
             Text(
-                text = event.name, style = MaterialTheme.typography.titleLarge
+                text = event.name,
+                style = MaterialTheme.typography.titleLarge
             )
             Text(
                 text = "Date: ${event.date.toLocalFormattedString()}",
@@ -44,7 +48,6 @@ internal fun EventListItem(userGPoint: GPoint?, event: Event, onClick: () -> Uni
                     text = "Distance: %.2f km".format(event.gPoint.distanceTo(it)),
                     style = MaterialTheme.typography.bodyMedium
                 )
-
             }
         }
     }

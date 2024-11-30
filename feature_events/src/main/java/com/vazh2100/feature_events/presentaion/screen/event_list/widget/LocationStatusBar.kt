@@ -43,7 +43,9 @@ internal fun LocationStatusBar(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            AnimatedVisibility(locationStatus == LocationStatus.PERMISSION_DENIED || locationStatus == LocationStatus.LOCATION_OFF) {
+            val isVisible =
+                locationStatus == LocationStatus.PERMISSION_DENIED || locationStatus == LocationStatus.LOCATION_OFF
+            AnimatedVisibility(isVisible) {
                 Column {
                     Spacer(modifier = Modifier.height(8.dp))
                     ErrorPanel(locationStatus.statusMessage)
@@ -55,7 +57,8 @@ internal fun LocationStatusBar(
                     Button(
                         onClick = {
                             locationPermissionState.launchPermissionRequest()
-                        }, modifier = Modifier.fillMaxWidth()
+                        },
+                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(text = "Grant Location Permission")
                     }
@@ -63,11 +66,16 @@ internal fun LocationStatusBar(
                     Button(
                         onClick = {
                             val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
-                            val uri =
-                                android.net.Uri.fromParts("package", context.packageName, null)
+                            val uri = android.net.Uri.fromParts(
+                                "package",
+                                context.packageName,
+                                null
+                            )
                             intent.data = uri
                             context.startActivity(intent)
-                        }, modifier = Modifier.fillMaxWidth(), colors = ButtonDefaults.buttonColors(
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor = MaterialTheme.colorScheme.onPrimary
                         )
@@ -75,7 +83,6 @@ internal fun LocationStatusBar(
                         Text(text = "Go to Settings")
                     }
                 }
-
             }
             Spacer(modifier = Modifier.height(8.dp))
         }

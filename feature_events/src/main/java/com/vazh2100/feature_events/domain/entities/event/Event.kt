@@ -9,7 +9,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.Instant
 
-
 @Serializable
 @Entity(tableName = "events")
 data class Event(
@@ -20,8 +19,12 @@ data class Event(
     @SerialName("latitude") @ColumnInfo(name = "latitude") val latitude: Double,
     @SerialName("longitude") @ColumnInfo(name = "longitude") val longitude: Double,
     @SerialName("city") @ColumnInfo(name = "city") val city: String,
-    @Serializable(with = InstantDateTimeSerializer::class) @SerialName("date") @ColumnInfo(name = "date") val date: Instant
+    @Serializable(with = InstantDateTimeSerializer::class)
+    @SerialName("date")
+    @ColumnInfo(name = "date")
+    val date: Instant
 ) {
+
     val gPoint: GPoint
         get() = GPoint(latitude, longitude)
 }

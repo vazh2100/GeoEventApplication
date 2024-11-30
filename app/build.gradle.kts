@@ -1,10 +1,8 @@
+import org.gradle.kotlin.dsl.android
+
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.dependency.analysis)
 }
 
 android {
@@ -60,8 +58,6 @@ android {
     }
 }
 
-
-
 dependencies {
     // Core
     implementation(libs.androidx.activity.compose)
@@ -85,7 +81,7 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.tooling)
     debugRuntimeOnly(libs.androidx.ui.test.manifest)
-    //modules
+    // modules
     implementation(project(":core"))
     implementation(project(":feature_events"))
 }

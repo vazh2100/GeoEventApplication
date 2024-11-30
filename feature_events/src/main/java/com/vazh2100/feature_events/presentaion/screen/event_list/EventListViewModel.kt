@@ -111,10 +111,12 @@ internal class EventListViewModel(
 
     private fun reactOnUserGPChanged() =
         userGPoint.scan(userGPoint.value) { old, new ->
-            if (old == null && new != null && (_searchParams.value.radius != null || _searchParams.value.sortType == EventSortType.DISTANCE)) {
+            val isFromNull = old == null && new != null
+            val hasGeoFilter =
+                _searchParams.value.radius != null || _searchParams.value.sortType == EventSortType.DISTANCE
+            if (isFromNull && hasGeoFilter) {
                 loadEvents()
             }
             new
         }.launchIn(viewModelScope)
 }
-

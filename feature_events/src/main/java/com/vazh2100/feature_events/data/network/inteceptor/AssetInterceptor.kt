@@ -8,8 +8,13 @@ import okhttp3.ResponseBody
 import java.io.IOException
 
 internal class AssetInterceptor(
-    private val assetReader: AssetReader, private val targetPath: String = "event"
+    private val assetReader: AssetReader,
+    private val targetPath: String = "event"
 ) : Interceptor {
+
+    companion object {
+        const val CODE_OK = 200
+    }
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -22,7 +27,7 @@ internal class AssetInterceptor(
                 .Builder()
                 .request(request)
                 .protocol(Protocol.HTTP_1_1)
-                .code(200)
+                .code(CODE_OK)
                 .message("OK")
                 .body(ResponseBody.create(null, content))
                 .addHeader("Content-Type", "application/json")
