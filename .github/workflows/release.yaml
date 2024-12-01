@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-release:
-    if: ${{ startsWith(github.event.head_commit.message, 'v1.') }}
+    if: ${{ startsWith(github.event.head_commit.message, 'v1') }}
     runs-on: ubuntu-latest
 
     steps:
