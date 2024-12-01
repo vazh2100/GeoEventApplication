@@ -6,6 +6,7 @@
 **Тестирование**: JUnit, Mockk.  
 **Архитектура**: Мультимодальная, Clean Architecture, Koin DI, MVVM   
 **Качество кода**: pre-commit hook: commit можно сделать, только если проверка Detekt и Unit тесты прошли успешно  
+**CI/CD**: настроен GitHub Workflow автоматически собирающий и публикующий подписанную release сборку в GitHub  
 **Техническое задание**: [TECHNICAL SPECIFICATIONS.md](https://github.com/vazh2100/GeoEventApplication/blob/master/TECHNICALSPECIFICATIONS.md)
  <div style="display: flex; justify-content: space-between;"> <img src="screenshots/Screenshot_Good.png" width="270" /> <img src="screenshots/Screenshot_Bad.png" width="270" /> <img src="screenshots/Screenshot_Filter.png" width="270" /> </div>
 

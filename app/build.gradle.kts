@@ -20,9 +20,18 @@ android {
         applicationId = "com.vazh2100.geoeventapp"
         minSdk = 26
         targetSdk = 35
-        versionCode = 3
+        versionCode = 4
         versionName = getVersionName(versionCode!!)
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("KEYSTORE_PATH") ?: "keystore.jks")
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
+            keyAlias = System.getenv("KEY_ALIAS") ?: ""
+            keyPassword = System.getenv("KEY_PASSWORD") ?: ""
+        }
     }
 
     buildTypes {
@@ -33,14 +42,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
-
     applicationVariants.configureEach {
         outputs.configureEach {
             // Change output file name to match the desired naming convention
             val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-            val newApkName = "${defaultConfig.applicationId}.${defaultConfig.versionName}.apk"
+            val newApkName = "${defaultConfig.applicationId}.v${defaultConfig.versionName}.apk"
             outputImpl.outputFileName = newApkName
         }
     }
