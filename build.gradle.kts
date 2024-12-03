@@ -23,6 +23,7 @@ subprojects {
         // detekt
         "detektPlugins"(rootProject.libs.detekt.formatting)
         "detektPlugins"(rootProject.libs.detekt.rules.compose)
+//        "detektPlugins"(rootProject.libs.detekt.rules.libraries)
     }
 }
 

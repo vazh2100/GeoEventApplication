@@ -17,7 +17,7 @@ import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AppNavGraph(navController: NavHostController) {
+internal fun AppNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = "eventList",

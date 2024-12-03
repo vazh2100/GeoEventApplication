@@ -25,7 +25,7 @@ import java.time.Instant
  * Unit tests for the GetFilteredEventsUseCase class.
  * These tests ensure that the GetFilteredEventsUseCase behaves correctly in different scenarios.
  */
-class GetFilteredEventsUseCaseTest {
+internal class GetFilteredEventsUseCaseTest {
 
     private lateinit var getFilteredEventsUseCase: GetFilteredEventsUseCase
     private val eventRepository: EventRepository = mockk()

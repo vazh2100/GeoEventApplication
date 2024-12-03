@@ -1,7 +1,7 @@
 [versions]
 agp = "8.7.2"
 datastore = "1.1.1"
-detektFormatting = "1.23.0"
+detekt = "1.23.0"
 detektRulesCompose = "1.2.0"
 junit = "4.13.2"
 koin = "4.0.0"
@@ -27,7 +27,8 @@ androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektFormatting" }
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+detekt-rules-libraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
 detekt-rules-compose = { module = "ru.kode:detekt-rules-compose", version.ref = "detektRulesCompose" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
@@ -51,4 +52,4 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.27" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version = "2.5.0" }
-detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.0" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

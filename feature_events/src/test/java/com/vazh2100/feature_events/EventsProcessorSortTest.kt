@@ -13,7 +13,7 @@ import java.time.Instant
  * Unit tests for the EventsProcessor's sort function.
  * Verifies that events are correctly sorted based on different criteria such as date and distance.
  */
-class EventsProcessorSortTest {
+internal class EventsProcessorSortTest {
 
     // Test events used for sorting
     private val event1 = Event(

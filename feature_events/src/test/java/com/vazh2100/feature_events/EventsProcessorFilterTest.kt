@@ -21,7 +21,7 @@ import java.time.temporal.ChronoUnit
  * 5. Combined filtering by type and radius
  * 6. No filters applied, returning all events.
  */
-class EventsProcessorFilterTest {
+internal class EventsProcessorFilterTest {
 
     // Constants for filtering tests
     private val userGPoint = GPoint(55.0, 37.0)
