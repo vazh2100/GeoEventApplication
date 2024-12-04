@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#!/bin/sh
+echo "Запуск тестов..."
+./gradlew testDebugUnitTest
+TEST_EXIT_CODE=$?
+echo "Код завершения тестов: $TEST_EXIT_CODE"
+if [ $TEST_EXIT_CODE -ne 0 ]; then
+    echo "Тесты не прошли. Пуш отменен."
+    exit 1
+fi
+echo "Тесты прошли успешно."

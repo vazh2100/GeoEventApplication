@@ -15,6 +15,7 @@ import org.koin.dsl.module
  * used across the application such as APIs, repositories, use cases, and view models.
  */
 val coreModule = module {
+
     // **API Layer**
     // Configures API, networking clients, and interceptors.
     // **Storage Layer**

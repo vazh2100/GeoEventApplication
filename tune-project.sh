@@ -1,26 +1,17 @@
 #!/bin/bash
 
-# Путь к файлу pre-commit в папке проекта
-SOURCE_FILE="config/pre-commit"
+PRE_COMMIT="config/pre-commit"
+PRE_PUSH="config/pre-push"
 
-# Путь к папке хуков Git
-TARGET_DIR=".git/hooks"
+TARGET_PRE_COMMIT=".git/hooks/pre-commit"
+TARGET_PRE_PUSH=".git/hooks/pre-push"
 
-# Полный путь к целевой символической ссылке
-TARGET_LINK="${TARGET_DIR}/pre-commit"
-
-# Проверяем, существует ли файл SOURCE_FILE
-if [ ! -f "$SOURCE_FILE" ]; then
-    echo "Ошибка: Файл ${SOURCE_FILE} не найден!"
-    exit 1
-fi
-
-# Удаляем старую символическую ссылку или файл, если они существуют
-if [ -e "$TARGET_LINK" ] || [ -L "$TARGET_LINK" ]; then
-    rm "$TARGET_LINK"
-    echo "Старая ссылка или файл pre-commit удалены."
-fi
+rm "$TARGET_PRE_COMMIT"
+rm "$TARGET_PRE_PUSH"
+echo "Старые ссылки удалены."
 
 # Создаём символическую ссылку
-ln -s "../../${SOURCE_FILE}" "$TARGET_LINK"
-echo "Символическая ссылка создана: ${TARGET_LINK} -> ${SOURCE_FILE}"
+ln -s "../../${PRE_COMMIT}" "$TARGET_PRE_COMMIT"
+ln -s "../../${PRE_PUSH}" "$TARGET_PRE_PUSH"
+echo "Символическая ссылка создана: ${TARGET_PRE_COMMIT} -> ${PRE_COMMIT}"
+echo "Символическая ссылка создана: ${TARGET_PRE_PUSH} -> ${PRE_PUSH}"

@@ -3,7 +3,7 @@ config:
 
 build:
   maxIssues: 0
-  excludeCorrectable: false
+  excludeCorrectable: true
   weights:
     complexity: 2
     longMethod: 2

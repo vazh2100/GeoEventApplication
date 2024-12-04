@@ -15,12 +15,7 @@ class GPointTest {
         val point1 = GPoint(52.5200, 13.4050) // Berlin
         val point2 = GPoint(52.5200, 13.4050) // Berlin
         val distance = point1.distanceTo(point2)
-
-        assertEquals(
-            0.0,
-            distance,
-            0.0
-        ) // The distance should be 0, with no margin of error.
+        assertEquals(0.0, distance, 0.0) // The distance should be 0, with no margin of error.
     }
 
     /**
