@@ -26,7 +26,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "GeoEventApplication"
-include(":app")
-include(":core")
-include(":feature_events")
+include(":0_app")
+include(":1_core_a")
+include(":2_events")
 

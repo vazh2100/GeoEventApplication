@@ -1,12 +1,25 @@
 #!/bin/sh
 
-#!/bin/sh
+echo "Проверка проекта в detekt..."
+./gradlew detekt --auto-correct
+DETEKT_EXIT_CODE=$?
+if [ $DETEKT_EXIT_CODE -ne 0 ]; then
+    echo "Detekt нашел неисправимые ошибки. Push отменен."
+    exit 1
+fi
+
+# Проверяем, были ли изменения после автокоррекции
+if [ -n "$(git status --porcelain -uno)" ]; then
+    echo "Detekt внес изменения в код, нужно добавить изменения в commit перед push"
+    exit 1
+fi
+
 echo "Запуск тестов..."
 ./gradlew testDebugUnitTest
 TEST_EXIT_CODE=$?
 echo "Код завершения тестов: $TEST_EXIT_CODE"
 if [ $TEST_EXIT_CODE -ne 0 ]; then
-    echo "Тесты не прошли. Пуш отменен."
+    echo "Тесты не прошли. Push отменен."
     exit 1
 fi
 echo "Тесты прошли успешно."
