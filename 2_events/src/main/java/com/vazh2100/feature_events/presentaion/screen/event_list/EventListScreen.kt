@@ -27,11 +27,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.vazh2100.core.presentaion.widget.ErrorMessage
 import com.vazh2100.core.presentaion.widget.LoadingIndicator
-import com.vazh2100.core.presentaion.widget.NetworkStatusBar
 import com.vazh2100.feature_events.domain.entities.event.Event
 import com.vazh2100.feature_events.presentaion.screen.event_list.widget.EventList
 import com.vazh2100.feature_events.presentaion.screen.event_list.widget.FilterPanel
 import com.vazh2100.feature_events.presentaion.screen.event_list.widget.LocationStatusBar
+import com.vazh2100.network.widget.NetworkStatusBar
 import org.koin.androidx.compose.koinViewModel
 
 /**

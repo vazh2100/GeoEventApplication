@@ -2,9 +2,7 @@ package com.vazh2100.feature_events
 
 import android.util.Log
 import com.vazh2100.core.domain.entities.GPoint
-import com.vazh2100.core.domain.entities.NetworkStatus
 import com.vazh2100.core.domain.usecase.IGetLocationStatusUseCase
-import com.vazh2100.core.domain.usecase.IGetNetworkStatusUseCase
 import com.vazh2100.feature_events.data.repository.EventRepository
 import com.vazh2100.feature_events.data.storages.device.EventsPreferencesStorage
 import com.vazh2100.feature_events.domain.entities.event.Event
@@ -14,6 +12,8 @@ import com.vazh2100.feature_events.domain.entities.event.EventType
 import com.vazh2100.feature_events.domain.entities.event.EventsProcessor
 import com.vazh2100.feature_events.domain.entities.event.EventsProcessor.searchWith
 import com.vazh2100.feature_events.domain.usecase.GetFilteredEventsUseCase
+import com.vazh2100.network.entity.NetworkStatus
+import com.vazh2100.network.usecase.IGetNetworkStatusUseCase
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify

@@ -1,7 +1,7 @@
 package com.vazh2100.feature_events.data.network.client
 
 import com.vazh2100.feature_events.data.network.api.EventsApi
-import com.vazh2100.feature_events.data.network.inteceptor.AssetInterceptor
+import com.vazh2100.feature_events.data.network.interceptor.AssetInterceptor
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import okhttp3.OkHttpClient

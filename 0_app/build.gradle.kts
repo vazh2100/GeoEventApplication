@@ -66,11 +66,11 @@ android {
 }
 
 dependencies {
-    // Core
-    implementation(libs.androidx.activity.compose)
+    // Compose Bom
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    // Navigation
+    implementation(libs.androidx.compose.material3)
+    // Compose Not Bom
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
     // KoinDI
     implementation(libs.koin.core)
@@ -82,13 +82,8 @@ dependencies {
     ksp(libs.room.compiler)
     // Location Google Play Services
     implementation(libs.play.services.location)
-    // Tests
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    debugImplementation(libs.androidx.ui.tooling)
-    debugRuntimeOnly(libs.androidx.ui.test.manifest)
     // modules
     implementation(project(":1_core_a"))
+    implementation(project(":1_network"))
     implementation(project(":2_events"))
 }

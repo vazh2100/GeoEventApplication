@@ -2,7 +2,7 @@ package com.vazh2100.feature_events
 
 import com.vazh2100.feature_events.data.network.api.EventsApi
 import com.vazh2100.feature_events.data.network.client.EventsClientProvider
-import com.vazh2100.feature_events.data.network.inteceptor.AssetInterceptor
+import com.vazh2100.feature_events.data.network.interceptor.AssetInterceptor
 import com.vazh2100.feature_events.data.repository.EventRepository
 import com.vazh2100.feature_events.data.storages.device.EventsPreferencesStorage
 import com.vazh2100.feature_events.data.storages.room.DatabaseProvider

@@ -28,5 +28,5 @@ dependencyResolutionManagement {
 rootProject.name = "GeoEventApplication"
 include(":0_app")
 include(":1_core_a")
+include(":1_network")
 include(":2_events")
-

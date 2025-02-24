@@ -3,14 +3,14 @@ package com.vazh2100.feature_events.presentaion.screen.event_list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vazh2100.core.domain.entities.GPoint
-import com.vazh2100.core.domain.entities.NetworkStatus
 import com.vazh2100.core.domain.usecase.IGetLocationStatusUseCase
-import com.vazh2100.core.domain.usecase.IGetNetworkStatusUseCase
 import com.vazh2100.feature_events.domain.entities.event.Event
 import com.vazh2100.feature_events.domain.entities.event.EventSearchParams
 import com.vazh2100.feature_events.domain.entities.event.EventSortType
 import com.vazh2100.feature_events.domain.usecase.GetFilteredEventsUseCase
 import com.vazh2100.feature_events.domain.usecase.GetSavedFiltersUseCase
+import com.vazh2100.network.entity.NetworkStatus
+import com.vazh2100.network.usecase.IGetNetworkStatusUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -41,7 +41,7 @@ internal class EventListViewModel(
     val errorMessage: StateFlow<String?> get() = _errorMessage
 
     // State to store the currently applied event filter
-    private val _searchParams = MutableStateFlow<EventSearchParams>(EventSearchParams())
+    private val _searchParams = MutableStateFlow(EventSearchParams())
     val eventSearchParams: StateFlow<EventSearchParams> get() = _searchParams
 
     // Flow for network status

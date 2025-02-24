@@ -1,14 +1,14 @@
 package com.vazh2100.feature_events.domain.usecase
 
 import android.util.Log
-import com.vazh2100.core.domain.entities.NetworkStatus
 import com.vazh2100.core.domain.usecase.IGetLocationStatusUseCase
-import com.vazh2100.core.domain.usecase.IGetNetworkStatusUseCase
 import com.vazh2100.feature_events.data.repository.EventRepository
 import com.vazh2100.feature_events.data.storages.device.EventsPreferencesStorage
 import com.vazh2100.feature_events.domain.entities.event.Event
 import com.vazh2100.feature_events.domain.entities.event.EventSearchParams
 import com.vazh2100.feature_events.domain.entities.event.EventsProcessor.searchWith
+import com.vazh2100.network.entity.NetworkStatus
+import com.vazh2100.network.usecase.IGetNetworkStatusUseCase
 
 /**
  * Use case for retrieving a filtered list of events.

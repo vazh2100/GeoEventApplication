@@ -1,4 +1,4 @@
-package com.vazh2100.core.domain.entities
+package com.vazh2100.network.entity
 
 /**
  * Represents the network connection status of the device.

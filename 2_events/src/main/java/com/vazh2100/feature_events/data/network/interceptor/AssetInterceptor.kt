@@ -1,4 +1,4 @@
-package com.vazh2100.feature_events.data.network.inteceptor
+package com.vazh2100.feature_events.data.network.interceptor
 
 import com.vazh2100.feature_events.domain.entities.AssetReader
 import okhttp3.Interceptor

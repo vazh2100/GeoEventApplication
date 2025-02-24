@@ -47,7 +47,7 @@ internal class EventRepository(
             ChronoUnit.MINUTES.between(it, getNowDate()) < CACHE_VALIDITY_TIME
         } == true
         println("isCacheValid: $isCacheValid")
-        println("isCacheValid: ${lastUpdateTime.value}")
+        println("lastUpdateTime: ${lastUpdateTime.value}")
         return if (isCacheValid || !hasInternet) {
             events
         } else {

@@ -1,4 +1,4 @@
-package com.vazh2100.core.presentaion.widget
+package com.vazh2100.network.widget
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -6,7 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.vazh2100.core.domain.entities.NetworkStatus
+import com.vazh2100.core.presentaion.widget.ErrorPanel
+import com.vazh2100.network.entity.NetworkStatus
 
 @Composable
 fun NetworkStatusBar(networkStatus: NetworkStatus, modifier: Modifier = Modifier) {
