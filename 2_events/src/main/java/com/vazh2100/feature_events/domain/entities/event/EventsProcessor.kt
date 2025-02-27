@@ -1,6 +1,6 @@
 package com.vazh2100.feature_events.domain.entities.event
 
-import com.vazh2100.core.domain.entities.GPoint
+import com.vazh2100.geolocation.entity.GPoint
 import java.time.Instant
 
 internal object EventsProcessor {

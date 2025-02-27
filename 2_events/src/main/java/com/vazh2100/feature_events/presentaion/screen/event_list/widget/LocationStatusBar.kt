@@ -21,8 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
-import com.vazh2100.core.domain.entities.LocationStatus
 import com.vazh2100.core.presentaion.widget.ErrorPanel
+import com.vazh2100.geolocation.entity.LocationStatus
+import com.vazh2100.geolocation.entity.LocationStatus.LOCATION_OFF
+import com.vazh2100.geolocation.entity.LocationStatus.PERMISSION_DENIED
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -43,15 +45,14 @@ internal fun LocationStatusBar(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            val isVisible =
-                locationStatus == LocationStatus.PERMISSION_DENIED || locationStatus == LocationStatus.LOCATION_OFF
+            val isVisible = locationStatus == PERMISSION_DENIED || locationStatus == LOCATION_OFF
             AnimatedVisibility(isVisible) {
                 Column {
                     Spacer(modifier = Modifier.height(8.dp))
                     ErrorPanel(locationStatus.statusMessage)
                 }
             }
-            AnimatedVisibility(locationStatus == LocationStatus.PERMISSION_DENIED) {
+            AnimatedVisibility(locationStatus == PERMISSION_DENIED) {
                 Column {
                     Spacer(modifier = Modifier.height(8.dp))
                     Button(

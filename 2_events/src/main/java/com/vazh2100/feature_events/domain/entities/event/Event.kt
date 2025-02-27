@@ -3,8 +3,8 @@ package com.vazh2100.feature_events.domain.entities.event
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.vazh2100.core.domain.entities.GPoint
 import com.vazh2100.core.domain.entities.json.InstantDateTimeSerializer
+import com.vazh2100.geolocation.entity.GPoint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.Instant

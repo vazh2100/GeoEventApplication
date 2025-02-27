@@ -1,10 +1,10 @@
 package com.vazh2100.feature_events
 
-import com.vazh2100.core.domain.entities.GPoint
 import com.vazh2100.feature_events.domain.entities.event.Event
 import com.vazh2100.feature_events.domain.entities.event.EventSortType
 import com.vazh2100.feature_events.domain.entities.event.EventType
 import com.vazh2100.feature_events.domain.entities.event.EventsProcessor
+import com.vazh2100.geolocation.entity.GPoint
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 import java.time.Instant

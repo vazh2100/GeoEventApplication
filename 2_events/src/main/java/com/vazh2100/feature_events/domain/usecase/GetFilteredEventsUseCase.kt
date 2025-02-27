@@ -1,12 +1,12 @@
 package com.vazh2100.feature_events.domain.usecase
 
 import android.util.Log
-import com.vazh2100.core.domain.usecase.IGetLocationStatusUseCase
 import com.vazh2100.feature_events.data.repository.EventRepository
 import com.vazh2100.feature_events.data.storages.device.EventsPreferencesStorage
 import com.vazh2100.feature_events.domain.entities.event.Event
 import com.vazh2100.feature_events.domain.entities.event.EventSearchParams
 import com.vazh2100.feature_events.domain.entities.event.EventsProcessor.searchWith
+import com.vazh2100.geolocation.usecase.IGetLocationStatusUseCase
 import com.vazh2100.network.entity.NetworkStatus
 import com.vazh2100.network.usecase.IGetNetworkStatusUseCase
 
@@ -18,14 +18,14 @@ import com.vazh2100.network.usecase.IGetNetworkStatusUseCase
 internal class GetFilteredEventsUseCase(
     private val eventRepository: EventRepository,
     private val eventsPreferencesStorage: EventsPreferencesStorage,
-    private val getNetworkStatusUseCase: IGetNetworkStatusUseCase,
-    private val getLocationStatusUseCase: IGetLocationStatusUseCase,
+    private val getNetworkStatus: IGetNetworkStatusUseCase,
+    private val getLocationStatus: IGetLocationStatusUseCase,
 ) {
 
     /**
      * Retrieves a list of events filtered based on user preferences and current conditions.
      */
-    suspend fun get(
+    suspend operator fun invoke(
         eventSearchParams: EventSearchParams
     ): Result<List<Event>> {
         // Save the filter preferences locally
@@ -35,22 +35,18 @@ internal class GetFilteredEventsUseCase(
             Log.e("", "", e)
         }
         // Check the current network status
-        val hasInternet = getNetworkStatusUseCase.networkStatus.value == NetworkStatus.CONNECTED
+        val hasInternet = getNetworkStatus.networkStatus.value == NetworkStatus.CONNECTED
         // Get the user's current coordinates
-        val userGPoint = getLocationStatusUseCase.userGPoint.value
+        val userGPoint = getLocationStatus.userGPoint.value
         val events: List<Event>
         try {
             // Fetch the events from the repository
             events = eventRepository.getAllEvents(hasInternet)
         } catch (_: Exception) {
-            // Return a failure result if fetching events fails
             return Result.failure(Exception("Failed to get events"))
         }
         // Filter and sort events
-        val filteredEvents = events.searchWith(
-            eventSearchParams,
-            userGPoint
-        )
+        val filteredEvents = events.searchWith(eventSearchParams, userGPoint)
         // Return a successful result with the filtered events
         return Result.success(filteredEvents)
     }

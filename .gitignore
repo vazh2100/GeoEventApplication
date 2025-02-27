@@ -1,4 +1,5 @@
-.idea/
+.idea
+.kotlin
 *.iml
 /build
 .gradle
@@ -8,3 +9,4 @@ local.properties
 .externalNativeBuild
 .cxx
 keystore.jks
+/3_release.sh

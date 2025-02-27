@@ -1,8 +1,6 @@
 package com.vazh2100.feature_events
 
 import android.util.Log
-import com.vazh2100.core.domain.entities.GPoint
-import com.vazh2100.core.domain.usecase.IGetLocationStatusUseCase
 import com.vazh2100.feature_events.data.repository.EventRepository
 import com.vazh2100.feature_events.data.storages.device.EventsPreferencesStorage
 import com.vazh2100.feature_events.domain.entities.event.Event
@@ -12,6 +10,8 @@ import com.vazh2100.feature_events.domain.entities.event.EventType
 import com.vazh2100.feature_events.domain.entities.event.EventsProcessor
 import com.vazh2100.feature_events.domain.entities.event.EventsProcessor.searchWith
 import com.vazh2100.feature_events.domain.usecase.GetFilteredEventsUseCase
+import com.vazh2100.geolocation.entity.GPoint
+import com.vazh2100.geolocation.usecase.IGetLocationStatusUseCase
 import com.vazh2100.network.entity.NetworkStatus
 import com.vazh2100.network.usecase.IGetNetworkStatusUseCase
 import io.mockk.Runs
@@ -34,13 +34,12 @@ import java.time.Instant
  */
 internal class GetFilteredEventsUseCaseTest {
 
-    private lateinit var getFilteredEventsUseCase: GetFilteredEventsUseCase
+    private lateinit var getFilteredEvents: GetFilteredEventsUseCase
     private val eventRepository: EventRepository = mockk()
     private val preferencesStorage: EventsPreferencesStorage = mockk()
-    private val getNetworkStatusUseCase: IGetNetworkStatusUseCase = mockk()
-    private val getLocationStatusUseCase: IGetLocationStatusUseCase = mockk()
-    private val eventSearchParams =
-        EventSearchParams(radius = 5000, sortType = EventSortType.DISTANCE)
+    private val getNetworkStatus: IGetNetworkStatusUseCase = mockk()
+    private val getLocationStatus: IGetLocationStatusUseCase = mockk()
+    private val eventSearchParams = EventSearchParams(radius = 5000, sortType = EventSortType.DISTANCE)
     private val now = Instant.now()
     private val userGPoint = GPoint(0.0, 0.0)
     private val event1 = Event(
@@ -68,17 +67,17 @@ internal class GetFilteredEventsUseCaseTest {
 
     @Before
     fun setUp() {
-        getFilteredEventsUseCase = GetFilteredEventsUseCase(
+        getFilteredEvents = GetFilteredEventsUseCase(
             eventRepository,
             preferencesStorage,
-            getNetworkStatusUseCase,
-            getLocationStatusUseCase
+            getNetworkStatus,
+            getLocationStatus
         )
         mockkObject(EventsProcessor)
         mockkStatic(Log::class)
         coEvery { preferencesStorage.saveEventSearchParams(eventSearchParams) } just Runs
-        every { getNetworkStatusUseCase.networkStatus.value } returns NetworkStatus.CONNECTED
-        every { getLocationStatusUseCase.userGPoint.value } returns userGPoint
+        every { getNetworkStatus.networkStatus.value } returns NetworkStatus.CONNECTED
+        every { getLocationStatus.userGPoint.value } returns userGPoint
         coEvery { eventRepository.getAllEvents(true) } returns mockEvents
         coEvery { eventRepository.getAllEvents(false) } returns mockEvents
         every { mockEvents.searchWith(eventSearchParams, userGPoint) } returns searchedEvents
@@ -91,11 +90,11 @@ internal class GetFilteredEventsUseCaseTest {
      */
     @Test
     fun `test get events successfully with network`() = runBlocking {
-        val result = getFilteredEventsUseCase.get(eventSearchParams)
+        val result = getFilteredEvents(eventSearchParams)
 
         coVerify { preferencesStorage.saveEventSearchParams(eventSearchParams) }
-        coVerify { getNetworkStatusUseCase.networkStatus.value }
-        coVerify { getLocationStatusUseCase.userGPoint.value }
+        coVerify { getNetworkStatus.networkStatus.value }
+        coVerify { getLocationStatus.userGPoint.value }
         coVerify { eventRepository.getAllEvents(true) }
         assert(result.isSuccess)
         assertEquals(searchedEvents, result.getOrNull())
@@ -108,12 +107,12 @@ internal class GetFilteredEventsUseCaseTest {
      */
     @Test
     fun `test get events successfully with no network`() = runBlocking {
-        coEvery { getNetworkStatusUseCase.networkStatus.value } returns NetworkStatus.DISCONNECTED
-        val result = getFilteredEventsUseCase.get(eventSearchParams)
+        coEvery { getNetworkStatus.networkStatus.value } returns NetworkStatus.DISCONNECTED
+        val result = getFilteredEvents(eventSearchParams)
 
         coVerify { preferencesStorage.saveEventSearchParams(eventSearchParams) }
-        coVerify { getNetworkStatusUseCase.networkStatus.value }
-        coVerify { getLocationStatusUseCase.userGPoint.value }
+        coVerify { getNetworkStatus.networkStatus.value }
+        coVerify { getLocationStatus.userGPoint.value }
         coVerify { eventRepository.getAllEvents(false) }
         assert(result.isSuccess)
         assertEquals(searchedEvents, result.getOrNull())
@@ -126,11 +125,11 @@ internal class GetFilteredEventsUseCaseTest {
     @Test
     fun `test error when fetching events`(): Unit = runBlocking {
         coEvery { eventRepository.getAllEvents(true) } throws Exception("Network Error")
-        val result = getFilteredEventsUseCase.get(eventSearchParams)
+        val result = getFilteredEvents(eventSearchParams)
 
         coVerify { preferencesStorage.saveEventSearchParams(eventSearchParams) }
-        coVerify { getNetworkStatusUseCase.networkStatus.value }
-        coVerify { getLocationStatusUseCase.userGPoint.value }
+        coVerify { getNetworkStatus.networkStatus.value }
+        coVerify { getLocationStatus.userGPoint.value }
         coVerify { eventRepository.getAllEvents(true) }
         assert(result.isFailure)
         assertEquals("Failed to get events", result.exceptionOrNull()?.message)
@@ -146,11 +145,11 @@ internal class GetFilteredEventsUseCaseTest {
         // Simulate an error when saving event search parameters
         coEvery { preferencesStorage.saveEventSearchParams(eventSearchParams) } throws Exception("Storage Error")
         // Execute the use case
-        val result = getFilteredEventsUseCase.get(eventSearchParams)
+        val result = getFilteredEvents(eventSearchParams)
         // Verify that all the necessary methods were called
         coVerify { preferencesStorage.saveEventSearchParams(eventSearchParams) }
-        coVerify { getNetworkStatusUseCase.networkStatus.value }
-        coVerify { getLocationStatusUseCase.userGPoint.value }
+        coVerify { getNetworkStatus.networkStatus.value }
+        coVerify { getLocationStatus.userGPoint.value }
         coVerify { eventRepository.getAllEvents(true) }
         // Verify that despite the error in saving the search parameters, the events are correctly fetched
         assert(result.isSuccess)

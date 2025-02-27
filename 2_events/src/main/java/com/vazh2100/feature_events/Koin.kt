@@ -52,8 +52,8 @@ val featureEventsModule = module {
         GetFilteredEventsUseCase(
             eventRepository = get(),
             eventsPreferencesStorage = get(),
-            getNetworkStatusUseCase = get(),
-            getLocationStatusUseCase = get(),
+            getNetworkStatus = get(),
+            getLocationStatus = get(),
         )
     }
     factory { GetSavedFiltersUseCase(eventsPreferencesStorage = get()) }
@@ -61,10 +61,10 @@ val featureEventsModule = module {
     // Provides ViewModel instances for the app's presentation layer.
     viewModel<EventListViewModel> {
         EventListViewModel(
-            getFilteredEventsUseCase = get(),
-            getSavedFiltersUseCase = get(),
-            getNetworkStatusUseCase = get(),
-            getLocationStatusUseCase = get()
+            getFilteredEvents = get(),
+            getSavedFilters = get(),
+            getNetworkStatus = get(),
+            getLocationStatus = get()
         )
     }
     // **Entity Layer**

@@ -8,4 +8,6 @@ internal data class EventSearchParams(
     val endDate: Instant? = null,
     val radius: Int? = null,
     val sortType: EventSortType? = null,
-)
+) {
+    val hasGeoFilter: Boolean get() = radius != null || sortType == EventSortType.DISTANCE
+}

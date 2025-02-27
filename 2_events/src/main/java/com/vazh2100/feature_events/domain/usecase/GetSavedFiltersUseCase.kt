@@ -7,7 +7,7 @@ internal class GetSavedFiltersUseCase(
     private val eventsPreferencesStorage: EventsPreferencesStorage
 ) {
 
-    suspend fun get(): Result<EventSearchParams> {
+    suspend operator fun invoke(): Result<EventSearchParams> {
         return try {
             val filter = eventsPreferencesStorage.getEventSearchParams()
             Result.success(filter)

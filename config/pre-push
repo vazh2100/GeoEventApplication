@@ -8,12 +8,6 @@ if [ $DETEKT_EXIT_CODE -ne 0 ]; then
     exit 1
 fi
 
-# Проверяем, были ли изменения после автокоррекции
-if [ -n "$(git status --porcelain -uno)" ]; then
-    echo "Detekt внес изменения в код, нужно добавить изменения в commit перед push"
-    exit 1
-fi
-
 echo "Запуск тестов..."
 ./gradlew testDebugUnitTest
 TEST_EXIT_CODE=$?

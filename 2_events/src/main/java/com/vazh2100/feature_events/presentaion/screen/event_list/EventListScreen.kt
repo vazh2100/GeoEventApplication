@@ -56,42 +56,36 @@ fun EventListScreen(
 //     Local state for managing temporary filters and visibility of the filter panel
     var showFilterPanel by remember { mutableStateOf(false) }
 
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = userGPoint?.let {
-                            "Coordinates: Lat: %.2f, Lon: %.2f".format(
-                                it.lat,
-                                it.lon
-                            )
-                        } ?: "Coordinates: Not Available",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(
-                            top = 8.dp,
-                            start = 8.dp
-                        )
+    Scaffold(modifier = modifier, topBar = {
+        TopAppBar(
+            title = {
+                Text(
+                    text = userGPoint?.let {
+                        "Coordinates: Lat: %.2f, Lon: %.2f".format(it.lat, it.lon)
+                    } ?: "Coordinates: Not Available",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(
+                        top = 8.dp,
+                        start = 8.dp
                     )
-                },
-                actions = {
-                    IconButton(onClick = {
-                        showFilterPanel = !showFilterPanel
-                    }) {
-                        Icon(
-                            Icons.Filled.FilterList,
-                            contentDescription = "Filters",
-                            modifier = Modifier.size(36.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                },
-                expandedHeight = 36.dp
-            )
-        }
-    ) { paddingValues ->
+                )
+            },
+            actions = {
+                IconButton(onClick = {
+                    showFilterPanel = !showFilterPanel
+                }) {
+                    Icon(
+                        Icons.Filled.FilterList,
+                        contentDescription = "Filters",
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+            },
+            expandedHeight = 36.dp
+        )
+    }) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()

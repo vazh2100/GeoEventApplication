@@ -11,9 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.vazh2100.core.domain.entities.GPoint
 import com.vazh2100.core.domain.entities.formatter.toLocalFormattedString
 import com.vazh2100.feature_events.domain.entities.event.Event
+import com.vazh2100.geolocation.entity.GPoint
 
 @Composable
 internal fun EventListItem(userGPoint: GPoint?, event: Event, onClick: () -> Unit) {

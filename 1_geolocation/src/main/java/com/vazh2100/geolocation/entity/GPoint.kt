@@ -1,4 +1,4 @@
-package com.vazh2100.core.domain.entities
+package com.vazh2100.geolocation.entity
 
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -12,8 +12,7 @@ data class GPoint(val lat: Double, val lon: Double) {
     }
 
     /**
-     * Calculates the geographical distance between the point and other point using the Haversine formula.
-     * @return The distance in kilometers.
+     * Distance between the points using the Haversine formula.
      */
     fun distanceTo(other: GPoint): Double {
         val dLat = Math.toRadians(other.lat - this.lat)
