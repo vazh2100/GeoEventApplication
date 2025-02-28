@@ -4,29 +4,32 @@ import androidx.lifecycle.viewModelScope
 import com.vazh2100.feature_events.domain.entities.event.EventSearchParams
 import com.vazh2100.feature_events.domain.usecase.GetFilteredEventsUseCase
 import com.vazh2100.feature_events.domain.usecase.GetSavedFiltersUseCase
+import com.vazh2100.geolocation.entity.LocationStatus.UNDEFINED
 import com.vazh2100.geolocation.usecase.IGetLocationStatusUseCase
-import com.vazh2100.network.usecase.IGetNetworkStatusUseCase
+import com.vazh2100.network.entity.NetworkStatus.UNKNOWN
+import com.vazh2100.network.usecase.IObserveNetworkStateUseCase
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 internal class EventListViewModel(
     private val getSavedFilters: GetSavedFiltersUseCase,
     private val getFilteredEvents: GetFilteredEventsUseCase,
-    getNetworkStatus: IGetNetworkStatusUseCase,
+    getNetworkStatus: IObserveNetworkStateUseCase,
     getLocationStatus: IGetLocationStatusUseCase,
 ) : EventListState() {
 
     init {
-        networkStatus = getNetworkStatus.networkStatus
+        locationStatus = getLocationStatus().stateIn(viewModelScope, SharingStarted.Eagerly, UNDEFINED)
         userGPoint = getLocationStatus.userGPoint
+        networkStatus = getNetworkStatus().stateIn(viewModelScope, SharingStarted.Eagerly, UNKNOWN)
         viewModelScope.launch {
             loadSavedFilters()
             loadEvents()
             reactOnUserGPChanged()
         }
-        getLocationStatus().onEach { _locationStatus.value = it }.launchIn(viewModelScope)
     }
 
     fun applyFilters(eventSearchParams: EventSearchParams) {

@@ -13,7 +13,7 @@ import com.vazh2100.feature_events.domain.usecase.GetFilteredEventsUseCase
 import com.vazh2100.geolocation.entity.GPoint
 import com.vazh2100.geolocation.usecase.IGetLocationStatusUseCase
 import com.vazh2100.network.entity.NetworkStatus
-import com.vazh2100.network.usecase.IGetNetworkStatusUseCase
+import com.vazh2100.network.usecase.IObserveNetworkStateUseCase
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -23,6 +23,7 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -37,7 +38,7 @@ internal class GetFilteredEventsUseCaseTest {
     private lateinit var getFilteredEvents: GetFilteredEventsUseCase
     private val eventRepository: EventRepository = mockk()
     private val preferencesStorage: EventsPreferencesStorage = mockk()
-    private val getNetworkStatus: IGetNetworkStatusUseCase = mockk()
+    private val getNetworkStatus: IObserveNetworkStateUseCase = mockk()
     private val getLocationStatus: IGetLocationStatusUseCase = mockk()
     private val eventSearchParams = EventSearchParams(radius = 5000, sortType = EventSortType.DISTANCE)
     private val now = Instant.now()
@@ -76,7 +77,7 @@ internal class GetFilteredEventsUseCaseTest {
         mockkObject(EventsProcessor)
         mockkStatic(Log::class)
         coEvery { preferencesStorage.saveEventSearchParams(eventSearchParams) } just Runs
-        every { getNetworkStatus.networkStatus.value } returns NetworkStatus.CONNECTED
+        every { getNetworkStatus() } returns flowOf(NetworkStatus.CONNECTED)
         every { getLocationStatus.userGPoint.value } returns userGPoint
         coEvery { eventRepository.getAllEvents(true) } returns mockEvents
         coEvery { eventRepository.getAllEvents(false) } returns mockEvents
@@ -93,7 +94,7 @@ internal class GetFilteredEventsUseCaseTest {
         val result = getFilteredEvents(eventSearchParams)
 
         coVerify { preferencesStorage.saveEventSearchParams(eventSearchParams) }
-        coVerify { getNetworkStatus.networkStatus.value }
+        coVerify { getNetworkStatus() }
         coVerify { getLocationStatus.userGPoint.value }
         coVerify { eventRepository.getAllEvents(true) }
         assert(result.isSuccess)
@@ -107,11 +108,11 @@ internal class GetFilteredEventsUseCaseTest {
      */
     @Test
     fun `test get events successfully with no network`() = runBlocking {
-        coEvery { getNetworkStatus.networkStatus.value } returns NetworkStatus.DISCONNECTED
+        coEvery { getNetworkStatus() } returns flowOf(NetworkStatus.DISCONNECTED)
         val result = getFilteredEvents(eventSearchParams)
 
         coVerify { preferencesStorage.saveEventSearchParams(eventSearchParams) }
-        coVerify { getNetworkStatus.networkStatus.value }
+        coVerify { getNetworkStatus() }
         coVerify { getLocationStatus.userGPoint.value }
         coVerify { eventRepository.getAllEvents(false) }
         assert(result.isSuccess)
@@ -128,7 +129,7 @@ internal class GetFilteredEventsUseCaseTest {
         val result = getFilteredEvents(eventSearchParams)
 
         coVerify { preferencesStorage.saveEventSearchParams(eventSearchParams) }
-        coVerify { getNetworkStatus.networkStatus.value }
+        coVerify { getNetworkStatus() }
         coVerify { getLocationStatus.userGPoint.value }
         coVerify { eventRepository.getAllEvents(true) }
         assert(result.isFailure)
@@ -148,7 +149,7 @@ internal class GetFilteredEventsUseCaseTest {
         val result = getFilteredEvents(eventSearchParams)
         // Verify that all the necessary methods were called
         coVerify { preferencesStorage.saveEventSearchParams(eventSearchParams) }
-        coVerify { getNetworkStatus.networkStatus.value }
+        coVerify { getNetworkStatus() }
         coVerify { getLocationStatus.userGPoint.value }
         coVerify { eventRepository.getAllEvents(true) }
         // Verify that despite the error in saving the search parameters, the events are correctly fetched

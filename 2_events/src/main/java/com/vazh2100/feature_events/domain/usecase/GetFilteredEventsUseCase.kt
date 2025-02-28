@@ -7,8 +7,9 @@ import com.vazh2100.feature_events.domain.entities.event.Event
 import com.vazh2100.feature_events.domain.entities.event.EventSearchParams
 import com.vazh2100.feature_events.domain.entities.event.EventsProcessor.searchWith
 import com.vazh2100.geolocation.usecase.IGetLocationStatusUseCase
-import com.vazh2100.network.entity.NetworkStatus
-import com.vazh2100.network.usecase.IGetNetworkStatusUseCase
+import com.vazh2100.network.entity.NetworkStatus.CONNECTED
+import com.vazh2100.network.usecase.IObserveNetworkStateUseCase
+import kotlinx.coroutines.flow.first
 
 /**
  * Use case for retrieving a filtered list of events.
@@ -18,7 +19,7 @@ import com.vazh2100.network.usecase.IGetNetworkStatusUseCase
 internal class GetFilteredEventsUseCase(
     private val eventRepository: EventRepository,
     private val eventsPreferencesStorage: EventsPreferencesStorage,
-    private val getNetworkStatus: IGetNetworkStatusUseCase,
+    private val getNetworkStatus: IObserveNetworkStateUseCase,
     private val getLocationStatus: IGetLocationStatusUseCase,
 ) {
 
@@ -35,7 +36,7 @@ internal class GetFilteredEventsUseCase(
             Log.e("", "", e)
         }
         // Check the current network status
-        val hasInternet = getNetworkStatus.networkStatus.value == NetworkStatus.CONNECTED
+        val hasInternet = getNetworkStatus().first() == CONNECTED
         // Get the user's current coordinates
         val userGPoint = getLocationStatus.userGPoint.value
         val events: List<Event>

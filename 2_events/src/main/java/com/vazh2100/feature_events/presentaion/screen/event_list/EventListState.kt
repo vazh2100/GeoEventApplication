@@ -21,8 +21,8 @@ internal abstract class EventListState : ViewModel() {
     val events = _events.asStateFlow()
 
     // location status and current user's coordinates
-    protected val _locationStatus = MutableStateFlow(LocationStatus.UNDEFINED)
-    val locationStatus = _locationStatus.asStateFlow()
+    lateinit var locationStatus: StateFlow<LocationStatus>
+        protected set
     lateinit var userGPoint: StateFlow<GPoint?>
         protected set
     lateinit var networkStatus: StateFlow<NetworkStatus>
