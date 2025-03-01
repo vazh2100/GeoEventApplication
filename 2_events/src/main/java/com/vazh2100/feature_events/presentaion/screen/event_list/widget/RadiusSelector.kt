@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +17,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.vazh2100.theme.colors
+import com.vazh2100.theme.dimens
+import com.vazh2100.theme.styles
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,29 +31,29 @@ internal fun RadiusSelector(
     Column {
         Text(
             "Distance (km)",
-            style = MaterialTheme.typography.titleSmall
+            style = styles.titleSmall
         )
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(dimens.eight))
         Slider(
             onValueChange = { tempRadius = it },
             valueRange = 250f..7500f,
             onValueChangeFinished = { onValueChange(tempRadius?.toInt()) },
             value = tempRadius ?: 7500f,
             steps = 28,
-            modifier = Modifier.padding(horizontal = 4.dp),
+            modifier = Modifier.padding(horizontal = dimens.four),
             thumb = {
                 Box(
                     modifier = Modifier
-                        .size(16.dp)
+                        .size(dimens.sixteen)
                         .background(
-                            MaterialTheme.colorScheme.primary,
+                            colors.primary,
                             shape = CircleShape
                         )
                 )
             },
         )
         tempRadius?.let {
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(dimens.eight))
             Text("Chosen: ${it.toInt()} km")
         }
     }

@@ -6,14 +6,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.vazh2100.core.domain.entities.formatter.toLocalFormattedString
 import com.vazh2100.feature_events.domain.entities.event.Event
 import com.vazh2100.geolocation.entity.GPoint
+import com.vazh2100.theme.dimens
+import com.vazh2100.theme.styles
 
 @Composable
 internal fun EventListItem(userGPoint: GPoint?, event: Event, onClick: () -> Unit) {
@@ -21,32 +21,32 @@ internal fun EventListItem(userGPoint: GPoint?, event: Event, onClick: () -> Uni
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = 16.dp,
-                vertical = 8.dp
+                horizontal = dimens.sixteen,
+                vertical = dimens.eight
             )
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(dimens.four)
     ) {
         Column(
             Modifier
-                .padding(16.dp)
+                .padding(dimens.sixteen)
         ) {
             Text(
                 text = event.name,
-                style = MaterialTheme.typography.titleLarge
+                style = styles.titleLarge
             )
             Text(
                 text = "Date: ${event.date.toLocalFormattedString()}",
-                style = MaterialTheme.typography.bodyMedium
+                style = styles.bodyMedium
             )
             Text(
                 text = "Type: ${event.type.displayName}",
-                style = MaterialTheme.typography.bodyMedium
+                style = styles.bodyMedium
             )
             userGPoint?.let {
                 Text(
                     text = "Distance: %.2f km".format(event.gPoint.distanceTo(it)),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = styles.bodyMedium
                 )
             }
         }

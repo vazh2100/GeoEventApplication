@@ -9,7 +9,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,8 +17,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.vazh2100.core.domain.entities.DisplayNameEnum
+import com.vazh2100.theme.dimens
+import com.vazh2100.theme.styles
 
 @Composable
 fun <T : DisplayNameEnum> TypeSelector(
@@ -31,8 +31,8 @@ fun <T : DisplayNameEnum> TypeSelector(
     var expanded by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
-        Text("Event Type", style = MaterialTheme.typography.titleSmall)
-        Spacer(modifier = Modifier.height(8.dp))
+        Text("Event Type", style = styles.titleSmall)
+        Spacer(modifier = Modifier.height(dimens.eight))
         Box {
             OutlinedButton(onClick = { expanded = true }) {
                 Text(currentSelection?.displayName ?: "Choose type")

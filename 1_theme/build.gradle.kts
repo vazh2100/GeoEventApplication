@@ -1,25 +1,22 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "com.vazh2100.core"
+    namespace = "com.vazh2100.theme"
     compileSdk = 35
 
     defaultConfig {
         minSdk = 26
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
     }
     compileOptions {
@@ -45,13 +42,5 @@ dependencies {
     implementation(libs.koin.android)
     // Json
     implementation(libs.kotlinx.serialization.json)
-    // Room
-    implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
-    // Location Google Play Services
-    implementation(libs.play.services.location)
-    // Tests
-    testImplementation(libs.junit)
-    testImplementation(libs.mockk)
-    implementation(project(":1_theme"))
+    // Modules
 }

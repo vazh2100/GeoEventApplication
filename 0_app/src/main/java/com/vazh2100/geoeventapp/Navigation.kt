@@ -1,6 +1,5 @@
 package com.vazh2100.geoeventapp
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.EaseInOut
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -15,7 +14,6 @@ import com.vazh2100.feature_events.presentaion.screen.event_list.EventListScreen
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 internal fun AppNavGraph(navController: NavHostController) {
     NavHost(

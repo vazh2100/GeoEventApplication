@@ -67,4 +67,5 @@ dependencies {
     api(project(":1_core_a"))
     api(project(":1_network"))
     api(project(":1_geolocation"))
+    api(project(":1_theme"))
 }

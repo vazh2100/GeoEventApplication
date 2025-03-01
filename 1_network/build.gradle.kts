@@ -34,4 +34,5 @@ dependencies {
     implementation(libs.koin.android)
     // modules
     api(project(":1_core_a"))
+    api(project(":1_theme"))
 }

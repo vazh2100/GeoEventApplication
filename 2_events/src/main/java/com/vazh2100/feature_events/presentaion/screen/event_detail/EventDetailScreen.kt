@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -26,9 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.vazh2100.core.domain.entities.formatter.toLocalFormattedString
 import com.vazh2100.feature_events.domain.entities.event.Event
+import com.vazh2100.theme.colors
+import com.vazh2100.theme.dimens
+import com.vazh2100.theme.shapes
+import com.vazh2100.theme.styles
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,56 +60,56 @@ fun EventDetailsScreen(
         Column(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(dimens.sixteen)
         ) {
             Card(
-                shape = RoundedCornerShape(12.dp),
+                shape = shapes.medium,
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(6.dp)
+                elevation = CardDefaults.cardElevation(dimens.four)
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(dimens.sixteen)
                 ) {
                     Text(
                         text = event.name,
-                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                        style = styles.headlineMedium.copy(fontWeight = FontWeight.Bold),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(dimens.twelve))
                     Text(
                         text = "Date: ${event.date.toLocalFormattedString()}",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = styles.bodyMedium
                     )
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(dimens.eight))
                     Text(
                         text = "Type: ${event.type.displayName}",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = styles.bodyMedium
                     )
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(dimens.eight))
 
                     Text(
                         text = "Location: ${event.city}",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = styles.bodyMedium
                     )
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(dimens.twelve))
                     Text(
                         text = "Description:",
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                        style = styles.bodyMedium.copy(fontWeight = FontWeight.Bold)
                     )
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(dimens.eight))
                     Text(
                         text = event.description,
                         style = MaterialTheme
                             .typography
                             .bodySmall
-                            .copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                            .copy(color = colors.onSurfaceVariant),
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
             }
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(dimens.sixteen))
             Button(
                 onClick = {
                     addEventToGoogleCalendar(

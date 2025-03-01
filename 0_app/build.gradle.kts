@@ -86,5 +86,6 @@ dependencies {
     implementation(project(":1_core_a"))
     implementation(project(":1_network"))
     implementation(project(":1_geolocation"))
+    implementation(project(":1_theme"))
     implementation(project(":2_events"))
 }

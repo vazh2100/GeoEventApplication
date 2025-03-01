@@ -4,31 +4,32 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.vazh2100.theme.colors
+import com.vazh2100.theme.dimens
+import com.vazh2100.theme.shapes
+import com.vazh2100.theme.styles
 
 @Composable
 fun ErrorPanel(text: String, modifier: Modifier = Modifier) {
-    val backgroundColor = MaterialTheme.colorScheme.error
-    val textColor = MaterialTheme.colorScheme.onError
+    val backgroundColor = colors.error
+    val textColor = colors.onError
     Box(modifier = modifier) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
                     backgroundColor,
-                    shape = RoundedCornerShape(24.dp)
+                    shape = shapes.extraLarge
                 )
-                .padding(10.dp)
+                .padding(dimens.twelve)
         ) {
             Text(
                 text = text,
-                style = MaterialTheme.typography.bodyMedium,
+                style = styles.bodyMedium,
                 color = textColor,
                 modifier = Modifier.align(Alignment.Center)
             )

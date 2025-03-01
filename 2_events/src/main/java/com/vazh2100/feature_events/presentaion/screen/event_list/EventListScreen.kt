@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -24,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.vazh2100.core.presentaion.widget.ErrorMessage
 import com.vazh2100.core.presentaion.widget.LoadingIndicator
 import com.vazh2100.feature_events.domain.entities.event.Event
@@ -32,6 +30,9 @@ import com.vazh2100.feature_events.presentaion.screen.event_list.widget.EventLis
 import com.vazh2100.feature_events.presentaion.screen.event_list.widget.FilterPanel
 import com.vazh2100.feature_events.presentaion.screen.event_list.widget.LocationStatusBar
 import com.vazh2100.network.widget.NetworkStatusBar
+import com.vazh2100.theme.colors
+import com.vazh2100.theme.dimens
+import com.vazh2100.theme.styles
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -63,11 +64,11 @@ fun EventListScreen(
                     text = userGPoint?.let {
                         "Coordinates: Lat: %.2f, Lon: %.2f".format(it.lat, it.lon)
                     } ?: "Coordinates: Not Available",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    style = styles.bodyMedium,
+                    color = colors.onSurface,
                     modifier = Modifier.padding(
-                        top = 8.dp,
-                        start = 8.dp
+                        top = dimens.eight,
+                        start = dimens.eight
                     )
                 )
             },
@@ -78,12 +79,12 @@ fun EventListScreen(
                     Icon(
                         Icons.Filled.FilterList,
                         contentDescription = "Filters",
-                        modifier = Modifier.size(36.dp)
+                        modifier = Modifier.size(dimens.thirtySix)
                     )
                 }
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(dimens.eight))
             },
-            expandedHeight = 36.dp
+            expandedHeight = dimens.thirtySix
         )
     }) { paddingValues ->
         Box(

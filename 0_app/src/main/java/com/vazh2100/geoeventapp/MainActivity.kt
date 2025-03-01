@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
-import com.vazh2100.core.presentaion.theme.GeoEventAppTheme
+import com.vazh2100.theme.AppTheme
 
 internal class MainActivity : ComponentActivity() {
 
@@ -13,7 +13,7 @@ internal class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            GeoEventAppTheme {
+            AppTheme {
                 val navController = rememberNavController()
                 AppNavGraph(navController = navController)
             }

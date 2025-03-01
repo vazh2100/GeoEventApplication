@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.vazh2100.core.presentaion.widget.ErrorPanel
 import com.vazh2100.network.entity.NetworkStatus
+import com.vazh2100.theme.dimens
 
 @Composable
 fun NetworkStatusBar(networkStatus: NetworkStatus, modifier: Modifier = Modifier) {
@@ -17,7 +17,12 @@ fun NetworkStatusBar(networkStatus: NetworkStatus, modifier: Modifier = Modifier
     ) {
         ErrorPanel(
             "No network",
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 4.dp)
+            modifier = Modifier.padding(
+                start = dimens.sixteen,
+                end = dimens.sixteen,
+                top = dimens.eight,
+                bottom = dimens.four
+            )
         )
     }
 }

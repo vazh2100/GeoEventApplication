@@ -29,5 +29,6 @@ rootProject.name = "GeoEventApplication"
 include(":0_app")
 include(":1_core_a")
 include(":1_network")
-include(":2_events")
 include(":1_geolocation")
+include(":1_theme")
+include(":2_events")

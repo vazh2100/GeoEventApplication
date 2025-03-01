@@ -14,17 +14,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.vazh2100.core.presentaion.widget.ErrorPanel
 import com.vazh2100.geolocation.entity.LocationStatus
 import com.vazh2100.geolocation.entity.LocationStatus.LOCATION_OFF
 import com.vazh2100.geolocation.entity.LocationStatus.PERMISSION_DENIED
+import com.vazh2100.theme.colors
+import com.vazh2100.theme.dimens
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -37,9 +37,9 @@ internal fun LocationStatusBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = dimens.sixteen)
             .background(
-                MaterialTheme.colorScheme.surface.copy(alpha = 0.1f)
+                colors.surface.copy(alpha = 0.1f)
             )
     ) {
         Column(
@@ -48,13 +48,13 @@ internal fun LocationStatusBar(
             val isVisible = locationStatus == PERMISSION_DENIED || locationStatus == LOCATION_OFF
             AnimatedVisibility(isVisible) {
                 Column {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(dimens.eight))
                     ErrorPanel(locationStatus.statusMessage)
                 }
             }
             AnimatedVisibility(locationStatus == PERMISSION_DENIED) {
                 Column {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(dimens.eight))
                     Button(
                         onClick = {
                             locationPermissionState.launchPermissionRequest()
@@ -63,7 +63,7 @@ internal fun LocationStatusBar(
                     ) {
                         Text(text = "Grant Location Permission")
                     }
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(dimens.four))
                     Button(
                         onClick = {
                             val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -77,15 +77,15 @@ internal fun LocationStatusBar(
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
+                            containerColor = colors.primary,
+                            contentColor = colors.onPrimary
                         )
                     ) {
                         Text(text = "Go to Settings")
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(dimens.eight))
         }
     }
 }
