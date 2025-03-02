@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.vazh2100.theme"
+    namespace = "theme"
     compileSdk = 35
 
     defaultConfig {

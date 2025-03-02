@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.vazh2100.core"
+    namespace = "core"
     compileSdk = 35
 
     defaultConfig {

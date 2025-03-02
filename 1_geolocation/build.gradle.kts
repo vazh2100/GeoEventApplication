@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.vazh2100.geolocation"
+    namespace = "geolocation"
     compileSdk = 35
 
     defaultConfig {

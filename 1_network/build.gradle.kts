@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.vazh2100.network"
+    namespace = "network"
     compileSdk = 35
 
     defaultConfig {

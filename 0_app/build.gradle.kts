@@ -12,11 +12,11 @@ android {
         "$major.$minor.$patch"
     }
 
-    namespace = "com.vazh2100.geoeventapp"
+    namespace = "vazh2100.geoventapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.vazh2100.geoeventapp"
+        applicationId = "vazh2100.geoventapp"
         minSdk = 26
         targetSdk = 35
         versionCode = 4
