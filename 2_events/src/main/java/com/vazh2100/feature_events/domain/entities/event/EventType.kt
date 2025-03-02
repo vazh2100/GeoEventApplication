@@ -1,6 +1,6 @@
 package com.vazh2100.feature_events.domain.entities.event
 
-import com.vazh2100.core.domain.entities.DisplayNameEnum
+import com.vazh2100.core.entities.DisplayNameEnum
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

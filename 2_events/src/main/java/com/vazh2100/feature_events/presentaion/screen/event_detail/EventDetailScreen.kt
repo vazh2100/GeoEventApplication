@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import com.vazh2100.core.domain.entities.formatter.toLocalFormattedString
+import com.vazh2100.core.entities.DateFormatter.toLocalFormattedString
 import com.vazh2100.feature_events.domain.entities.event.Event
 import com.vazh2100.theme.colors
 import com.vazh2100.theme.dimens

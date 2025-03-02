@@ -23,8 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.vazh2100.core.presentaion.widget.ErrorMessage
-import com.vazh2100.core.presentaion.widget.LoadingIndicator
+import com.vazh2100.core.widgets.ErrorMessage
+import com.vazh2100.core.widgets.LoadingIndicator
 import com.vazh2100.feature_events.domain.entities.event.Event
 import com.vazh2100.feature_events.presentaion.screen.event_list.widget.EventList
 import com.vazh2100.feature_events.presentaion.screen.event_list.widget.FilterPanel

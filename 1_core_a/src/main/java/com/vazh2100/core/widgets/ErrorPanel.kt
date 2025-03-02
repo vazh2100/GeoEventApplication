@@ -1,4 +1,4 @@
-package com.vazh2100.core.presentaion.widget
+package com.vazh2100.core.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

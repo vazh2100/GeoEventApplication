@@ -19,7 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
-import com.vazh2100.core.presentaion.widget.ErrorPanel
+import com.vazh2100.core.widgets.ErrorPanel
 import com.vazh2100.geolocation.entity.LocationStatus
 import com.vazh2100.geolocation.entity.LocationStatus.LOCATION_OFF
 import com.vazh2100.geolocation.entity.LocationStatus.PERMISSION_DENIED

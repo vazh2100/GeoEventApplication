@@ -12,9 +12,6 @@ pluginManagement {
     }
     plugins {
         id("com.autonomousapps.build-health") version "2.5.0"
-        id("com.android.application") version "8.7.2" apply false
-        id("org.jetbrains.kotlin.android") version "2.0.21" apply false
-        id("com.google.devtools.ksp") version "2.0.21-1.0.27" apply false
     }
 }
 dependencyResolutionManagement {
@@ -27,8 +24,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "GeoEventApplication"
 include(":0_app")
+include(":1_core")
 include(":1_core_a")
+include(":1_theme")
 include(":1_network")
 include(":1_geolocation")
-include(":1_theme")
 include(":2_events")

@@ -1,5 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
 
@@ -64,8 +67,9 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
+    api(project(":1_core"))
     api(project(":1_core_a"))
+    api(project(":1_theme"))
     api(project(":1_network"))
     api(project(":1_geolocation"))
-    api(project(":1_theme"))
 }

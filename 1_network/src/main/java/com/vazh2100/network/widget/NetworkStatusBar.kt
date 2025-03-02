@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.vazh2100.core.presentaion.widget.ErrorPanel
+import com.vazh2100.core.widgets.ErrorPanel
 import com.vazh2100.network.entity.NetworkStatus
 import com.vazh2100.theme.dimens
 

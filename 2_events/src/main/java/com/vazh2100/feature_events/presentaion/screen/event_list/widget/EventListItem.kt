@@ -9,7 +9,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.vazh2100.core.domain.entities.formatter.toLocalFormattedString
+import com.vazh2100.core.entities.DateFormatter.toLocalFormattedString
 import com.vazh2100.feature_events.domain.entities.event.Event
 import com.vazh2100.geolocation.entity.GPoint
 import com.vazh2100.theme.dimens

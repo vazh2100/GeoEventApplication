@@ -7,23 +7,19 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
-    alias(libs.plugins.ksp) apply false
-    alias(libs.plugins.dependency.analysis)
-    alias(libs.plugins.detekt) apply false
     alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.dependency.analysis)
 }
 subprojects {
     apply(plugin = rootProject.libs.plugins.detekt.get().pluginId)
-    apply(plugin = rootProject.libs.plugins.kotlin.android.get().pluginId)
-    apply(plugin = rootProject.libs.plugins.kotlin.compose.get().pluginId)
-    apply(plugin = rootProject.libs.plugins.kotlin.serialization.get().pluginId)
     apply(plugin = rootProject.libs.plugins.dependency.analysis.get().pluginId)
     configureDetekt()
     dependencies {
-        // detekt
         "detektPlugins"(rootProject.libs.detekt.formatting)
         "detektPlugins"(rootProject.libs.detekt.rules.compose)
-//        "detektPlugins"(rootProject.libs.detekt.rules.libraries)
     }
 }
 

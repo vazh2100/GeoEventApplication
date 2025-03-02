@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
 }
 
@@ -48,10 +50,7 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
-    // Location Google Play Services
-    implementation(libs.play.services.location)
-    // Tests
-    testImplementation(libs.junit)
-    testImplementation(libs.mockk)
+    //
+    implementation(project(":1_core"))
     implementation(project(":1_theme"))
 }

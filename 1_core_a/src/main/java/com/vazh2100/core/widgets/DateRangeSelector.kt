@@ -1,4 +1,4 @@
-package com.vazh2100.core.presentaion.widget
+package com.vazh2100.core.widgets
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,8 +26,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.vazh2100.core.domain.entities.formatter.formatAsUtc
-import com.vazh2100.core.domain.entities.formatter.toInstance
+import com.vazh2100.core.entities.DateFormatter.formatAsUtc
+import com.vazh2100.core.entities.DateFormatter.toInstance
 import com.vazh2100.theme.colors
 import com.vazh2100.theme.dimens
 import com.vazh2100.theme.shapes

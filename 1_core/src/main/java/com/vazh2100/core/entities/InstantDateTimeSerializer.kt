@@ -1,4 +1,4 @@
-package com.vazh2100.core.domain.entities.json
+package com.vazh2100.core.entities
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

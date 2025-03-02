@@ -1,4 +1,4 @@
-package com.vazh2100.core.presentaion.widget
+package com.vazh2100.core.widgets
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,12 +17,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.vazh2100.core.domain.entities.DisplayNameEnum
+import com.vazh2100.core.entities.DisplayNameEnum
 import com.vazh2100.theme.dimens
 import com.vazh2100.theme.styles
 
 @Composable
 fun <T : DisplayNameEnum> TypeSelector(
+    label: String,
     currentSelection: T?,
     onSelectionChange: (T?) -> Unit,
     items: List<T?>,
@@ -31,7 +32,7 @@ fun <T : DisplayNameEnum> TypeSelector(
     var expanded by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
-        Text("Event Type", style = styles.titleSmall)
+        Text(label, style = styles.titleSmall)
         Spacer(modifier = Modifier.height(dimens.eight))
         Box {
             OutlinedButton(onClick = { expanded = true }) {

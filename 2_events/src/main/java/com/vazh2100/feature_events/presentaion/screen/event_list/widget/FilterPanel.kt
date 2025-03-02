@@ -20,8 +20,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.vazh2100.core.presentaion.widget.DateRangeSelector
-import com.vazh2100.core.presentaion.widget.TypeSelector
+import com.vazh2100.core.widgets.DateRangeSelector
+import com.vazh2100.core.widgets.TypeSelector
 import com.vazh2100.feature_events.domain.entities.event.EventSearchParams
 import com.vazh2100.feature_events.domain.entities.event.EventSortType
 import com.vazh2100.feature_events.domain.entities.event.EventType
@@ -62,6 +62,7 @@ internal fun FilterPanel(
                     horizontalArrangement = Arrangement.Start
                 ) {
                     TypeSelector<EventType>(
+                        label = "Event Type",
                         currentSelection = tempParams.type,
                         onSelectionChange = { tempParams = tempParams.copy(type = it) },
                         items = mutableListOf<EventType?>().apply {
@@ -73,6 +74,7 @@ internal fun FilterPanel(
                     val currentSelection =
                         tempParams.sortType.takeIf { it != EventSortType.DISTANCE || userGPoint != null }
                     TypeSelector<EventSortType>(
+                        label = "Sort Type",
                         currentSelection = currentSelection,
                         items = mutableListOf<EventSortType?>().apply {
                             add(null)

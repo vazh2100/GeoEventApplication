@@ -28,9 +28,6 @@ android {
 
 
 dependencies {
-    // Compose
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.material3)
     // KoinDI
     implementation(libs.koin.core)
     implementation(libs.koin.android)

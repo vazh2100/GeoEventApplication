@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -45,7 +46,6 @@ android {
     }
     applicationVariants.configureEach {
         outputs.configureEach {
-            // Change output file name to match the desired naming convention
             val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
             val newApkName = "${defaultConfig.applicationId}.v${defaultConfig.versionName}.apk"
             outputImpl.outputFileName = newApkName
@@ -77,12 +77,8 @@ dependencies {
     implementation(libs.koin.android)
     // JSON
     implementation(libs.kotlinx.serialization.json)
-    // Room
-    runtimeOnly(libs.room.runtime)
-    ksp(libs.room.compiler)
-    // Location Google Play Services
-    implementation(libs.play.services.location)
     // modules
+    implementation(project(":1_core"))
     implementation(project(":1_core_a"))
     implementation(project(":1_network"))
     implementation(project(":1_geolocation"))
