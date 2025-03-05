@@ -30,36 +30,34 @@ print_tree() {
     done
 }
 
+# Функция для обработки каталога
+process_directory() {
+    local dir="$1"
+    local label="$2"
+
+    if [ -d "$dir" ]; then
+        echo "$label/"
+        print_tree "$dir" "   "
+    else
+        echo "Каталог $dir не существует или недоступен."
+    fi
+}
+
 # Основная программа
-cd 0_app/src/main/java/vazh2100/geoeventapp
-echo "0_app/"
-print_tree "." "   "
-cd ../../../../../..
-cd 1_core/src/main/java/core
-echo "1_core/"
-print_tree "." "   "
-cd ../../../../..
-cd 1_core_a/src/main/java/core
-echo "1_core_a/"
-print_tree "." "   "
-cd ../../../../..
-cd 1_geolocation/src/main/java/geolocation
-echo "1_geolocation/"
-print_tree "." "   "
-cd ../../../../..
-cd 1_network/src/main/java/network
-echo "1_network/"
-print_tree "." "   "
-cd ../../../../..
-cd 1_theme/src/main/java/theme
-echo "1_theme/"
-print_tree "." "   "
-cd ../../../../..
-cd 2_events/src/main/java/events
-echo "2_events/"
-print_tree "." "   "
-cd ../../../../..
-cd 2_events/src/test/java/events
-echo "2_events/"
-print_tree "." "   "
-cd ../../../../..
+# Используем обычный массив для хранения пар ключ-значение
+declare -a directories=(
+    "0_app:0_app/src/main/java/vazh2100/geoeventapp"
+    "1_core:1_core/src/main/java/core"
+    "1_core_a:1_core_a/src/main/java/core"
+    "1_geolocation:1_geolocation/src/main/java/geolocation"
+    "1_network:1_network/src/main/java/network"
+    "1_theme:1_theme/src/main/java/theme"
+    "2_events:2_events/src/main/java/events"
+    "2_events_test:2_events/src/test/java/events"
+)
+
+# Итерируемся по массиву directories
+for item in "${directories[@]}"; do
+    IFS=':' read -r label dir <<< "$item"
+    process_directory "$dir" "$label"
+done
