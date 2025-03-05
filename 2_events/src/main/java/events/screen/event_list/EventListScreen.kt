@@ -46,7 +46,7 @@ fun EventListScreen(
     modifier: Modifier = Modifier
 ) {
     val viewModel: EventListViewModel = koinViewModel()
-    // Observing state from the ViewModel
+    //
     val networkStatus by viewModel.networkStatus.collectAsState()
     val locationStatus by viewModel.locationStatus.collectAsState()
     val userGPoint by viewModel.userGPoint.collectAsState()
@@ -54,28 +54,22 @@ fun EventListScreen(
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val eventSearchParams by viewModel.eventSearchParams.collectAsState()
-//     Local state for managing temporary filters and visibility of the filter panel
+    //
     var showFilterPanel by remember { mutableStateOf(false) }
 
     Scaffold(modifier = modifier, topBar = {
         TopAppBar(
             title = {
                 Text(
-                    text = userGPoint?.let {
-                        "Coordinates: Lat: %.2f, Lon: %.2f".format(it.lat, it.lon)
-                    } ?: "Coordinates: Not Available",
+                    text = userGPoint?.let { "Coordinates: Lat: %.2f, Lon: %.2f".format(it.lat, it.lon) }
+                        ?: "Coordinates: Not Available",
                     style = styles.bodyMedium,
                     color = colors.onSurface,
-                    modifier = Modifier.padding(
-                        top = dimens.eight,
-                        start = dimens.eight
-                    )
+                    modifier = Modifier.padding(top = dimens.eight, start = dimens.eight)
                 )
             },
             actions = {
-                IconButton(onClick = {
-                    showFilterPanel = !showFilterPanel
-                }) {
+                IconButton(onClick = { showFilterPanel = !showFilterPanel }) {
                     Icon(
                         Icons.Filled.FilterList,
                         contentDescription = "Filters",
@@ -84,24 +78,13 @@ fun EventListScreen(
                 }
                 Spacer(modifier = Modifier.width(dimens.eight))
             },
-            expandedHeight = dimens.thirtySix
+            expandedHeight = dimens.thirtySix,
         )
     }) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                // Displays the current network status
+        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+            Column(modifier = Modifier.fillMaxSize()) {
                 NetworkStatusBar(networkStatus = networkStatus)
-                // Displays the current location status
-                LocationStatusBar(
-                    locationStatus = locationStatus,
-                    context = LocalContext.current
-                )
+                LocationStatusBar(locationStatus = locationStatus, context = LocalContext.current)
                 when {
                     isLoading -> LoadingIndicator()
                     errorMessage != null -> ErrorMessage(errorMessage)
@@ -110,10 +93,9 @@ fun EventListScreen(
                         events = events,
                         userGPoint = userGPoint,
                         onEventTap = onEventTap
-                    ) // Displays the list of events
+                    )
                 }
             }
-            // Filter panel for adjusting the event filters
             FilterPanel(
                 showFilterPanel = showFilterPanel,
                 searchParams = eventSearchParams,

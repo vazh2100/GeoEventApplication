@@ -36,9 +36,7 @@ internal class EventListViewModel(
         val changed = eventSearchParams != _searchParams.value
         if (changed) {
             _searchParams.value = eventSearchParams
-            viewModelScope.launch {
-                loadEvents()
-            }
+            viewModelScope.launch { loadEvents() }
         }
     }
 

@@ -11,11 +11,7 @@ import kotlinx.coroutines.flow.first
 import network.entity.NetworkStatus.CONNECTED
 import network.usecase.IObserveNetworkStateUseCase
 
-/**
- * Use case for retrieving a filtered list of events.
- * This class handles filtering logic by combining user preferences,
- * network status, and location data.
- */
+/** Retrieves a list of events filtered based on user preferences and current conditions. */
 internal class GetFilteredEventsUseCase(
     private val eventRepository: EventRepository,
     private val eventsPreferencesStorage: EventsPreferencesStorage,
@@ -23,12 +19,7 @@ internal class GetFilteredEventsUseCase(
     private val getLocationStatus: IGetLocationStatusUseCase,
 ) {
 
-    /**
-     * Retrieves a list of events filtered based on user preferences and current conditions.
-     */
-    suspend operator fun invoke(
-        eventSearchParams: EventSearchParams
-    ): Result<List<Event>> {
+    suspend operator fun invoke(eventSearchParams: EventSearchParams): Result<List<Event>> {
         // Save the filter preferences locally
         try {
             eventsPreferencesStorage.saveEventSearchParams(eventSearchParams)
@@ -47,7 +38,7 @@ internal class GetFilteredEventsUseCase(
             return Result.failure(Exception("Failed to get events"))
         }
         // Filter and sort events
-        val filteredEvents = events.searchWith(eventSearchParams, userGPoint)
+        val filteredEvents = events.searchWith(eventSearchParams.apply { gPoint = userGPoint })
         // Return a successful result with the filtered events
         return Result.success(filteredEvents)
     }

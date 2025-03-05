@@ -4,17 +4,21 @@ import android.content.Context
 import androidx.room.Room
 
 internal object DatabaseProvider {
-
     private var instance: EventsDatabase? = null
+
+    @Suppress("ReturnCount")
     fun getDatabase(context: Context): EventsDatabase {
-        return instance ?: synchronized(this) {
+        instance?.also { return it }
+        synchronized(this) {
+            instance?.also { return it }
             val dateBase = Room.databaseBuilder(
                 context.applicationContext,
                 EventsDatabase::class.java,
                 "app_database"
             ).build()
-            instance = dateBase
-            dateBase
+            return dateBase.also {
+                instance = it
+            }
         }
     }
 }

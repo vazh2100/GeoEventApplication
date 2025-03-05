@@ -61,11 +61,17 @@ internal class EventsProcessorFilterTest {
 
     private val cases = listOf(
         Case(events, EventSearchParams(type = EventType.CONCERT), listOf(event1, event3)),
-        Case(events, EventSearchParams(radius = radius), listOf(event1, event3)),
+        Case(events, EventSearchParams(radius = radius, gPoint = userGPoint), listOf(event1, event3)),
         Case(events, EventSearchParams(startDate = now), listOf(event2, event3)),
         Case(
             events,
-            EventSearchParams(EventType.CONCERT, startDate = now, endDate = now.plus(2, ChronoUnit.DAYS), radius),
+            EventSearchParams(
+                EventType.CONCERT,
+                startDate = now,
+                endDate = now.plus(2, ChronoUnit.DAYS),
+                radius = radius,
+                gPoint = userGPoint
+            ),
             listOf(event3)
         ),
         // invalid ranges
@@ -79,7 +85,7 @@ internal class EventsProcessorFilterTest {
     @Test
     fun `when the input and the filter are in place, the result is expected`() {
         for ((input, filter, expected) in cases) {
-            assertEquals(expected, EventsProcessor.filter(input, filter, userGPoint))
+            assertEquals(expected, EventsProcessor.filter(input, filter))
         }
     }
 

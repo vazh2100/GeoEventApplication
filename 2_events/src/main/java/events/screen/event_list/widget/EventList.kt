@@ -13,11 +13,9 @@ internal fun EventList(
     events: List<Event>,
     userGPoint: GPoint?,
     onEventTap: (Event) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    LazyColumn(modifier = modifier.fillMaxSize()) {
         items(events) { event ->
             EventListItem(
                 event = event,

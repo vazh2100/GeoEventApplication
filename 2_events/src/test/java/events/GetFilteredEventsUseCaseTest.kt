@@ -81,7 +81,7 @@ internal class GetFilteredEventsUseCaseTest {
         every { getLocationStatus.userGPoint.value } returns userGPoint
         coEvery { eventRepository.getAllEvents(true) } returns mockEvents
         coEvery { eventRepository.getAllEvents(false) } returns mockEvents
-        every { mockEvents.searchWith(eventSearchParams, userGPoint) } returns searchedEvents
+        every { mockEvents.searchWith(eventSearchParams) } returns searchedEvents
         every { Log.e(any(), any(), any()) } returns 0
     }
 

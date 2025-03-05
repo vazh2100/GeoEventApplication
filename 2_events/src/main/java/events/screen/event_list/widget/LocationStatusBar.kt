@@ -38,13 +38,9 @@ internal fun LocationStatusBar(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = dimens.sixteen)
-            .background(
-                colors.surface.copy(alpha = 0.1f)
-            )
+            .background(colors.surface.copy(alpha = 0.1f))
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             val isVisible = locationStatus == PERMISSION_DENIED || locationStatus == LOCATION_OFF
             AnimatedVisibility(isVisible) {
                 Column {
@@ -56,10 +52,8 @@ internal fun LocationStatusBar(
                 Column {
                     Spacer(modifier = Modifier.height(dimens.eight))
                     Button(
-                        onClick = {
-                            locationPermissionState.launchPermissionRequest()
-                        },
-                        modifier = Modifier.fillMaxWidth()
+                        onClick = { locationPermissionState.launchPermissionRequest() },
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Text(text = "Grant Location Permission")
                     }

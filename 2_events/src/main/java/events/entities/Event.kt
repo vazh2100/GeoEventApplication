@@ -21,8 +21,7 @@ data class Event(
     @SerialName("city") @ColumnInfo(name = "city") val city: String,
     @Serializable(with = InstantDateTimeSerializer::class)
     @SerialName("date")
-    @ColumnInfo(name = "date")
-    val date: Instant
+    @ColumnInfo(name = "date") val date: Instant
 ) {
 
     val gPoint: GPoint

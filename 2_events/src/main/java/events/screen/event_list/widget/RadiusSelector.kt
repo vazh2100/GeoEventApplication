@@ -29,10 +29,7 @@ internal fun RadiusSelector(
 ) {
     var tempRadius by remember { mutableStateOf(initialRadius?.toFloat()) }
     Column {
-        Text(
-            "Distance (km)",
-            style = styles.titleSmall
-        )
+        Text("Distance (km)", style = styles.titleSmall)
         Spacer(Modifier.height(dimens.eight))
         Slider(
             onValueChange = { tempRadius = it },
@@ -41,16 +38,7 @@ internal fun RadiusSelector(
             value = tempRadius ?: 7500f,
             steps = 28,
             modifier = Modifier.padding(horizontal = dimens.four),
-            thumb = {
-                Box(
-                    modifier = Modifier
-                        .size(dimens.sixteen)
-                        .background(
-                            colors.primary,
-                            shape = CircleShape
-                        )
-                )
-            },
+            thumb = { Box(modifier = Modifier.size(dimens.sixteen).background(colors.primary, shape = CircleShape)) },
         )
         tempRadius?.let {
             Spacer(Modifier.height(dimens.eight))
