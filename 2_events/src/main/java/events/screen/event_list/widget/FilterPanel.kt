@@ -61,7 +61,7 @@ internal fun FilterPanel(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    TypeSelector<EventType>(
+                    TypeSelector(
                         label = "Event Type",
                         currentSelection = tempParams.type,
                         onSelectionChange = { tempParams = tempParams.copy(type = it) },
@@ -73,17 +73,15 @@ internal fun FilterPanel(
                     )
                     val currentSelection =
                         tempParams.sortType.takeIf { it != EventSortType.DISTANCE || userGPoint != null }
-                    TypeSelector<EventSortType>(
+                    TypeSelector(
                         label = "Sort Type",
                         currentSelection = currentSelection,
-                        items = mutableListOf<EventSortType?>().apply {
+                        items = buildList {
                             add(null)
                             addAll(EventSortType.entries)
                             if (userGPoint == null) remove(EventSortType.DISTANCE)
                         },
-                        onSelectionChange = {
-                            tempParams = tempParams.copy(sortType = it)
-                        },
+                        onSelectionChange = { tempParams = tempParams.copy(sortType = it) },
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -98,28 +96,23 @@ internal fun FilterPanel(
                     Spacer(Modifier.height(dimens.sixteen))
                     RadiusSelector(
                         initialRadius = tempParams.radius,
-                        onValueChange = {
-                            tempParams = tempParams.copy(radius = it)
-                        }
+                        onValueChange = { tempParams = tempParams.copy(radius = it) }
                     )
                 }
-                Spacer(Modifier.height(dimens.eight))
+                Spacer(modifier = Modifier.height(dimens.eight))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Start
                 ) {
-                    OutlinedButton(onClick = {
-                        onClose()
-                    }) {
-                        Text("Cancel")
-                    }
+                    OutlinedButton(
+                        onClick = onClose,
+                        content = { Text("Cancel") }
+                    )
                     Spacer(modifier = Modifier.weight(1f))
-                    Button(onClick = {
-                        onClose()
-                        onApply(tempParams)
-                    }) {
-                        Text("Apply")
-                    }
+                    Button(
+                        onClick = { onClose(); onApply(tempParams) },
+                        content = { Text("Apply") },
+                    )
                     Spacer(modifier = Modifier.weight(1f))
                 }
             }

@@ -44,7 +44,6 @@ process_directory() {
 }
 
 # Основная программа
-# Используем обычный массив для хранения пар ключ-значение
 declare -a directories=(
     "0_app:0_app/src/main/java/vazh2100/geoeventapp"
     "1_core:1_core/src/main/java/core"
