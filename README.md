@@ -101,9 +101,11 @@
    │   │   └── EventDetailScreen.kt
    │   ├── event_list
    │   │   ├── widget
+   │   │   │   └── Content.kt
    │   │   │   └── EventListItem.kt
    │   │   │   └── EventList.kt
    │   │   │   └── FilterPanel.kt
+   │   │   │   └── GAppBar.kt
    │   │   │   └── LocationStatusBar.kt
    │   │   │   └── RadiusSelector.kt
    │   │   └── EventListScreen.kt

@@ -16,6 +16,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
@@ -29,11 +33,13 @@ import theme.dimens
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun LocationStatusBar(
-    locationStatus: LocationStatus,
+    locationStatus: State<LocationStatus>,
     context: Context,
 ) {
     val locationPermissionState = rememberPermissionState(ACCESS_FINE_LOCATION)
 
+    val visibility1 by remember { derivedStateOf { locationStatus.value in listOf(PERMISSION_DENIED, LOCATION_OFF) } }
+    val visibility2 by remember { derivedStateOf { locationStatus.value == PERMISSION_DENIED } }
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,14 +47,13 @@ internal fun LocationStatusBar(
             .background(colors.surface.copy(alpha = 0.1f))
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            val isVisible = locationStatus == PERMISSION_DENIED || locationStatus == LOCATION_OFF
-            AnimatedVisibility(isVisible) {
+            AnimatedVisibility(visibility1) {
                 Column {
                     Spacer(modifier = Modifier.height(dimens.eight))
-                    ErrorPanel(locationStatus.statusMessage)
+                    ErrorPanel(locationStatus.value.statusMessage)
                 }
             }
-            AnimatedVisibility(locationStatus == PERMISSION_DENIED) {
+            AnimatedVisibility(visibility2) {
                 Column {
                     Spacer(modifier = Modifier.height(dimens.eight))
                     Button(

@@ -21,10 +21,7 @@ fun ErrorPanel(text: String, modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    backgroundColor,
-                    shape = shapes.extraLarge
-                )
+                .background(backgroundColor, shape = shapes.extraLarge)
                 .padding(dimens.twelve)
         ) {
             Text(

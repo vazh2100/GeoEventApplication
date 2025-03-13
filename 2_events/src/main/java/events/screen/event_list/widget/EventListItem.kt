@@ -20,34 +20,16 @@ internal fun EventListItem(userGPoint: GPoint?, event: Event, onClick: () -> Uni
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = dimens.sixteen,
-                vertical = dimens.eight
-            )
+            .padding(horizontal = dimens.sixteen, vertical = dimens.eight)
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(dimens.four)
+        elevation = CardDefaults.cardElevation(dimens.four),
     ) {
-        Column(
-            Modifier
-                .padding(dimens.sixteen)
-        ) {
-            Text(
-                text = event.name,
-                style = styles.titleLarge
-            )
-            Text(
-                text = "Date: ${event.date.toLocalFormattedString()}",
-                style = styles.bodyMedium
-            )
-            Text(
-                text = "Type: ${event.type.displayName}",
-                style = styles.bodyMedium
-            )
+        Column(Modifier.padding(dimens.sixteen)) {
+            Text(text = event.name, style = styles.titleLarge)
+            Text(text = "Date: ${event.date.toLocalFormattedString()}", style = styles.bodyMedium)
+            Text(text = "Type: ${event.type.displayName}", style = styles.bodyMedium)
             userGPoint?.let {
-                Text(
-                    text = "Distance: %.2f km".format(event.gPoint.distanceTo(it)),
-                    style = styles.bodyMedium
-                )
+                Text(text = "Distance: %.2f km".format(event.gPoint.distanceTo(it)), style = styles.bodyMedium)
             }
         }
     }
