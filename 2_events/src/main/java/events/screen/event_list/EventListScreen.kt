@@ -20,7 +20,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import core.widgets.ErrorMessage
@@ -53,9 +52,9 @@ fun EventListScreen(
     val events by viewModel.events.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
-    val eventSearchParams by viewModel.eventSearchParams.collectAsState()
+    val eventSearchParams = viewModel.eventSearchParams.collectAsState()
     //
-    var showFilterPanel by remember { mutableStateOf(false) }
+    val showFilterPanel = remember { mutableStateOf(false) }
 
     Scaffold(modifier = modifier, topBar = {
         TopAppBar(
@@ -69,7 +68,7 @@ fun EventListScreen(
                 )
             },
             actions = {
-                IconButton(onClick = { showFilterPanel = !showFilterPanel }) {
+                IconButton(onClick = { showFilterPanel.value = !showFilterPanel.value }) {
                     Icon(
                         Icons.Filled.FilterList,
                         contentDescription = "Filters",
@@ -98,9 +97,8 @@ fun EventListScreen(
             }
             FilterPanel(
                 showFilterPanel = showFilterPanel,
-                searchParams = eventSearchParams,
+                searchParamsState = eventSearchParams,
                 userGPoint = userGPoint,
-                onClose = { showFilterPanel = false },
                 onApply = viewModel::applyFilters,
             )
         }

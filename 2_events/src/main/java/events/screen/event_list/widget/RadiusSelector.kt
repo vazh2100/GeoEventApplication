@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,18 +24,15 @@ import theme.styles
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun RadiusSelector(
-    initialRadius: Int?,
-    onValueChange: (Int?) -> Unit,
-) {
-    var tempRadius by remember { mutableStateOf(initialRadius?.toFloat()) }
+internal fun RadiusSelector(selectedRadius: MutableState<Int?>) {
+    var tempRadius by remember { mutableStateOf(selectedRadius.value?.toFloat()) }
     Column {
         Text("Distance (km)", style = styles.titleSmall)
         Spacer(Modifier.height(dimens.eight))
         Slider(
             onValueChange = { tempRadius = it },
             valueRange = 250f..7500f,
-            onValueChangeFinished = { onValueChange(tempRadius?.toInt()) },
+            onValueChangeFinished = { selectedRadius.value = tempRadius?.toInt() },
             value = tempRadius ?: 7500f,
             steps = 28,
             modifier = Modifier.padding(horizontal = dimens.four),

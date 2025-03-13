@@ -9,6 +9,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import theme.dimens
@@ -20,10 +21,8 @@ import java.time.ZonedDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateRangeSelector(
-    dateFrom: Instant?,
-    dateTo: Instant?,
-    onDateFromChange: (Instant) -> Unit,
-    onDateToChange: (Instant) -> Unit,
+    dateFrom: MutableState<Instant?>,
+    dateTo: MutableState<Instant?>,
     modifier: Modifier = Modifier,
 ) {
     val now = remember {
@@ -41,16 +40,16 @@ fun DateRangeSelector(
         Row(horizontalArrangement = Arrangement.spacedBy(dimens.sixteen)) {
             AppDatePicker(
                 modifier = Modifier.weight(1f),
-                selectedDate = dateFrom,
-                selectableDates = selectableDatesFrom(now, plusMonth, dateTo),
-                onDateChange = { onDateFromChange(it) },
+                selectedDate = dateFrom.value,
+                selectableDates = selectableDatesFrom(now, plusMonth, dateTo.value),
+                onDateChange = { dateFrom.value = it },
             )
 
             AppDatePicker(
                 modifier = Modifier.weight(1f),
-                selectedDate = dateTo,
-                selectableDates = selectableDatesTo(now, plusMonth, dateFrom),
-                onDateChange = { onDateToChange(it.plusSeconds(TWENTY_THREE_HOURS_IN_SECONDS)) },
+                selectedDate = dateTo.value,
+                selectableDates = selectableDatesTo(now, plusMonth, dateFrom.value),
+                onDateChange = { dateTo.value = it.plusSeconds(TWENTY_THREE_HOURS_IN_SECONDS) },
             )
         }
     }

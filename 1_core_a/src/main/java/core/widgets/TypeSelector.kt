@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,27 +25,32 @@ import theme.styles
 @Composable
 fun <T : DisplayNameEnum> TypeSelector(
     label: String,
-    currentSelection: T?,
-    onSelectionChange: (T?) -> Unit,
+    currentSelection: MutableState<T?>,
     items: List<T?>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
-        Text(label, style = styles.titleSmall)
+        Text(text = label, style = styles.titleSmall)
         Spacer(modifier = Modifier.height(dimens.eight))
         Box {
-            OutlinedButton(onClick = { expanded = true }) {
-                Text(currentSelection?.displayName ?: "Choose type")
-                Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
-            }
-            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            OutlinedButton(onClick = { expanded = true }, content = {
+                Text(currentSelection.value?.displayName ?: "Choose type")
+                Icon(Icons.Filled.ArrowDropDown, null)
+            })
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+            ) {
                 items.forEach { type ->
-                    DropdownMenuItem(onClick = {
-                        onSelectionChange(type)
-                        expanded = false
-                    }, text = { Text(type?.displayName ?: "None") })
+                    DropdownMenuItem(
+                        onClick = {
+                            currentSelection.value = type
+                            expanded = false
+                        },
+                        text = { Text(type?.displayName ?: "None") },
+                    )
                 }
             }
         }

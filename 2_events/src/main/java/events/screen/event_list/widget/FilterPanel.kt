@@ -15,10 +15,10 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import core.widgets.DateRangeSelector
 import core.widgets.TypeSelector
@@ -31,19 +31,28 @@ import theme.shapes
 
 @Composable
 internal fun FilterPanel(
-    showFilterPanel: Boolean,
-    searchParams: EventSearchParams,
-    onClose: () -> Unit,
-    onApply: (EventSearchParams) -> Unit,
+    showFilterPanel: MutableState<Boolean>,
+    searchParamsState: State<EventSearchParams>,
     userGPoint: GPoint?,
+    onApply: (EventSearchParams) -> Unit,
 ) {
-    var tempParams by remember { mutableStateOf(searchParams) }
+    val searchParams = searchParamsState.value
 
-    if (!showFilterPanel) tempParams = searchParams
+    // temp params
+    val type = remember(showFilterPanel) { mutableStateOf(searchParams.type) }
+    val sortType = remember(showFilterPanel) {
+        searchParams.sortType.takeIf { it != EventSortType.DISTANCE || searchParams.gPoint != null }.let {
+            mutableStateOf(it)
+        }
+    }
+    val dateFrom = remember(showFilterPanel) { mutableStateOf(searchParams.startDate) }
+    val dateTo = remember(showFilterPanel) { mutableStateOf(searchParams.endDate) }
+    val radius = remember(showFilterPanel) { mutableStateOf(searchParams.radius) }
+
     AnimatedVisibility(
         enter = expandIn(),
         exit = shrinkOut(),
-        visible = showFilterPanel,
+        visible = showFilterPanel.value,
         modifier = Modifier.fillMaxWidth()
     ) {
         Surface(
@@ -63,41 +72,33 @@ internal fun FilterPanel(
                 ) {
                     TypeSelector(
                         label = "Event Type",
-                        currentSelection = tempParams.type,
-                        onSelectionChange = { tempParams = tempParams.copy(type = it) },
+                        currentSelection = type,
                         items = mutableListOf<EventType?>().apply {
                             add(null)
                             addAll(EventType.entries)
                         },
                         modifier = Modifier.weight(1f)
                     )
-                    val currentSelection =
-                        tempParams.sortType.takeIf { it != EventSortType.DISTANCE || userGPoint != null }
+
                     TypeSelector(
                         label = "Sort Type",
-                        currentSelection = currentSelection,
+                        currentSelection = sortType,
                         items = buildList {
                             add(null)
                             addAll(EventSortType.entries)
                             if (userGPoint == null) remove(EventSortType.DISTANCE)
                         },
-                        onSelectionChange = { tempParams = tempParams.copy(sortType = it) },
                         modifier = Modifier.weight(1f)
                     )
                 }
                 Spacer(Modifier.height(dimens.eight))
                 DateRangeSelector(
-                    dateFrom = tempParams.startDate,
-                    dateTo = tempParams.endDate,
-                    onDateFromChange = { tempParams = tempParams.copy(startDate = it) },
-                    onDateToChange = { tempParams = tempParams.copy(endDate = it) }
+                    dateFrom = dateFrom,
+                    dateTo = dateTo,
                 )
                 userGPoint?.let {
                     Spacer(Modifier.height(dimens.sixteen))
-                    RadiusSelector(
-                        initialRadius = tempParams.radius,
-                        onValueChange = { tempParams = tempParams.copy(radius = it) }
-                    )
+                    RadiusSelector(selectedRadius = radius)
                 }
                 Spacer(modifier = Modifier.height(dimens.eight))
                 Row(
@@ -105,12 +106,24 @@ internal fun FilterPanel(
                     horizontalArrangement = Arrangement.Start
                 ) {
                     OutlinedButton(
-                        onClick = onClose,
+                        onClick = { showFilterPanel.value = false },
                         content = { Text("Cancel") }
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Button(
-                        onClick = { onClose(); onApply(tempParams) },
+                        onClick = {
+                            onApply(
+                                EventSearchParams(
+                                    type = type.value,
+                                    startDate = dateFrom.value,
+                                    endDate = dateTo.value,
+                                    radius = radius.value,
+                                    sortType = sortType.value,
+                                    gPoint = userGPoint,
+                                )
+                            )
+                            showFilterPanel.value = false
+                        },
                         content = { Text("Apply") },
                     )
                     Spacer(modifier = Modifier.weight(1f))
