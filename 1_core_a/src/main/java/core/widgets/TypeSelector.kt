@@ -29,16 +29,18 @@ fun <T : DisplayNameEnum> TypeSelector(
     items: List<T?>,
     modifier: Modifier = Modifier,
 ) {
-    var expanded by remember { mutableStateOf(false) }
-
     Column(modifier = modifier) {
         Text(text = label, style = styles.titleSmall)
         Spacer(modifier = Modifier.height(dimens.eight))
         Box {
-            OutlinedButton(onClick = { expanded = true }, content = {
-                Text(currentSelection.value?.displayName ?: "Choose type")
-                Icon(Icons.Filled.ArrowDropDown, null)
-            })
+            var expanded by remember { mutableStateOf(false) }
+            OutlinedButton(
+                onClick = { expanded = true },
+                content = {
+                    Text(currentSelection.value?.displayName ?: "Choose type")
+                    Icon(Icons.Filled.ArrowDropDown, null)
+                },
+            )
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },

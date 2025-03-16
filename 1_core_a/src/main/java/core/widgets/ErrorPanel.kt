@@ -14,22 +14,19 @@ import theme.shapes
 import theme.styles
 
 @Composable
-fun ErrorPanel(text: String, modifier: Modifier = Modifier) {
-    val backgroundColor = colors.error
-    val textColor = colors.onError
-    Box(modifier = modifier) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(backgroundColor, shape = shapes.extraLarge)
-                .padding(dimens.twelve)
-        ) {
+fun ErrorPanel(text: String, modifier: Modifier = Modifier) = Box(modifier = modifier) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colors.error, shape = shapes.extraLarge)
+            .padding(dimens.twelve),
+        content = {
             Text(
                 text = text,
                 style = styles.bodyMedium,
-                color = textColor,
+                color = colors.onError,
                 modifier = Modifier.align(Alignment.Center)
             )
-        }
-    }
+        },
+    )
 }

@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +35,7 @@ import java.time.Instant
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppDatePicker(
-    selectedDate: Instant?,
+    selectedDate: State<Instant?>,
     selectableDates: SelectableDates,
     onDateChange: (Instant) -> Unit,
     modifier: Modifier = Modifier,
@@ -42,8 +43,8 @@ fun AppDatePicker(
     var showDatePicker by remember { mutableStateOf(false) }
 
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = selectedDate?.toEpochMilli(),
-        initialDisplayedMonthMillis = selectedDate?.toEpochMilli(),
+        initialSelectedDateMillis = selectedDate.value?.toEpochMilli(),
+        initialDisplayedMonthMillis = selectedDate.value?.toEpochMilli(),
         selectableDates = selectableDates,
     )
     Box(
@@ -57,7 +58,7 @@ fun AppDatePicker(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = selectedDate?.formatAsUtc() ?: "",
+                    text = selectedDate.value?.formatAsUtc() ?: "",
                     style = styles.bodyLarge,
                     color = colors.onSurface,
                 )

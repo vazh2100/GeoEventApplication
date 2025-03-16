@@ -40,14 +40,14 @@ fun DateRangeSelector(
         Row(horizontalArrangement = Arrangement.spacedBy(dimens.sixteen)) {
             AppDatePicker(
                 modifier = Modifier.weight(1f),
-                selectedDate = dateFrom.value,
+                selectedDate = dateFrom,
                 selectableDates = selectableDatesFrom(now, plusMonth, dateTo.value),
                 onDateChange = { dateFrom.value = it },
             )
 
             AppDatePicker(
                 modifier = Modifier.weight(1f),
-                selectedDate = dateTo.value,
+                selectedDate = dateTo,
                 selectableDates = selectableDatesTo(now, plusMonth, dateFrom.value),
                 onDateChange = { dateTo.value = it.plusSeconds(TWENTY_THREE_HOURS_IN_SECONDS) },
             )

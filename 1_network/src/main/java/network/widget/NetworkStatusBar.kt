@@ -20,7 +20,7 @@ fun NetworkStatusBar(networkStatus: State<NetworkStatus>, modifier: Modifier = M
         modifier = modifier.fillMaxWidth()
     ) {
         ErrorPanel(
-            "No network",
+            text = "No network",
             modifier = Modifier.padding(
                 start = dimens.sixteen,
                 end = dimens.sixteen,
