@@ -20,11 +20,16 @@ internal class EventListViewModel(
     getNetworkStatus: IObserveNetworkStateUseCase,
     getLocationStatus: IGetLocationStatusUseCase,
 ) : EventListState() {
+    companion object {
+        private const val BACKGROUND_TIMEOUT = 10000L
+    }
 
     init {
-        locationStatus = getLocationStatus().stateIn(viewModelScope, SharingStarted.Eagerly, UNDEFINED)
+        locationStatus =
+            getLocationStatus().stateIn(viewModelScope, SharingStarted.WhileSubscribed(BACKGROUND_TIMEOUT), UNDEFINED)
         userGPoint = getLocationStatus.userGPoint
-        networkStatus = getNetworkStatus().stateIn(viewModelScope, SharingStarted.Eagerly, UNKNOWN)
+        networkStatus =
+            getNetworkStatus().stateIn(viewModelScope, SharingStarted.WhileSubscribed(BACKGROUND_TIMEOUT), UNKNOWN)
         viewModelScope.launch {
             loadSavedFilters()
             loadEvents()

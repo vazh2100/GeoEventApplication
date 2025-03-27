@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import events.entities.Event
 import events.screen.event_list.widget.Content
 import events.screen.event_list.widget.FilterPanel
@@ -31,9 +32,9 @@ fun EventListScreen(
 ) {
     val viewModel: EventListViewModel = koinViewModel()
     //
-    val networkStatus = viewModel.networkStatus.collectAsState()
-    val locationStatus = viewModel.locationStatus.collectAsState()
-    val userGPoint by viewModel.userGPoint.collectAsState()
+    val networkStatus = viewModel.networkStatus.collectAsStateWithLifecycle()
+    val locationStatus = viewModel.locationStatus.collectAsStateWithLifecycle()
+    val userGPoint by viewModel.userGPoint.collectAsStateWithLifecycle()
     val events = viewModel.events.collectAsState()
     val isLoading = viewModel.isLoading.collectAsState()
     val errorMessage = viewModel.errorMessage.collectAsState()
