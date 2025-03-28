@@ -21,7 +21,7 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import network.entity.NetworkStatus
 import network.usecase.IObserveNetworkStateUseCase
@@ -77,7 +77,7 @@ internal class GetFilteredEventsUseCaseTest {
         mockkObject(EventsProcessor)
         mockkStatic(Log::class)
         coEvery { preferencesStorage.saveEventSearchParams(eventSearchParams) } just Runs
-        every { getNetworkStatus() } returns flowOf(NetworkStatus.CONNECTED)
+        every { getNetworkStatus() } returns MutableStateFlow(NetworkStatus.CONNECTED)
         every { getLocationStatus.userGPoint.value } returns userGPoint
         coEvery { eventRepository.getAllEvents(true) } returns mockEvents
         coEvery { eventRepository.getAllEvents(false) } returns mockEvents
@@ -108,7 +108,7 @@ internal class GetFilteredEventsUseCaseTest {
      */
     @Test
     fun `test get events successfully with no network`() = runBlocking {
-        coEvery { getNetworkStatus() } returns flowOf(NetworkStatus.DISCONNECTED)
+        coEvery { getNetworkStatus() } returns MutableStateFlow(NetworkStatus.DISCONNECTED)
         val result = getFilteredEvents(eventSearchParams)
 
         coVerify { preferencesStorage.saveEventSearchParams(eventSearchParams) }

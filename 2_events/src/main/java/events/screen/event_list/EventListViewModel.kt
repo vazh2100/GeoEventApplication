@@ -4,14 +4,10 @@ import androidx.lifecycle.viewModelScope
 import events.entities.EventSearchParams
 import events.usecase.GetFilteredEventsUseCase
 import events.usecase.GetSavedFiltersUseCase
-import geolocation.entity.LocationStatus.UNDEFINED
 import geolocation.usecase.IGetLocationStatusUseCase
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.scan
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import network.entity.NetworkStatus.UNKNOWN
 import network.usecase.IObserveNetworkStateUseCase
 
 internal class EventListViewModel(
@@ -20,16 +16,11 @@ internal class EventListViewModel(
     getNetworkStatus: IObserveNetworkStateUseCase,
     getLocationStatus: IGetLocationStatusUseCase,
 ) : EventListState() {
-    companion object {
-        private const val BACKGROUND_TIMEOUT = 10000L
-    }
 
     init {
-        locationStatus =
-            getLocationStatus().stateIn(viewModelScope, SharingStarted.WhileSubscribed(BACKGROUND_TIMEOUT), UNDEFINED)
+        locationStatus = getLocationStatus()
         userGPoint = getLocationStatus.userGPoint
-        networkStatus =
-            getNetworkStatus().stateIn(viewModelScope, SharingStarted.WhileSubscribed(BACKGROUND_TIMEOUT), UNKNOWN)
+        networkStatus = getNetworkStatus()
         viewModelScope.launch {
             loadSavedFilters()
             loadEvents()
