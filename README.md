@@ -61,6 +61,8 @@
 1_network
    ├── entity
    │   └── NetworkStatus.kt
+   ├── repository
+   │   └── NetworkStateRepository.kt
    ├── usecase
    │   └── IObserveNetworkStateUseCase.kt
    ├── widget
